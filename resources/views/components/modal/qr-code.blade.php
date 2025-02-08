@@ -15,15 +15,62 @@
                     </button>
                 </div>
                 <div class="w-full h-auto space-y-5 flex flex-col items-center justify-center">
-                    <div
-                        class="h-[350px] w-[350px] p-10 overflow-hiddem object-center border bg-white rounded-xl border-black">
-                        <x-image path="resources/img/sample-qr.png" className="h-full w-full" />
+                    <div id="qr-code-container"
+                        class="h-[350px] w-[350px] p-10 overflow-hidden object-center border bg-white rounded-xl border-black">
+                        {{-- 
+                            I removed it because it wont replace the old qr to the new generated qr
+
+                            <img id="large-qr-image" src="{{ asset('resources/img/sample-qr.png') }}" class="h-full w-full" /> 
+                        --}}
+                        <div id="large-qr-code-img"></div>
                     </div>
-                    <p class="text-sm"><span class="font-bold">QR CODE:</span> MF_JFDBN2JF_IFH</p>
+                    <p class="text-sm">
+                        <span class="font-bold">QR CODE:</span> <span id="qr-code-text">N/A</span>
+                    </p>
+                    {{-- 
+                        The x-button still wont work when I try from Onclick="event()" qr-code.php to onclick="event()" button.php
+                        I will use again the x-button if the script is fixed
+
                     <x-button tertiary label="Download QR" leftIcon="material-symbols--download-rounded"
-                        className="text-sm px-8" />
+                        class="text-sm px-8" id="download-qr-large-btn"/>
+                         --}}
+                    <button label="download QR" id="download-qr-large-btn" 
+                    class='px-16 py-3 border rounded-full text-custom-orange hover:border-custom-orange animate-transition flex items-center justify-center gap-2'>
+                        <i class="material-symbols--download-rounded">download</i>    
+                        Download QR
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+{{-- 
+    this is the script to convert and download qr code
+--}}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        // Add event listener to download QR image
+        document.getElementById("download-qr-large-btn").addEventListener("click", function () {
+        
+            const qrCanvas = document.getElementById("large-qr-code-img").querySelector("canvas");
+            if (qrCanvas) {
+                
+                // Get the image data URL (base64 format)
+                const qrImage = qrCanvas.toDataURL("image/png");
+
+                // Create an <a> tag dynamically for downloading the image
+                const downloadLink = document.createElement("a");
+                downloadLink.href = qrImage;
+                downloadLink.download = "QR_Code.png"; // Set the default filename for download
+                document.body.appendChild(downloadLink);
+                downloadLink.click(); // Trigger the download
+                document.body.removeChild(downloadLink); // Clean up the link after triggering the download
+            } else {
+                console.error("QR code not found in the container!");
+            }
+        });
+    });
+</script>

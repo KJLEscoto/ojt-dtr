@@ -1,3 +1,3 @@
-<div>
-    Successful
-</div>
+@php
+    dd('dashboard')
+@endphp

@@ -61,7 +61,7 @@
         </main>
 
         {{-- users/intern layout --}}
-    @elseif (Request::routeIs('show.users-dashboard') || Request::routeIs('show.users-settings'))
+    @elseif (Request::routeIs('users.dashboard') || Request::routeIs('users.settings'))
         <nav class="fixed top-0 left-0 w-full h-auto z-50 bg-white">
             <div class="grid grid-cols-3 text-nowrap h-auto px-20 border shadow-md">
                 <section class="flex items-center justify-start">
@@ -69,24 +69,25 @@
                 </section>
 
                 <section class="flex items-center justify-center">
-                    <a href="{{ route('show.users-dashboard') }}"
-                        class="{{ Request::routeIs('show.users-dashboard*') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-10 px-7 border-b-4 flex items-center gap-2' }}">
+                    <a href="{{ route('users.dashboard') }}"
+                        class="{{ Request::routeIs('users.dashboard*') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-10 px-7 border-b-4 flex items-center gap-2' }}">
                         <span class="akar-icons--dashboard"></span>
                         <p>Dashboard</p>
                     </a>
 
-                    <a href="{{ route('show.users-settings') }}"
-                        class="{{ Request::routeIs('show.users-settings*') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-10 px-7 border-b-4 flex items-center gap-2' }}">
+                    <a href="{{ route('users.settings') }}"
+                        class="{{ Request::routeIs('users.settings') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-10 px-7 border-b-4 flex items-center gap-2' }}">
                         <span class="solar--settings-linear"></span>
                         <p>Settings</p>
                     </a>
 
                 </section>
 
-                <section class="flex items-center justify-end">
+                <x-form.container routeName="logout" className="flex items-center justify-end">
+                    @csrf
                     <x-button primary label="Logout" leftIcon="material-symbols--logout-rounded" submit
                         className="px-10 py-3" />
-                </section>
+                </x-form.container>
             </div>
         </nav>
 
@@ -102,7 +103,7 @@
                 </span> --}}
 
         {{-- admin layout --}}
-    @elseif (Request::routeIs('show.admin-dashboard'))
+    @elseif (Request::routeIs('admin.dashboard'))
         <main class="w-full h-screen">
             <!-- Sidebar (Fixed & on the Left) -->
             <aside
