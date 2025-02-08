@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -17,11 +18,24 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = [];
+
+    // protected $fillable = [
+    //     'firstname',
+    //     'middlename',
+    //     'lastname',
+    //     'email',
+    //     'password',
+    //     'phone',
+    //     'gender',
+    //     'address',
+    //     'school',
+    //     'starting_date',
+    //     'emergency_fullname',
+    //     'emergency_contact',
+    //     'emergency_address',
+    //     'qr_code',
+    // ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,5 +58,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function history():HasMany
+    {
+        return $this->hasMany(Histories::class);
     }
 }

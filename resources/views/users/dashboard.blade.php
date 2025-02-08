@@ -1,6 +1,8 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <span>
     <x-modal.qr-code id="qr-code-modal" />
 </span>
+
 
 <x-main-layout>
     <main class="grid grid-cols-12">
@@ -24,7 +26,7 @@
                                         <span class="fluent--scan-qr-code-24-filled"></span>
                                         <h1 class="font-semibold">Total Scans</h1>
                                         <p class="px-2 py-1 rounded-md border font-semibold bg-white text-custom-red">
-                                            10
+                                            {{$totalScan}}
                                         </p>
                                     </div>
                                 </span>
@@ -41,11 +43,11 @@
 
                                     <section class="grid grid-cols-5 gap-x-2 gap-y-3 items-center">
                                         <span class="fontisto--male text-custom-red col-span-1"></span>
-                                        <h1 class="font-bold col-span-4 text-xl">John Doe</h1>
+                                        <h1 class="font-bold col-span-4 text-xl">{{$user->firstname}} {{$user->lastname}}</h1>
                                         <span class="ic--round-email text-custom-red col-span-1"></span>
-                                        <p class="font-medium col-span-4 text-custom-red">johndoe@gmail.com</p>
+                                        <p class="font-medium col-span-4 text-custom-red">{{$user->email}}</p>
                                         <span class="solar--phone-bold text-custom-red col-span-1"></span>
-                                        <p class="font-medium col-span-4 text-gray-600">+63 9123456789</p>
+                                        <p class="font-medium col-span-4 text-gray-600">{{$user->phone}}</p>
                                     </section>
                                 </div>
                             </div>
@@ -55,14 +57,33 @@
                         <section
                             class="p-5 rounded-lg border border-gray-200 bg-white w-1/2 h-auto text-center gap-3 flex flex-col items-center justify-center">
                             <h1 class="text-sm font-semibold">YOUR PERSONAL QR CODE</h1>
-                            <button data-pd-overlay="#qr-code-modal" data-modal-target="qr-code-modal"
-                                data-modal-toggle="qr-code-modal"
-                                class=" modal-button h-32 w-32 p-5 overflow-hidden flex items-center justify-center border bg-white rounded-xl border-black cursor-pointer">
-                                <x-image path="resources/img/sample-qr.png" className="h-full w-full" />
+                            
+                            <!-- Button with QR Code -->
+                            <span hidden id="hidden-data-qr-text">{{$user->qr_code}}</span>
+                            <button data-modal-target="qr-code-modal"
+                                data-qr-text="{{ $user->qr_code }}"
+                                class="modal-button h-32 w-32 p-5 overflow-hidden flex items-center justify-center border bg-white rounded-xl border-black cursor-pointer">
+
+                                <!-- Small QR Code -->  
+                                <div id="small-qr-code-img"></div>
                             </button>
+
+                            
                             <p class="text-xs font-medium">Click QR to enlarge</p>
+                            {{-- 
+                                The x-button is not working but I will use it when it fixed for better generalization of the buttons
+
                             <x-button tertiary label="Download QR" leftIcon="material-symbols--download-rounded"
-                                className="text-sm px-8" />
+                                className="text-sm px-8" onClick="myFunction()" id="download-qr-small-btn" />
+                            --}}
+                            <button
+                            class='px-16 py-3 border rounded-full text-custom-orange hover:border-custom-orange animate-transition flex items-center justify-center gap-2
+                            text-sm px-8'
+                            id="download-qr-small-btn"
+                            >
+                                <i class="material-symbols--download-rounded">download</i> 
+                                Download QR
+                            </button>
                         </section>
                     </div>
 
@@ -70,9 +91,9 @@
                         <x-page-title title="Additional Information" titleClass="text-xl font-semibold" />
                         <div class="grid grid-cols-4 gap-2 w-full">
                             <h1 class="text-lg font-semibold col-span-1">Address</h1>
-                            <p class="text-lg font-normal col-span-3">Davao City</p>
+                            <p class="text-lg font-normal col-span-3">{{$user->address}}</p>
                             <h1 class="text-lg font-semibold col-span-1">School</h1>
-                            <p class="text-lg font-normal col-span-3">STI College Davao</p>
+                            <p class="text-lg font-normal col-span-3">{{$user->school}}</p>
                         </div>
                     </div>
 
@@ -80,11 +101,11 @@
                         <x-page-title title="Emergency Contact" titleClass="text-xl font-semibold" />
                         <div class="grid grid-cols-4 gap-2 w-full">
                             <h1 class="text-lg font-semibold col-span-1">Name</h1>
-                            <p class="text-lg font-normal col-span-3">Johnny Doe</p>
+                            <p class="text-lg font-normal col-span-3">{{$user->emergency_contact_fullname}}</p>
                             <h1 class="text-lg font-semibold col-span-1">Contact No.</h1>
-                            <p class="text-lg font-normal col-span-3">+63 9123456789</p>
+                            <p class="text-lg font-normal col-span-3">{{$user->emergency_contact_number}}</p>
                             <h1 class="text-lg font-semibold col-span-1">Address</h1>
-                            <p class="text-lg font-normal col-span-3">Davao City</p>
+                            <p class="text-lg font-normal col-span-3">{{$user->emergency_contact_address}}</p>
                         </div>
                     </div>
                 </div>
@@ -102,28 +123,31 @@
 
                     <div
                         class="h-[75%] w-full rounded-xl bg-white overflow-auto text-black flex flex-col items-start justify-start">
-                        @for ($i = 1; $i <= 12; $i++)
+                        @foreach ($histories as $history)
                             <section class="px-7 py-5 w-full flex justify-between items-center even:bg-custom-orange/5">
                                 <div class="">
-                                    <section class="font-bold text-lg">8:00 am</section>
-                                    <p class="text-sm font-medium text-gray-700">Feb 1, 2025</p>
+                                    <section class="font-bold text-lg">{{$history['timeFormat']}}</section>
+                                    <p class="text-sm font-medium text-gray-700">{{$history['datetime']}}</p>
                                 </div>
-                                <div class="text-green-500 flex items-center gap-1 select-none">
-                                    <span class="lets-icons--in"></span>
-                                    <p>Time in</p>
-                                </div>
-                                <div class="text-red-500 flex items-center gap-1 select-none">
-                                    <span class="lets-icons--out"></span>
-                                    <p>Time out</p>
-                                </div>
+                                @if ($history['description'] === 'time in')
+                                    <div class="text-green-500 flex items-center gap-1 select-none">
+                                        <span class="lets-icons--in"></span>
+                                        <p>Time in</p>
+                                    </div>
+                                @else
+                                    <div class="text-red-500 flex items-center gap-1 select-none">
+                                        <span class="lets-icons--out"></span>
+                                        <p>Time out</p>
+                                    </div>
+                                @endif
                             </section>
-                        @endfor
+                        @endforeach
                     </div>
 
                     <div class="tracking-wider flex items-center gap-2 select-none">
                         <span class="ic--round-date-range"></span>
                         <p class="">Starting Date:</p>
-                        <span class="">Feb 1, 2025</span>
+                        <span class="">{{$userTimeStarted}}</span>
                     </div>
                 </section>
             </div>
@@ -133,3 +157,71 @@
     </main>
 
 </x-main-layout>
+
+@include('components.modal.qr-code');
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Generate the small QR code when the page loads
+        const qrCodeText = document.getElementById("hidden-data-qr-text").innerText;
+
+        new QRCode(document.getElementById("small-qr-code-img"), {
+            text: qrCodeText,
+            width: 120,
+            height: 120
+        });
+
+        // Add event listener to download QR image
+        document.getElementById("download-qr-small-btn").addEventListener("click", function () {
+        
+            const qrCanvas = document.getElementById("small-qr-code-img").querySelector("canvas");
+            if (qrCanvas) {
+                // Get the image data URL (base64 format)
+                const qrImage = qrCanvas.toDataURL("image/png");
+
+                // Create an <a> tag dynamically for downloading the image
+                const downloadLink = document.createElement("a");
+                downloadLink.href = qrImage;
+                downloadLink.download = "QR_Code.png"; // Set the default filename for download
+                document.body.appendChild(downloadLink);
+                downloadLink.click(); // Trigger the download
+                document.body.removeChild(downloadLink); // Clean up the link after triggering the download
+            } else {
+                console.error("QR code not found in the container!");
+            }
+        });
+    });
+
+    //this one for clicking the modal and passing some data in the enlarge modal
+    document.addEventListener("DOMContentLoaded", function () {
+        const qrButtons = document.querySelectorAll("[data-modal-target='qr-code-modal']");
+
+        qrButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const qrText = this.getAttribute("data-qr-text");
+
+                console.log("QR Modal Opened!", qrText);
+
+                document.getElementById("qr-code-text").innerText = qrText;
+
+                // Generate new QR code
+                new QRCode(document.getElementById("large-qr-code-img"), {
+                    text: qrText,
+                    width: 350,
+                    height: 350
+                });
+                
+                // Show the modal
+                document.getElementById("qr-code-modal").classList.remove("hidden");
+            });
+        });
+
+        // Close modal
+        document.querySelectorAll(".close-modal-button").forEach(button => {
+            button.addEventListener("click", function () {
+                document.getElementById("qr-code-modal").classList.add("hidden");
+            });
+        });
+    });
+</script>

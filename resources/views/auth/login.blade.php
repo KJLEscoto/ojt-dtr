@@ -1,7 +1,8 @@
 {{-- admin login --}}
-@if (Request::routeIs('show.admin-login'))
-    <main class="container mx-auto max-w-screen-xl">
+@if (Request::routeIs('show.admin.login'))
+<main class="container mx-auto max-w-screen-xl">
         <x-main-layout>
+        
             <x-form.container routeName="show.reset-password" method="POST"
                 className="flex flex-col gap-10 w-1/3 p-10 border border-gray-200 rounded-2xl shadow-xl">
 
@@ -25,6 +26,9 @@
 
     {{-- user/intern login --}}
 @elseif (Request::routeIs('show.login'))
+            @if (session('invalid'))
+                <p>{{session('invalid')}}</p>
+            @endif
     <span>
         <x-modal.forgot-password id="forgot-password-modal" />
         <x-modal.confirmation-email id="confirmation-email-modal" />
@@ -39,12 +43,12 @@
         <x-page-title title="intern login" />
 
         {{-- login form --}}
-        <x-form.container routeName="show.login" method="POST" className="space-y-5 w-full">
+        <x-form.container routeName="login" method="POST" className="space-y-5 w-full">
             @csrf
 
             {{-- email --}}
-            <x-form.input label="Email" classLabel="font-medium text-2xl" name_id="email_add"
-                placeholder="example@gmail.com" type="email" labelClass="text-xl font-medium" big />
+            <x-form.input label="Email" classLabel="font-medium text-2xl" name_id="email"
+                placeholder="example@gmail.com" type="" labelClass="text-xl font-medium" big />
 
             {{-- password --}}
             <x-form.input label="Password" classLabel="font-medium text-2xl" name_id="password" placeholder="••••••••"
@@ -63,7 +67,7 @@
             {{-- button --}}
             <x-button primary label="Login" submit />
 
-            {{-- <a href="{{ route('show.reset-password') }}">Reset</a> --}}
+            {{-- <a href="{{ route('show.reset.password') }}">Reset</a> --}}
 
         </x-form.container>
     </x-main-layout>

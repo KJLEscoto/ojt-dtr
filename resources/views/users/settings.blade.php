@@ -1,7 +1,10 @@
+<x-modal.forgot-password id="forgot-password-modal" />
+<x-modal.confirmation-email id="confirmation-email-modal" />
+
 <x-main-layout>
     <div class="container mx-auto max-w-screen-xl">
         <main class="px-20 py-20 min-h-screen w-full relative">
-            <x-form.container routeName="show.login" className="grid grid-cols-12 gap-10 w-full h-full">
+            <x-form.container routeName="reset-password" className="grid grid-cols-12 gap-10 w-full h-full">
 
                 <!-- Profile Section -->
                 <div class="col-span-4 h-full w-full">
@@ -22,9 +25,10 @@
                             <!-- Actions -->
                             <section class="flex flex-col items-center gap-5">
                                 <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" />
-                                <a href="#" class="tracking-wide text-custom-orange">
-                                    Reset Password
-                                </a>
+                                <button type="button" data-pd-overlay="#forgot-password-modal"
+                                    data-modal-target="forgot-password-modal" data-modal-toggle="forgot-password-modal"
+                                    class="modal-button font-bold hover:text-custom-orange cursor-pointer">Click
+                                    here.</button>
                             </section>
 
                         </div>
@@ -38,23 +42,23 @@
                         <section class="space-y-5 w-full">
                             <x-form.section-title title="Personal Information" />
                             <div class="grid grid-cols-3 w-full gap-5">
-                                <x-form.input label="First Name" type="text" name_id="first_name" placeholder="John"
+                                <x-form.input label="First Name" type="text" name_id="first_name" placeholder="John" value="{{$user->firstname}}"
                                     labelClass="text-lg font-medium" small />
-                                <x-form.input label="Last Name" type="text" name_id="last_name" placeholder="Doe"
+                                <x-form.input label="Last Name" type="text" name_id="last_name" placeholder="Doe" value="{{$user->lastname}}"
                                     labelClass="text-lg font-medium" small />
-                                <x-form.input label="Middle Name" type="text" name_id="middle_name"
+                                <x-form.input label="Middle Name" type="text" name_id="middle_name" value="{{$user->middlename}}"
                                     placeholder="Watson" labelClass="text-lg font-medium" small />
                             </div>
                             <div class="grid grid-cols-2 w-full gap-5">
-                                <x-form.input label="Gender" type="text" name_id="gender"
+                                <x-form.input label="Gender" type="text" name_id="gender" value="{{$user->gender}}"
                                     placeholder="Select a gender" labelClass="text-lg font-medium" small />
-                                <x-form.input label="Phone" type="text" name_id="phone" placeholder="+63"
+                                <x-form.input label="Phone" type="text" name_id="phone" placeholder="+63" value="{{$user->phone}}"
                                     labelClass="text-lg font-medium" small />
                             </div>
                             <div class="grid grid-cols-2 w-full gap-5">
-                                <x-form.input label="Address" type="text" name_id="address" placeholder="Davao City"
+                                <x-form.input label="Address" type="text" name_id="address" placeholder="Davao City" value="{{$user->address}}"
                                     labelClass="text-lg font-medium" small />
-                                <x-form.input label="School" type="text" name_id="school" placeholder="School name"
+                                <x-form.input label="School" type="text" name_id="school" placeholder="School name" value="{{$user->school}}"
                                     labelClass="text-lg font-medium" small />
                             </div>
                         </section>
@@ -62,9 +66,9 @@
                         <section class="space-y-5 w-full">
                             <x-form.section-title title="Account Information" />
                             <div class="grid grid-cols-2 w-full gap-5">
-                                <x-form.input label="Email" type="email" name_id="email_address"
+                                <x-form.input label="Email" type="email" name_id="email_address" value="{{$user->email}}"
                                     placeholder="example@gmail.com" labelClass="text-lg font-medium" small />
-                                <x-form.input label="Starting Date" type="date" name_id="starting_date"
+                                <x-form.input label="Starting Date" type="date" name_id="starting_date" value="{{$user->starting_date}}"
                                     placeholder="MMM DD, YYY" labelClass="text-lg font-medium" small />
                             </div>
                         </section>
@@ -72,11 +76,11 @@
                         <section class="space-y-5 w-full">
                             <x-form.section-title title="Emergency Contact" />
                             <div class="grid grid-cols-3 w-full gap-5">
-                                <x-form.input label="Full Name" type="text" name_id="emergency_full_name"
+                                <x-form.input label="Full Name" type="text" name_id="emergency_full_name" value="{{$user->emergency_contact_fullname}}"
                                     placeholder="Johny Doe" labelClass="text-lg font-medium" small />
-                                <x-form.input label="Contact No." type="text" name_id="emergency_contact_no"
+                                <x-form.input label="Contact No." type="text" name_id="emergency_contact_no" value="{{$user->emergency_contact_number}}"
                                     placeholder="+63" labelClass="text-lg font-medium" small />
-                                <x-form.input label="Address" type="text" name_id="emergency_address"
+                                <x-form.input label="Address" type="text" name_id="emergency_address" value="{{$user->emergency_contact_address}}"
                                     placeholder="Davao City" labelClass="text-lg font-medium" small />
                             </div>
                         </section>
