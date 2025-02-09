@@ -40,10 +40,10 @@ class UserController extends Controller
 
             //get the user data from the qr code
             $userData = User::where('qr_code', $request->qr_code)->first();
-            
+
             //initialized the histories object(table)
             $timeCheck = new Histories();
-            
+
             //set the user id
             $timeCheck->user_id = $userData->id;
 
@@ -52,13 +52,12 @@ class UserController extends Controller
             $timeCheck->datetime = Carbon::now()->timezone('Asia/Manila');
 
             //it will be depends if time in or time out
-            if($request->type == 'time_in'){
-                
+            if ($request->type == 'time_in') {
+
                 //this will set the description to time in
                 $timeCheck->description = 'time in';
                 $success_text = "Time in checked successfully";
-            }
-            else if($request->type == 'time_out'){
+            } else if ($request->type == 'time_out') {
 
                 //this will set the description to time out
                 $timeCheck->description = 'time out';
@@ -67,7 +66,7 @@ class UserController extends Controller
 
             //save the data to the database
             $timeCheck->save();
-            
+
             //mail the shift notification
             $sendShiftNotification = $emailController->EmailShiftNotification($userData, $timeCheck);
 
@@ -81,13 +80,13 @@ class UserController extends Controller
     public function showDTR(DtrSummaryController $dtrSummaryController, Request $request)
     {
         try {
-            
+
             //initialize the local variables
             //this variables only to be used in this function so it wont conflict with the global variables 
             $users = null;
             $histories = null;
             $records = [];
-            
+
             //get the user access that is currently logged in
             $user_access = Auth::user();
 
@@ -99,9 +98,9 @@ class UserController extends Controller
             //$groupedData['Time out']
             //$groupedData['Hours worked']
             $totalHours = $dtrSummaryController->DtrSummary($request);
-            
+
             //check if the auth user is admin which is based on their role
-            if($user_access->role == 'admin'){
+            if ($user_access->role == 'admin') {
 
                 //get the user history data with history relation
                 $users = User::with('history')->get();
@@ -121,13 +120,12 @@ class UserController extends Controller
             }
 
             //if the role is admin it will go to this page
-            if($user_access->role == 'admin'){
-                return view('dtr.index',[
+            if ($user_access->role == 'admin') {
+                return view('dtr.index', [
                     'records' => $records,
                     'type' => 'admin',
                 ]);
-            }
-            else{
+            } else {
 
                 //this data will be store in the requrest object
                 $data = [
@@ -144,7 +142,7 @@ class UserController extends Controller
                 //then the $totalHours will be passed to the view dtr.index
                 //with the data of array['type' => 'user', 'groupedData' => $totalHours]
                 //dd($totalHours);
-                return view('dtr.index',[
+                return view('dtr.index', [
                     'type' => 'user',
                     'groupedData' => $totalHours,
                 ]);
@@ -156,7 +154,7 @@ class UserController extends Controller
 
     public function showProfile($id)
     {
-        
+
         //access user with authenticated user
         $access_user = Auth::user();
 
@@ -164,10 +162,10 @@ class UserController extends Controller
         $users = User::find($id);
 
         //check if the role is either admin or anything else
-        if($access_user->role == 'admin'){
-            
+        if ($access_user->role == 'admin') {
+
             //return response()->json(['users' => $users], Response::HTTP_INTERNAL_SERVER_ERROR);
-            if(!(isset($users))){
+            if (!(isset($users))) {
                 return redirect()->route('admin.dashboard');
             }
 
@@ -175,16 +173,14 @@ class UserController extends Controller
                 'user' => $users,
                 'access_user' => $access_user,
             ]);
-        }
-        else{
+        } else {
             //check if the user is the same as the access user
-            if($access_user->id === $users->id){
+            if ($access_user->id === $users->id) {
                 return view('users.profile.edit', [
                     'user' => $users,
                     'access_user' => $access_user,
                 ]);
-            }
-            else{
+            } else {
                 return redirect()->route('users.profile.index');
             }
         }
@@ -227,12 +223,12 @@ class UserController extends Controller
     public function showDashboard()
     {
         $users = Auth::user();
-        
+
         //check if the user is admin
-        if($users->role == 'admin'){
+        if ($users->role == 'admin') {
             return $this->showAdminScanner();
         }
-        
+
         //later if not admin
         //convert all the dateitme details
         $histories = $users->history()->latest()->get()->map(function ($history) {
@@ -242,7 +238,7 @@ class UserController extends Controller
                 'timeFormat' => Carbon::parse($history->datetime)->format('g:i A'),
             ];
         })->toArray();
-        
+
         $history = new HistoryController();
         $totalScan = $history->UserTotalScan();
         $totalTimeIn = $history->UserTotalTimeIn();
@@ -282,7 +278,7 @@ class UserController extends Controller
         $totalTimeOut = $history->TotalTimeOut();
         $totalRegister = $history->TotalRegister();
 
-        return view('admin.scanner', [
+        return view('admin.dashboard', [
             'user' => $users,
             'totalScans' => $totalScan,
             'totalTimeIn' => $totalTimeIn,
@@ -308,7 +304,7 @@ class UserController extends Controller
                 'history' => $history,
             ];
         }
-        
+
         //dd($records);
 
         return view('admin.histories', [
@@ -320,7 +316,7 @@ class UserController extends Controller
     {
         $users = User::get();
 
-        return view('admin.users',[
+        return view('admin.users', [
             'users' => $users,
         ]);
     }
@@ -334,8 +330,8 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $user = User::where('id', $request->user_id)->first();
-        
-        if(is_null($user)){
+
+        if (is_null($user)) {
             return back()->with('invalid', 'The inpud is invalid please try again!');
         }
 
@@ -351,5 +347,5 @@ class UserController extends Controller
         $user = User::find($id);
         $user->delete();
         return redirect()->route('users.profile.index');
-    }    
+    }
 }

@@ -34,15 +34,15 @@ class AuthController extends Controller
             'emergency_contact_fullname' => 'required|string|max:255',
             'emergency_contact_number' => 'required|string|max:255',
             'emergency_contact_address' => 'required|string|max:255',
-            
+
             'password' => 'required|string|min:8|confirmed',
         ]);
 
         //return response()->json(['message' => $request->all()],Response::HTTP_INTERNAL_SERVER_ERROR);
-        
+
         //dd($data);
         //Generate QR Code
-        $qr_code = 'QR' . '_' . Str::random(10) . '_' . Str::random(10);        
+        $qr_code = 'QR' . '_' . Str::random(10) . '_' . Str::random(10);
 
         //dd($qr_code);
         $user = User::create(
@@ -61,10 +61,10 @@ class AuthController extends Controller
                 'emergency_contact_number' => $data['emergency_contact_number'],
                 'emergency_contact_address' => $data['emergency_contact_address'],
                 'qr_code' => $qr_code,
-                'expiry_date' => Carbon::now()->addMonths(3), 
+                'expiry_date' => Carbon::now()->addMonths(3),
             ]
         );
-        
+
         return back()->with([
             'success' => 'Congratulations! You are now registered!',
         ]);
@@ -77,86 +77,82 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        try{
-            //dd($request->all());
+        //dd($request->all());
         $data = $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-        
-            if(Auth::attempt($data)){
 
-                
-                //session regenerate
-                $request->session()->regenerate();   
-                
-                //get the auth user data
-                $user = Auth::user();
+        if (Auth::attempt($data)) {
 
-                //local variables
-                $isExpired = false;
-                $isActive = false;
-                $isStarted = false; 
-            
-                if($user->role == 'admin'){
-                    return redirect()->route('admin.dashboard');
+
+            //session regenerate
+            $request->session()->regenerate();
+
+            //get the auth user data
+            $user = Auth::user();
+
+            //local variables
+            $isExpired = false;
+            $isActive = false;
+            $isStarted = false;
+
+            if ($user->role == 'admin') {
+                return redirect()->route('admin.dashboard');
+            } else {
+                if ($user->expiry_date < Carbon::now()) {
+                    $user->status = 'inactive';
+                    $user->save();
+                    Auth::logout();
+
+                    //expiry message
+                    return response()->json(
+                        ['error' => 'Your account has expired, Please contact the admin for more inforamtion'],
+                        Response::HTTP_UNAUTHORIZED
+                    );
                 }
-                else{
-                    if($user->expiry_date < Carbon::now()){
-                        $user->status = 'inactive';
-                        $user->save();
-                        Auth::logout();
+                if (!is_null($user->starting_date) && $user->starting_date < Carbon::now()) {
+                    $isStarted = true;
+                }
+                if (!is_null($user->expiry_date) && $user->expiry_date < Carbon::now()) {
+                    $isExpired = true;
+                }
+                if ($user->status == 'active') {
+                    $isActive = true;
+                }
+                if ($isStarted && $isActive && !$isExpired) {
 
-                        //expiry message
-                        return response()->json(['error' => 'Your account has expired, Please contact the admin for more inforamtion'],
-                        Response::HTTP_UNAUTHORIZED);
-                    }
-                    if(!is_null($user->starting_date) && $user->starting_date < Carbon::now()){
-                        $isStarted = true;
-                    }
-                    if(!is_null($user->expiry_date) && $user->expiry_date < Carbon::now()){
-                        $isExpired = true;
-                    }
-                    if($user->status == 'active'){
-                        $isActive = true;
-                    }
-                    if($isStarted && $isActive && !$isExpired){
-
-                        //redirect to the users dashboard
-                        return redirect()->route('users.dashboard');
-                    }
-                    else{
-                        //this will logout the user and redirect 
-                        Auth::logout();
-                        return response()->json(['error' => 'You are not allowed to login, Please contact the admin for more inforamtion'], 403);
-                    }
+                    //redirect to the users dashboard
+                    return redirect()->route('users.dashboard');
+                } else {
+                    //this will logout the user and redirect 
+                    Auth::logout();
+                    return response()->json(['error' => 'You are not allowed to login, Please contact the admin for more inforamtion'], 403);
                 }
             }
-
-            throw new \Exception('Invalid credentials');
-        }
-        catch(\Exception $ex)
-        {
-            return redirect()->route('show.login')->with('invalid', $ex->getMessage());
         }
 
+        // return back()->with(['invalid' => 'Invalid Login Credentials.']);
+
+        throw ValidationException::withMessages([
+            'invalid' => 'Invalid login credentials.'
+        ]);
     }
 
     public function logout(Request $request)
-    {   
+    {
         $user = Auth::user();
-        
-        
+
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         //redirect()->route('login');
-        
-        if($user->role == 'admin'){
+
+        if ($user->role == 'admin') {
             Auth::logout();
-            return redirect()->route('show.login');
-        }
-        else{
+            return redirect()->route('show.admin.login');
+        } else {
             Auth::logout();
             return redirect()->route('show.login');
         }
@@ -170,25 +166,23 @@ class AuthController extends Controller
     public function resetPassword(Request $request, EmailController $emailController)
     {
         //email verification
-        $data =$request->validate([
+        $data = $request->validate([
             'email' => 'required|string|email',
         ]);
         //dd($data);
-        
+
         //validation here
         $user = User::where('email', $request->email)->first();
 
         //get the class of the Auth
         $authenticatedUser = Auth::class;
 
-        if(!$user){
+        if (!$user) {
             return back()->with('invalid', 'Email not found');
         }
 
-        if($authenticatedUser::check())
-        {
-            if($user->email != $authenticatedUser::user()->email)
-            {
+        if ($authenticatedUser::check()) {
+            if ($user->email != $authenticatedUser::user()->email) {
                 return back()->with('invalid', 'Email does not matched!');
             }
         }
@@ -199,5 +193,5 @@ class AuthController extends Controller
         //return the success response
         return back()->with('success', 'Password reset successfully');
     }
-    
+
 }

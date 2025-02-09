@@ -15,9 +15,13 @@ Route::get('/login', function () {
     return view('auth.login');
 })->name('show.login');
 
-// Route::get('/reset-password', function () {
-//     return view('auth.reset-password');
-// })->name('show.reset-password');
+Route::get('/admin/login', function () {
+    return view('auth.login');
+})->name('show.admin.login');
+
+Route::get('/test', function () {
+    return view('test');
+})->name('test');
 
 // Route::get('/dashboard', function () {
 //     return view('users.dashboard');
@@ -27,9 +31,7 @@ Route::get('/login', function () {
 //     return view('users.settings');
 // })->name('show.users-settings');
 
-// Route::get('/admin/login', function () {
-//     return view('auth.login');
-// })->name('show.admin-login');
+
 
 // Route::get('/admin/dashboard', function () {
 //     return view('admin.dashboard');
@@ -43,13 +45,14 @@ Route::middleware('guest')->group(function () {
     //login page transition
     //Route::get('/login', [AuthController::class, 'showLogin'])->name('show.login');
     //login admin login page transition
-    //Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('show.admin.login');
+    Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('show.admin.login');
     //register page transition
     Route::get('/register', [AuthController::class, 'showRegister'])->name('show.register');
 
     //login post method
-    Route::post('/login', [AuthController::class, 'login'])->name('login');    
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login');
 });
 
 //register post method
@@ -58,10 +61,10 @@ Route::middleware('auth')->group(function () {
 
     //user dashboard
     Route::get('/dashboard', [UserController::class, 'showDashboard'])->name('users.dashboard');
-    
+
     //user settings
     Route::get('/settings', [UserController::class, 'showSettings'])->name('users.settings');
-    
+
     Route::get('/admin/dashboard', [UserController::class, 'showDashboard'])->name('admin.dashboard');
 
     //user index page
@@ -79,30 +82,30 @@ Route::middleware('auth')->group(function () {
 
     //admin history
     Route::get('/admin/history', [UserController::class, 'showAdminHistory'])->name('admin.histories');
-    
+
     //admin profile
     Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('user.profile');
-    
+
     //admin profile
     Route::get('/admin/profile/{id}', [UserController::class, 'showProfile'])->name('admin.user.profile');
-    
+
     //admin dtr page
     Route::get('/admin/dtr', [UserController::class, 'showAdminDTR'])->name('admin.user.dtr');
-    
+
     //dtr page
     Route::get('/dtr', [UserController::class, 'showDTR'])->name('user.dtr');
-    
+
     //admin history post method
     Route::post('/history', [UserController::class, 'AdminScannerTimeCheck'])->name('admin.history.time.check');
-    
+
     //logout post method
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     //update user post method
     Route::put('/update', [UserController::class, 'update'])->name('users.settings.update');
-    
+
     //gdrive test api page
-    Route::get('/apiTest', function(){
+    Route::get('/apiTest', function () {
         return view('gdrive.files');
     });
 });

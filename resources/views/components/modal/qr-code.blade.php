@@ -34,9 +34,9 @@
                     <x-button tertiary label="Download QR" leftIcon="material-symbols--download-rounded"
                         class="text-sm px-8" id="download-qr-large-btn"/>
                          --}}
-                    <button label="download QR" id="download-qr-large-btn" 
-                    class='px-16 py-3 border rounded-full text-custom-orange hover:border-custom-orange animate-transition flex items-center justify-center gap-2'>
-                        <i class="material-symbols--download-rounded">download</i>    
+                    <button label="download QR" id="download-qr-large-btn"
+                        class='px-16 py-3 border rounded-full text-custom-orange hover:border-custom-orange animate-transition flex items-center justify-center gap-2'>
+                        <i class="material-symbols--download-rounded">download</i>
                         Download QR
                     </button>
                 </div>
@@ -50,14 +50,14 @@
 --}}
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
 
         // Add event listener to download QR image
-        document.getElementById("download-qr-large-btn").addEventListener("click", function () {
-        
+        document.getElementById("download-qr-large-btn").addEventListener("click", function() {
+
             const qrCanvas = document.getElementById("large-qr-code-img").querySelector("canvas");
             if (qrCanvas) {
-                
+
                 // Get the image data URL (base64 format)
                 const qrImage = qrCanvas.toDataURL("image/png");
 
@@ -67,7 +67,8 @@
                 downloadLink.download = "QR_Code.png"; // Set the default filename for download
                 document.body.appendChild(downloadLink);
                 downloadLink.click(); // Trigger the download
-                document.body.removeChild(downloadLink); // Clean up the link after triggering the download
+                document.body.removeChild(
+                    downloadLink); // Clean up the link after triggering the download
             } else {
                 console.error("QR code not found in the container!");
             }
