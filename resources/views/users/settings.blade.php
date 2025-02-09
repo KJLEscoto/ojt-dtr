@@ -4,8 +4,7 @@
 <x-main-layout>
     <div class="container mx-auto max-w-screen-xl">
         <main class="px-20 py-20 min-h-screen w-full relative">
-            <x-form.container routeName="reset-password" className="grid grid-cols-12 gap-10 w-full h-full">
-
+            <x-form.container routeName="users.settings.update" method="PUT" className="grid grid-cols-12 gap-10 w-full h-full">
                 <!-- Profile Section -->
                 <div class="col-span-4 h-full w-full">
                     <section
@@ -24,7 +23,7 @@
 
                             <!-- Actions -->
                             <section class="flex flex-col items-center gap-5">
-                                <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" />
+                                <x-button primary label="Save Changes" submit leftIcon="eva--save-outline"></x-button>
                                 <button type="button" data-pd-overlay="#forgot-password-modal"
                                     data-modal-target="forgot-password-modal" data-modal-toggle="forgot-password-modal"
                                     class="modal-button font-bold hover:text-custom-orange cursor-pointer">Click

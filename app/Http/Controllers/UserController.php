@@ -331,8 +331,9 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        dd($request->all());
         $user = User::find($id);
         $user->update($request->all());
         return redirect()->route('users.profile.index');

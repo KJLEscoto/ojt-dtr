@@ -99,7 +99,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     //update user post method
-    Route::put('/update/{id}', [UserController::class, 'update'])->name('users.profile.update');
+    Route::put('/update', [UserController::class, 'update'])->name('users.settings.update');
     
     //gdrive test api page
     Route::get('/apiTest', function(){

@@ -4,7 +4,11 @@
 
 <main class="container mx-auto max-w-screen-xl">
     <x-main-layout>
-        <x-form.container routeName="show.reset-password" method="POST" className="space-y-10 w-1/3">
+        @php
+            $token = request()->query('token');
+            $email = request()->query('email');
+        @endphp
+        <x-form.container routeName="reset-password-validation" method="POST" className="space-y-10 w-1/3">
             <x-logo />
 
             <div class="flex justify-center">
@@ -15,8 +19,12 @@
                 <x-form.input label="New Password" name_id="password" type="password" big placeholder="••••••••" />
                 <x-form.input label="Confirm Password" name_id="password_confirmation" type="password" big
                     placeholder="••••••••" />
+                <x-form.input name_id="token" type="text" hidden
+                    value="{{$token}}" />
+                <x-form.input name_id="email" type="text" hidden
+                    value="{{$email}}" />
                 <div class="flex justify-end">
-                    <x-button primary button openModal="confirmation-update-password-modal" className="modal-button"
+                    <x-button primary submit openModal="confirmation-update-password-modal" className="modal-button"
                         label="Update Password" />
                 </div>
             </div>

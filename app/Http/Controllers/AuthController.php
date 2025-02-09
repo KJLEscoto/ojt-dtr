@@ -178,14 +178,25 @@ class AuthController extends Controller
         //validation here
         $user = User::where('email', $request->email)->first();
 
+        //get the class of the Auth
+        $authenticatedUser = Auth::class;
+
         if(!$user){
             return back()->with('invalid', 'Email not found');
         }
 
-        dd($user->email);
+        if($authenticatedUser::check())
+        {
+            if($user->email != $authenticatedUser::user()->email)
+            {
+                return back()->with('invalid', 'Email does not matched!');
+            }
+        }
 
+        //send the reset password link to the email
         $resetPassword = $emailController->EmailResetPassword($user);
 
+        //return the success response
         return back()->with('success', 'Password reset successfully');
     }
     

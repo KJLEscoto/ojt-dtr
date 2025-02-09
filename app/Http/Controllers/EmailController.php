@@ -73,7 +73,7 @@ class EmailController extends Controller
 
         //get the email from the request
         $email = $request->email;
-        $token = $request->register_token;
+        $token = $request->token;
 
         //check if the token is valid
         $DBtoken = DB::table('password_reset_tokens')->where('email', $email)->first();
