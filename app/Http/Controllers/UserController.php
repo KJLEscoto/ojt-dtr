@@ -333,10 +333,17 @@ class UserController extends Controller
 
     public function update(Request $request)
     {
-        dd($request->all());
-        $user = User::find($id);
-        $user->update($request->all());
-        return redirect()->route('users.profile.index');
+        $user = User::where('id', $request->user_id)->first();
+        
+        if(is_null($user)){
+            return back()->with('invalid', 'The inpud is invalid please try again!');
+        }
+
+        // Exclude user_id from the request data
+        $data = $request->except('user_id');
+
+        $user->update($data);
+        return back()->with('success', 'The information update has been successful!');
     }
 
     public function destroy($id)
