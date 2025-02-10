@@ -75,16 +75,16 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(Request $request, HistoryController $historyController, UserController $userController)
     {
         //dd($request->all());
+
         $data = $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
-        ]);
+        ]);        
 
-        if (Auth::attempt($data)) {
-
+            if (Auth::attempt($data)) {
 
             //session regenerate
             $request->session()->regenerate();
@@ -98,8 +98,20 @@ class AuthController extends Controller
             $isStarted = false;
 
             if ($user->role == 'admin') {
-                return redirect()->route('admin.dashboard');
+                if($request->type === 'user')
+                {
+                    Auth::logout();
+                    return back()->with('invalid', 'This user does not belong here');
+                }
+
+                $userController->showAdminScanner();
+                
             } else {
+                if($request->type === 'admin')
+                {
+                    Auth::logout();
+                    return back()->with('invalid', 'This user does not belong here');
+                }
                 if ($user->expiry_date < Carbon::now()) {
                     $user->status = 'inactive';
                     $user->save();

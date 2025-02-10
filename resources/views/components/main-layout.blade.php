@@ -70,7 +70,6 @@
                     <x-form.option imgPath="/resources/img/login.png" title="New Intern?" routePath="show.register"
                         desc="Sign up to keep track of your daily attendance." btnLabel="Register" />
                 @endif
-
             </div>
         </main>
 
@@ -109,51 +108,7 @@
 
         {{-- admin layout --}}
     @elseif (Request::routeIs('admin.dashboard*'))
-        <!-- Sidebar (Fixed & on the Left) -->
-        {{-- <aside
-                class="fixed left-0 top-0 h-full border-r shadow-xl py-10 gap-10 flex flex-col justify-between bg-white z-20 w-1/4">
-                <section class="space-y-10">
-                    <!-- Logo -->
-                    <div class="flex justify-start items-center px-10">
-                        <x-logo />
-                    </div>
-
-                    <!-- Navigation -->
-                    <div>
-                        <section
-                            class="flex items-center gap-2 px-10 py-5 border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer">
-                            <span class="akar-icons--dashboard"></span>
-                            <p>Dashboard</p>
-                        </section>
-                        <section
-                            class="flex items-center gap-2 px-10 py-5 border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                            <span class="material-symbols--history-rounded w-6 h-6"></span>
-                            <p>History</p>
-                        </section>
-                        <section
-                            class="flex items-center gap-2 px-10 py-5 border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                            <span class="tabler--school"></span>
-                            <p>Schools</p>
-                        </section>
-                        <section
-                            class="flex items-center gap-2 px-10 py-5 border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                            <span class="cuida--user-outline"></span>
-                            <p>Profile</p>
-                        </section>
-                    </div>
-                </section>
-
-                <!-- Logout Button -->
-                <section class="px-10 w-full flex justify-center">
-                    <x-button primary button label="Logout" leftIcon="material-symbols--logout-rounded"
-                        className="w-full" />
-                </section>
-            </aside>
-
-            <div class="fixed right-0 top-0 w-3/4 p-10 bg-white overflow-y-auto h-screen">
-                {{ $slot }}
-            </div> --}}
-
+        @props(['array_daily' => '', 'ranking' => ''])
         <!-- Navbar (Sticky at the Top) -->
         <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
             <div class="flex justify-between items-center px-10 py-4">
@@ -162,7 +117,7 @@
                 </button>
                 <x-logo />
                 <div class="flex items-center gap-2">
-                    <p class="lg:block hidden">Hi, Admin Name!</p>
+                    <p class="lg:block hidden">Hi, {{Auth::user()->firstname}}</p>
                     <button type="button" class="">
                     </button>
                     <div class="dropdown relative inline-flex">
@@ -258,7 +213,7 @@
             </aside>
 
             <!-- Main Content (Auto Scroll) -->
-            <main class="md:col-span-6 col-span-full overflow-auto p-10 h-[calc(100vh-6rem)]">
+            <main class="md:col-span-6 col-span-full overflow-auto p-10 h-[calc(100vh-6rem)] bg-gray-100">
                 {{ $slot }}
             </main>
 
@@ -267,7 +222,7 @@
                 class="hidden md:block md:col-span-4 bg-gradient-to-r from-custom-orange via-custom-orange/90 to-custom-red shadow-md sticky h-[calc(100vh-6rem)] top-20 p-10 overflow-auto">
                 <div class="w-full h-auto space-y-10">
                     <section class="w-full h-fit">
-                        <div class="p-5 rounded-xl border border-gray-200 bg-white h-full w-full space-y-5">
+                        <div class="p-5 rounded-xl border border-gray-200 bg-white h-auto w-full space-y-5">
                             <section class="flex gap-2 items-start text-custom-red">
                                 <span class="hugeicons--champion"></span>
                                 <div class="flex items-end justify-between w-full">
@@ -277,19 +232,19 @@
                             </section>
 
                             <!--HTML CODE-->
-                            <div class="w-full relative h-full">
+                            <div class="w-full relative h-fit">
                                 <div class="swiper progress-slide-carousel swiper-container relative">
                                     <div class="swiper-wrapper">
-                                        @for ($i = 1; $i <= 3; $i++)
+                                        @foreach ($ranking as $user)
                                             <div class="swiper-slide">
                                                 <div
                                                     class="bg-custom-orange/5 rounded-md py-10 h-full flex justify-center items-center">
                                                     <span class="text-xl font-semibold text-custom-red">
-                                                        Intern {{ $i }}
+                                                        Intern {{ $user['name'] }} {{$user['hours_worked']}} Hours
                                                     </span>
                                                 </div>
                                             </div>
-                                        @endfor
+                                        @endforeach
                                     </div>
                                     <div
                                         class="swiper-pagination !bottom-5 !top-auto !w-80 right-0 mx-auto bg-gray-100">
@@ -300,38 +255,44 @@
                     </section>
                     <section
                         class="p-5 w-full border bg-white border-gray-200 rounded-xl h-[500px] overflow-hidden space-y-5">
-                        <div class="flex items-center gap-2 text-custom-red font-semibold">
+                        <div class="flex items-end gap-2 text-custom-red justify-between w-full font-semibold">
+                            <div class="flex items-start gap-2">
                             <span class="material-symbols--co-present-outline"></span>
                             <p class="font-semibold text-lg">Daily Attendance</p>
+                            </div>
+                            
+                            @foreach ($array_daily as $daily)
+                            <p>{{$daily['datetime']}}</p>
+                            @break
+                            @endforeach
                         </div>
                         <div
-                            class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md cursor-pointer relative">
-                            @for ($i = 1; $i <= 12; $i++)
-                                <div class="relative group w-auto even:bg-custom-orange/5">
-                                    <section class="px-7 py-5 w-full flex justify-between items-center">
+                            class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
+                            @foreach ($array_daily as $daily)
+                                    <section class="px-7 py-5 w-full flex justify-between even:bg-custom-orange/5 bg-white items-center">
                                         <div class="flex items-center gap-5">
                                             <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                                 path="resources/img/default-male.png" />
 
                                             <div>
-                                                <section class="font-bold text-black text-lg">8:00 am</section>
-                                                <p class="text-sm font-medium text-gray-700">Feb 1, 2025</p>
+                                                <section class="font-bold text-black text-lg">{{$daily['timeFormat']}}</section>
+                                                <p class="text-sm font-medium text-gray-700">{{$daily['name']}}</p>
                                             </div>
                                         </div>
 
-                                        <div class="text-green-500 flex items-center gap-1 select-none">
-                                            <span class="lets-icons--in"></span>
-                                            <p>Time in</p>
-                                        </div>
+                                        @if ($daily['description'] === 'time in')
+                                            <div class="text-green-500 flex items-center gap-1 select-none">
+                                                <span class="lets-icons--in"></span>
+                                                <p>Time in</p>
+                                            </div>
+                                        @else
+                                            <div class="text-red-500 flex items-center gap-1 select-none">
+                                                <span class="lets-icons--out"></span>
+                                                <p>Time out</p>
+                                            </div>
+                                        @endif
                                     </section>
-
-                                    <!-- Tooltip Positioned on Top Center (Fixed) -->
-                                    <div class="hidden group-hover:flex absolute left-1/2 -translate-x-1/3 top-5 w-[150px] bg-white shadow-md p-3 rounded-md z-30 border flex-col text-center border-custom-orange"
-                                        style="pointer-events: none;">
-                                        <p class="font-semibold text-black w-full truncate">Full Name</p>
-                                    </div>
-                                </div>
-                            @endfor
+                            @endforeach
                         </div>
                     </section>
                 </div>

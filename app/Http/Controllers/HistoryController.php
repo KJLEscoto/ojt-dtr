@@ -35,8 +35,8 @@ class HistoryController extends Controller
 
     public function TotalRegister()
     {
-        $history = User::count();
-        return $history;
+        $user = User::count();  
+        return $user;
     }
 
     public function TotalHours()
@@ -105,6 +105,53 @@ class HistoryController extends Controller
         }
 
         return $totalHoursWork;
+    }
 
+    public function AllUserDailyAttendance()
+    {
+        try {
+
+            $Today = Carbon::now()->toDateString(); // Gets today's date (YYYY-MM-DD)
+
+            $DailyAttendance = Histories::whereDate('datetime', $Today)->orderBy('datetime', 'desc')->get()->map(function ($daily){
+                return [
+                    'name' => User::where('id', $daily->user_id)->first()->firstname,   
+                    'description' => $daily->description,
+                    'datetime' => Carbon::parse($daily->datetime)->format('F j, Y'),
+                    'timeFormat' => Carbon::parse($daily->datetime)->format('g:i A'),
+                ];
+            })->toArray();
+
+            return $DailyAttendance;
+        }
+        catch(\Exception $ex)
+        {
+            return back()->with('invalid', $ex->getMessage());
+        }
+    }
+
+    public function AllMonthlyUsers()
+    {
+        try {
+            $month = Carbon::now()->toDateString();
+
+            $users = User::whereDate('created_at', $month)
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(function ($user) {
+                    return [
+                        'fullname' => $user->firstname . ' ' . substr($user->middlename, 0, 1). '. ' . $user->lastname,
+                        'ago' => Carbon::parse($user->created_at)->diffForHumans(), // Shows time difference in human-readable format
+                    ];
+                });
+
+            return $users;
+
+            //fullname, 
+        }
+        catch(\Exception $ex)
+        {
+            return back()->with('invalid', $ex->getMessage());
+        }
     }
 }

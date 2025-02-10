@@ -1,5 +1,11 @@
 @props(['id' => ''])
 
+<!-- HTML5 QR Code Scanner -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<!-- Camera -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
+
 {{-- large qr code --}}
 <div id="{{ $id }}" class="pd-overlay hidden">
     <div
@@ -14,6 +20,8 @@
                     <div
                         class="h-[550px] w-[550px] p-5 overflow-hiddem object-center border bg-white rounded-xl border-black">
                         <p class="text-center font-bold">CAMERA HERE</p>
+                        <!-- Scanner Section -->
+                        <div id="reader" class="mt-8 w-full max-w-xl mx-auto"></div>
                     </div>
                     <p class="text-sm text-gray-600">Position the QR code within the frame to scan.</p>
                     <x-button primary label="STOP SCANNING" leftIcon="mdi--video-off"
@@ -23,3 +31,55 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Initialize QR Scanner
+    function initScanner() {
+            const scanner = new Html5QrcodeScanner('reader', {
+                qrbox: { width: 250, height: 250 },
+                fps: 10
+            });
+            
+            scanner.render(onScanSuccess, onScanError);
+        }
+
+    async function onScanSuccess(decodedText) {
+        try {
+            //modal
+            
+            const response = await axios.get(`/scanner/${decodedText}`);
+            console.log(response); // Access 'valid' from response data
+            alert(response.data.user.firstname);
+            
+            // ✅ Update HTML content dynamically
+            const text = document.getElementById("qrText").value = response.data.user.qr_code;
+            const firstName = document.getElementById("firstName").innerHTML = response.data.user.firstname;
+            const lastName = document.getElementById("lastName").innerHTML = response.data.user.lastname;
+            const email = document.getElementById("email").innerHTML = response.data.user.email;
+            const phone = document.getElementById("phone").innerHTML = response.data.user.phone;
+            const studentNo = document.getElementById("studentNo").innerHTML = response.data.user.student_no;
+            // Clear previous QR code
+            document.getElementById('qrcode').innerHTML = '';
+
+            // Create QR code
+            const qr = new QRCode(document.getElementById("qrcode"), {
+                text: text,
+                width: document.getElementById('qrcode').clientWidth,
+                height: document.getElementById('qrcode').clientHeight,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+        function onScanError(error) {
+            console.warn('QR Scan error:', error);
+        }
+
+        // Initialize scanner when page loads
+        document.addEventListener('DOMContentLoaded', initScanner);
+</script>

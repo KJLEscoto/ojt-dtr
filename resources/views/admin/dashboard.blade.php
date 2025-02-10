@@ -1,7 +1,7 @@
 {{-- scanner modal --}}
 <x-modal.scanner id="scanner-modal" />
 
-<x-main-layout>
+<x-main-layout :array_daily="$array_daily" :ranking="$ranking">
     <main class="container mx-auto max-w-screen-xl">
         <div class="flex flex-col gap-10 w-full h-auto">
 
@@ -9,13 +9,12 @@
                 <x-button primary label="Open QR Scanner" button openModal="scanner-modal"
                     leftIcon="iconamoon--scanner-fill" className="px-7 modal-button" />
             </div>
-
             @php
                 $totals = [
-                    ['label' => 'Total Scans', 'number' => rand(20, 40)],
-                    ['label' => 'Time In', 'number' => rand(20, 40)],
-                    ['label' => 'Time Out', 'number' => rand(20, 40)],
-                    ['label' => 'Registered Users', 'number' => rand(20, 40)],
+                    ['label' => 'Total Scans', 'number' => $totalScans],
+                    ['label' => 'Time In', 'number' => $totalTimeIn],
+                    ['label' => 'Time Out', 'number' => $totalTimeOut],
+                    ['label' => 'Total Registered', 'number' => $totalRegister]
                 ];
             @endphp
 
@@ -35,16 +34,16 @@
                         <p class="font-semibold text-lg">Recently Added Users</p>
                     </div>
                     <div class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
-                        @for ($i = 1; $i <= 12; $i++)
+                        @foreach ($recentlyAddedUser as $user)
                             <section class="px-7 py-5 w-full flex justify-between items-center even:bg-custom-orange/5">
                                 <div class="flex items-center gap-5">
                                     <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                         path="resources/img/default-male.png" />
-                                    <h1 class="font-semibold">Full Name</h1>
+                                    <h1 class="font-semibold">{{$user['fullname']}}</h1>
                                 </div>
-                                <p>1 min ago</p>
+                                <p>{{$user['ago']}}</p>
                             </section>
-                        @endfor
+                        @endforeach
                     </div>
                 </section>
             </div>
