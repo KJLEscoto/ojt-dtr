@@ -220,7 +220,7 @@ class UserController extends Controller
         return view('admin.users', compact('users'));
     }
 
-    public function showDashboard()
+    public function showDashboard(RankingController $rankingController)
     {
         $users = Auth::user();
 
@@ -233,6 +233,7 @@ class UserController extends Controller
         //convert all the dateitme details
         $histories = $users->history()->latest()->get()->map(function ($history) {
             return [
+                'user' => $history->firstname . ' ' . $history->lastname,
                 'description' => $history->description,
                 'datetime' => Carbon::parse($history->datetime)->format('F j, Y'),
                 'timeFormat' => Carbon::parse($history->datetime)->format('g:i A'),
@@ -244,8 +245,10 @@ class UserController extends Controller
         $totalTimeIn = $history->UserTotalTimeIn();
         $totalTimeOut = $history->UserTotalTimeOut();
         $totalRegister = $history->UserTotalRegister();
+        $dailyAttendance = $history->AllUserDailyAttendance();
 
-        //dd($histories);
+        //ranking controller
+        $userRanking = $rankingController->getRankings();
 
         return view('users.dashboard', [
             'user' => $users,
@@ -255,6 +258,7 @@ class UserController extends Controller
             'totalTimeOut' => $totalTimeOut,
             'totalRegister' => $totalRegister,
             'histories' => $histories,
+            'array_daily' => $dailyAttendance,
         ]);
     }
 
@@ -268,15 +272,16 @@ class UserController extends Controller
         $users = User::get();
 
         $rankingController = new RankingController();
-        $groupedData = $rankingController->getRankings();
+        $ranking = $rankingController->getRankings();
 
-        //dd($histories);
-
+        
         $history = new HistoryController();
         $totalScan = $history->TotalScan();
         $totalTimeIn = $history->TotalTimeIn();
         $totalTimeOut = $history->TotalTimeOut();
         $totalRegister = $history->TotalRegister();
+        $dailyAttendance = $history->AllUserDailyAttendance();
+        $recentlyAddedUser = $history->AllMonthlyUsers();
 
         return view('admin.dashboard', [
             'user' => $users,
@@ -284,8 +289,10 @@ class UserController extends Controller
             'totalTimeIn' => $totalTimeIn,
             'totalTimeOut' => $totalTimeOut,
             'totalRegister' => $totalRegister,
+            'array_daily' => $dailyAttendance,
             'histories' => $histories,
-            'groupedData' => $groupedData,
+            'ranking' => $ranking,
+            'recentlyAddedUser' => $recentlyAddedUser,
         ]);
     }
 

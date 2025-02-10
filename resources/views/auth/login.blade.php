@@ -22,6 +22,7 @@
                     <div class="space-y-7">
                         <x-form.input label="Email" name_id="email" type="email" big placeholder="admin@email.com" />
                         <x-form.input label="Password" name_id="password" type="password" big placeholder="••••••••" />
+                        <x-form.input name_id="type" type="password" hidden big placeholder="••••••••" value="admin" />
                         <x-button primary submit label="Login" className="w-full" />
                     </div>
                 </x-form.container>
@@ -63,6 +64,7 @@
                 {{-- password --}}
                 <x-form.input label="Password" classLabel="font-medium text-2xl" name_id="password"
                     placeholder="••••••••" type="password" labelClass="text-xl font-medium" big />
+                <x-form.input name_id="type" type="password" hidden big placeholder="••••••••" value="user" />
                 {{-- forgot password --}}
                 <section class="flex items-center gap-1">
                     <p>Forgot Password?</p>

@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             'address' => 'Test Address',
             'school' => 'Test School',
             'student_no' => '1234567890',
-            'starting_date' => '2024-01-01',
+            'starting_date' => Carbon::now(),
             'emergency_contact_fullname' => 'Test Emergency',
             'emergency_contact_number' => '09123456789',
             'emergency_contact_address' => 'Test Emergency Address',
