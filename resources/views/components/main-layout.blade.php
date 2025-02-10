@@ -223,10 +223,10 @@
             </nav>
         </aside>
 
-        <div class="mt-24 h-[calc(100vh-6rem)] w-full grid grid-cols-12">
+        <div class="mt-24 h-[calc(100vh-6rem)] w-full grid lg:grid-cols-12 grid-cols-10">
             <!-- Left Sidebar (Sticky on Large Screens) -->
             <aside
-                class="hidden lg:block lg:col-span-2 bg-white shadow-xl sticky top-20 h-[calc(100vh-6rem)] overflow-auto py-5">
+                class="hidden lg:block md:col-span-2 bg-white shadow-xl sticky top-20 h-[calc(100vh-6rem)] overflow-auto py-5">
                 <!-- Navigation -->
                 <nav>
                     <section
@@ -258,13 +258,13 @@
             </aside>
 
             <!-- Main Content (Auto Scroll) -->
-            <main class="col-span-12 lg:col-span-7 md:col-span-6 overflow-auto p-10 h-[calc(100vh-6rem)]">
+            <main class="md:col-span-6 col-span-full overflow-auto p-10 h-[calc(100vh-6rem)]">
                 {{ $slot }}
             </main>
 
             <!-- Right Sidebar (Sticky on Large Screens) -->
             <aside
-                class="hidden md:block lg:col-span-3 md:col-span-6 bg-gradient-to-r from-custom-orange via-custom-orange/90 to-custom-red shadow-md sticky h-[calc(100vh-6rem)] top-20 p-10 overflow-auto">
+                class="hidden md:block md:col-span-4 bg-gradient-to-r from-custom-orange via-custom-orange/90 to-custom-red shadow-md sticky h-[calc(100vh-6rem)] top-20 p-10 overflow-auto">
                 <div class="w-full h-auto space-y-10">
                     <section class="w-full h-fit">
                         <div class="p-5 rounded-xl border border-gray-200 bg-white h-full w-full space-y-5">
