@@ -4,6 +4,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\RankingController;
 
 
 
@@ -11,17 +13,9 @@ use Illuminate\Support\Facades\Route;
 //     return view('auth.register');
 // })->name('show.register');
 
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('show.login');
-
-Route::get('/admin/login', function () {
-    return view('auth.login');
-})->name('show.admin.login');
-
-Route::get('/test', function () {
-    return view('test');
-})->name('test');
+// Route::get('/test', function () {
+//     return view('test');
+// })->name('test');
 
 // Route::get('/dashboard', function () {
 //     return view('users.dashboard');
@@ -45,7 +39,7 @@ Route::middleware('guest')->group(function () {
     //login page transition
     //Route::get('/login', [AuthController::class, 'showLogin'])->name('show.login');
     //login admin login page transition
-    Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('show.admin.login');
+    //Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('show.admin.login');
     //register page transition
     Route::get('/register', [AuthController::class, 'showRegister'])->name('show.register');
 
@@ -60,12 +54,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
 
     //user dashboard
-    Route::get('/dashboard', [UserController::class, 'showDashboard'])->name('users.dashboard');
+    Route::get('/dashboard', [UserController::class, 'showUserDashboard'])->name('users.dashboard');
 
     //user settings
     Route::get('/settings', [UserController::class, 'showSettings'])->name('users.settings');
 
-    Route::get('/admin/dashboard', [UserController::class, 'showDashboard'])->name('admin.dashboard');
+   Route::get('/admin/dashboard', [UserController::class, 'showAdminDashboard'])->name('admin.dashboard');
 
     //user index page
     Route::get('/users', [UserController::class, 'index'])->name('users.profile.index');
@@ -117,3 +111,11 @@ Route::get('/reset-password', [AuthController::class, 'showResetPassword'])->nam
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
 //reset-password-validation post method
 Route::post('/reset-password-validation', [EmailController::class, 'EmailResetPasswordValidation'])->name('reset-password-validation');
+
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('show.login');
+
+Route::get('/admin/login', function () {
+    return view('auth.login');
+})->name('show.admin.login');

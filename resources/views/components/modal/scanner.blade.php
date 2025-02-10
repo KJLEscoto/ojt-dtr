@@ -24,62 +24,10 @@
                         <div id="reader" class="mt-8 w-full max-w-xl mx-auto"></div>
                     </div>
                     <p class="text-sm text-gray-600">Position the QR code within the frame to scan.</p>
-                    <x-button primary label="STOP SCANNING" leftIcon="mdi--video-off"
-                        className="text-sm px-8 close-modal-button" closeModal="{{ $id }}" />
+                    <x-button primary label="HIDE SCANNER" leftIcon="mdi--video-off"
+                        className="text-sm px-8 close-modal-button" id="closeButton" closeModal="{{ $id }}" />
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-    // Initialize QR Scanner
-    function initScanner() {
-            const scanner = new Html5QrcodeScanner('reader', {
-                qrbox: { width: 250, height: 250 },
-                fps: 10
-            });
-            
-            scanner.render(onScanSuccess, onScanError);
-        }
-
-    async function onScanSuccess(decodedText) {
-        try {
-            //modal
-            
-            const response = await axios.get(`/scanner/${decodedText}`);
-            console.log(response); // Access 'valid' from response data
-            alert(response.data.user.firstname);
-            
-            // ✅ Update HTML content dynamically
-            const text = document.getElementById("qrText").value = response.data.user.qr_code;
-            const firstName = document.getElementById("firstName").innerHTML = response.data.user.firstname;
-            const lastName = document.getElementById("lastName").innerHTML = response.data.user.lastname;
-            const email = document.getElementById("email").innerHTML = response.data.user.email;
-            const phone = document.getElementById("phone").innerHTML = response.data.user.phone;
-            const studentNo = document.getElementById("studentNo").innerHTML = response.data.user.student_no;
-            // Clear previous QR code
-            document.getElementById('qrcode').innerHTML = '';
-
-            // Create QR code
-            const qr = new QRCode(document.getElementById("qrcode"), {
-                text: text,
-                width: document.getElementById('qrcode').clientWidth,
-                height: document.getElementById('qrcode').clientHeight,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
-            });
-
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    }
-
-        function onScanError(error) {
-            console.warn('QR Scan error:', error);
-        }
-
-        // Initialize scanner when page loads
-        document.addEventListener('DOMContentLoaded', initScanner);
-</script>
