@@ -111,10 +111,10 @@ class AuthController extends Controller
                         return response()->json(['error' => 'Your account has expired, Please contact the admin for more inforamtion'],
                         Response::HTTP_UNAUTHORIZED);
                     }
-                    if(!is_null($user->starting_date) && $user->starting_date < Carbon::now()){
+                    if(!is_null($user->starting_date) && $user->starting_date <= Carbon::now()){
                         $isStarted = true;
                     }
-                    if(!is_null($user->expiry_date) && $user->expiry_date < Carbon::now()){
+                    if(!is_null($user->expiry_date) && $user->expiry_date <= Carbon::now()){
                         $isExpired = true;
                     }
                     if($user->status == 'active'){
