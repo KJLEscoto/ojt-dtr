@@ -1,6 +1,11 @@
 {{-- scanner modal --}}
 <x-modal.scanner id="scanner-modal" />
 
+{{-- time in modal --}}
+<span class="hidden" name="time-in-time-out">
+    <x-modal.time-in-time-out-modal id="time-in-time-out-modal" />
+</span>
+
 <x-main-layout :array_daily="$array_daily" :ranking="$ranking">
     <main class="container mx-auto max-w-screen-xl">
         <div class="flex flex-col gap-10 w-full h-auto">
@@ -14,7 +19,7 @@
                     ['label' => 'Total Scans', 'number' => $totalScans],
                     ['label' => 'Time In', 'number' => $totalTimeIn],
                     ['label' => 'Time Out', 'number' => $totalTimeOut],
-                    ['label' => 'Total Registered', 'number' => $totalRegister]
+                    ['label' => 'Total Registered', 'number' => $totalRegister],
                 ];
             @endphp
 
@@ -39,9 +44,9 @@
                                 <div class="flex items-center gap-5">
                                     <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                         path="resources/img/default-male.png" />
-                                    <h1 class="font-semibold">{{$user['fullname']}}</h1>
+                                    <h1 class="font-semibold">{{ $user['fullname'] }}</h1>
                                 </div>
-                                <p>{{$user['ago']}}</p>
+                                <p>{{ $user['ago'] }}</p>
                             </section>
                         @endforeach
                     </div>

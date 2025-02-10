@@ -26,6 +26,11 @@
                     <p class="text-sm text-gray-600">Position the QR code within the frame to scan.</p>
                     <x-button primary label="STOP SCANNING" leftIcon="mdi--video-off"
                         className="text-sm px-8 close-modal-button" closeModal="{{ $id }}" />
+                    <button class="hidden" id="">
+                        click time in / time out
+                    </button>
+                    <x-button tertiary label="time in / time out" openModal="time-in-time-out-modal"
+                        className="modal-button" />
                 </div>
             </div>
         </div>
@@ -35,22 +40,25 @@
 <script>
     // Initialize QR Scanner
     function initScanner() {
-            const scanner = new Html5QrcodeScanner('reader', {
-                qrbox: { width: 250, height: 250 },
-                fps: 10
-            });
-            
-            scanner.render(onScanSuccess, onScanError);
-        }
+        const scanner = new Html5QrcodeScanner('reader', {
+            qrbox: {
+                width: 250,
+                height: 250
+            },
+            fps: 10
+        });
+
+        scanner.render(onScanSuccess, onScanError);
+    }
 
     async function onScanSuccess(decodedText) {
         try {
             //modal
-            
+
             const response = await axios.get(`/scanner/${decodedText}`);
             console.log(response); // Access 'valid' from response data
             alert(response.data.user.firstname);
-            
+
             // ✅ Update HTML content dynamically
             const text = document.getElementById("qrText").value = response.data.user.qr_code;
             const firstName = document.getElementById("firstName").innerHTML = response.data.user.firstname;
@@ -76,10 +84,10 @@
         }
     }
 
-        function onScanError(error) {
-            console.warn('QR Scan error:', error);
-        }
+    function onScanError(error) {
+        console.warn('QR Scan error:', error);
+    }
 
-        // Initialize scanner when page loads
-        document.addEventListener('DOMContentLoaded', initScanner);
+    // Initialize scanner when page loads
+    document.addEventListener('DOMContentLoaded', initScanner);
 </script>

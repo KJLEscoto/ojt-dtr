@@ -51,8 +51,7 @@
     //testing if the onClick="even()" in the dashboard.php to onclick="even()" button.php
     //for now its not working
     //oridinary button like <button> with event is working normally
-    function myFunction()
-    {
+    function myFunction() {
         console.log('hello');
     }
 </script>
