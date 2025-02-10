@@ -114,20 +114,35 @@ class AuthController extends Controller
                 if (!is_null($user->starting_date) && $user->starting_date <= Carbon::now()) {
                     $isStarted = true;
                 }
-                if (!is_null($user->expiry_date) && $user->expiry_date <= Carbon::now()) {
-                    $isExpired = true;
-                }
-                if ($user->status == 'active') {
-                    $isActive = true;
-                }
-                if ($isStarted && $isActive && !$isExpired) {
+                else{
+                    if($user->expiry_date < Carbon::now()){
+                        $user->status = 'inactive';
+                        $user->save();
+                        Auth::logout();
 
-                    //redirect to the users dashboard
-                    return redirect()->route('users.dashboard');
-                } else {
-                    //this will logout the user and redirect 
-                    Auth::logout();
-                    return response()->json(['error' => 'You are not allowed to login, Please contact the admin for more inforamtion'], 403);
+                        //expiry message
+                        return response()->json(['error' => 'Your account has expired, Please contact the admin for more inforamtion'],
+                        Response::HTTP_UNAUTHORIZED);
+                    }
+                    if(!is_null($user->starting_date) && $user->starting_date <= Carbon::now()){
+                        $isStarted = true;
+                    }
+                    if(!is_null($user->expiry_date) && $user->expiry_date <= Carbon::now()){
+                        $isExpired = true;
+                    }
+                    if($user->status == 'active'){
+                        $isActive = true;
+                    }
+                    if($isStarted && $isActive && !$isExpired){
+
+                        //redirect to the users dashboard
+                        return redirect()->route('users.dashboard');
+                    }
+                    else{
+                        //this will logout the user and redirect 
+                        Auth::logout();
+                        return response()->json(['error' => 'You are not allowed to login, Please contact the admin for more inforamtion'], 403);
+                    }
                 }
             }
         }
