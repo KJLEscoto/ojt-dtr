@@ -68,20 +68,20 @@ Route::middleware('auth')->group(function () {
     //scanner user validation data
     Route::get('scanner/{qr_code}', [UserController::class, 'AdminScannerValidation'])->name('admin.scanner.validation');
 
+    
+    //admin scanner
+    //Route::get('/admin/scanner', [UserController::class, 'showAdminScanner'])->name('admin.scanner');
     //admin user index page
     Route::get('/admin/users', [UserController::class, 'showAdminUsers'])->name('admin.users');
-
-    //admin scanner
-    Route::get('/admin/scanner', [UserController::class, 'showAdminScanner'])->name('admin.scanner');
 
     //admin history
     Route::get('/admin/history', [UserController::class, 'showAdminHistory'])->name('admin.histories');
 
     //admin profile
-    Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('user.profile');
-
-    //admin profile
     Route::get('/admin/profile/{id}', [UserController::class, 'showProfile'])->name('admin.user.profile');
+    
+    //admin profile
+    //Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('user.profile');
 
     //admin dtr page
     Route::get('/admin/dtr', [UserController::class, 'showAdminDTR'])->name('admin.user.dtr');
