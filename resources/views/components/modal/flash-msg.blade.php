@@ -4,7 +4,7 @@
     <span class="flex items-center justify-center">
         <div id="flash-message-container" class="fixed top-16 z-[60] transform scale-50 opacity-0 animate-popup">
             <p
-                class="w-[400px] h-auto py-5 px-5 text-center rounded text-white {{ $msg == 'success' ? 'bg-green-500' : 'bg-custom-red' }}">
+                class="w-[400px] h-auto py-5 px-5 text-center rounded text-white {{ $msg == 'success' ? 'bg-green-500' : ($msg == 'update' ? 'bg-blue-500' : 'bg-custom-red') }}">
                 {{ session($msg) ?? $errors->first($msg) }}
             </p>
         </div>

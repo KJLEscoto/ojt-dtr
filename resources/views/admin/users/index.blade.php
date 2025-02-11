@@ -10,11 +10,11 @@
 
         <section class="grid grid-cols-3 gap-5" id="user-container">
             @foreach ($users as $user)
-                <div
+                <a href="{{ route('admin.users.details', $user->id) }}"
                     class="p-5 border border-gray-200 rounded-xl cursor-pointer hover:border-custom-orange flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
-                    data-name="{{ strtolower($user->firstname) }}" 
+                    data-name="{{ strtolower($user->firstname) }}"
                     data-student_no="{{ strtolower($user->student_no) }}">
-                    
+
                     <div class="w-auto h-auto">
                         <x-image className="w-24 h-24 rounded-full border border-custom-orange"
                             path="resources/img/default-male.png" />
@@ -23,27 +23,31 @@
                         <h1 class="text-lg font-semibold">{{ $user->firstname }}</h1>
                         <p class="text-gray-500">{{ $user->student_no }}</p>
                     </div>
-                </div>
+                </a>
             @endforeach
         </section>
 
         <!-- Pagination Controls -->
         <section class="flex items-center justify-between w-full mt-5">
             <p class="text-sm text-gray-500">
-                Showing <span id="first-item">1</span> to <span id="last-item">10</span> of <span id="total-items">{{ count($users) }}</span>
+                Showing <span id="first-item">1</span> - <span id="last-item">10</span> of <span
+                    id="total-items">{{ count($users) }}</span>
             </p>
 
-            <div class="flex gap-3">
-                <button id="prev-page" class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50" disabled>Prev</button>
-                <span id="page-info">Page 1</span>
-                <button id="next-page" class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50">Next</button>
+            <div class="flex gap-3 items-center">
+                <button id="prev-page"
+                    class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-custom-orange hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current"
+                    disabled>Prev</button>
+                <span id="page-info">Page 1 of </span>
+                <button id="next-page"
+                    class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50 hover:bg-custom-orange hover:text-white animate-transition disabled:hover:bg-gray-300 disabled:hover:text-current">Next</button>
             </div>
         </section>
     </div>
 </x-main-layout>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const searchInput = document.querySelector('[name="search"]');
         const userContainer = document.getElementById("user-container");
         const userCards = Array.from(document.querySelectorAll(".user-card"));
@@ -59,23 +63,25 @@
         let filteredUsers = [...userCards]; // Start with all users
 
         function renderUsers() {
-            userContainer.innerHTML = ""; // Clear the container
+            userContainer.innerHTML = "";
             const start = (currentPage - 1) * itemsPerPage;
             const end = start + itemsPerPage;
             const paginatedUsers = filteredUsers.slice(start, end);
 
             paginatedUsers.forEach(user => userContainer.appendChild(user));
 
-            // Update Pagination Info
+            // Update total pages dynamically
+            const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
             firstItem.textContent = filteredUsers.length === 0 ? 0 : start + 1;
             lastItem.textContent = Math.min(end, filteredUsers.length);
             totalItems.textContent = filteredUsers.length;
-            pageInfo.textContent = `Page ${currentPage}`;
 
-            // Enable/Disable Buttons
             prevPageBtn.disabled = currentPage === 1;
-            nextPageBtn.disabled = end >= filteredUsers.length;
+            nextPageBtn.disabled = currentPage >= totalPages;
         }
+
 
         function handleSearch() {
             const query = searchInput.value.toLowerCase();

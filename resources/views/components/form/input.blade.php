@@ -8,7 +8,7 @@
     'small' => false,
     'big' => false,
     'hidden' => false,
-    'options' => [], // Add options for dropdown
+    'options' => [], // Dropdown options
     'disabled' => false,
 ])
 
@@ -20,29 +20,33 @@
     @if ($type === 'select')
         <!-- Dropdown Selection -->
         <select id="{{ $name_id }}" name="{{ $name_id }}" @class([
-            'border w-full tracking-wider focus:ring-2 focus:ring-custom-orange focus:outline-none',
+            'border w-full tracking-wider focus:ring-2 focus:ring-custom-orange focus:outline-none bg-white',
             'border-custom-red' => $errors->has($name_id),
             'px-4 py-2 rounded-lg' => $small,
             'px-5 py-4 rounded-xl' => $big,
             'hidden' => $hidden,
-        ])>
+            'opacity-50 cursor-not-allowed bg-gray-100' => $disabled,
+        ])
+            @if ($disabled) disabled aria-disabled="true" tabindex="-1" @endif>
             <option value="" disabled selected>{{ $placeholder }}</option>
             @foreach ($options as $key => $option)
                 <option value="{{ $key }}" {{ old($name_id, $value) == $key ? 'selected' : '' }}>
-                    {{ $option }}</option>
+                    {{ $option }}
+                </option>
             @endforeach
         </select>
     @else
         <!-- Normal Input Field -->
-        <input :disabled="$disabled" type="{{ $type }}" id="{{ $name_id }}" name="{{ $name_id }}"
+        <input type="{{ $type }}" id="{{ $name_id }}" name="{{ $name_id }}"
             value="{{ old($name_id, $value) }}" placeholder="{{ $placeholder }}" @class([
                 'border w-full tracking-wider focus:ring-2 focus:ring-custom-orange focus:outline-none',
                 'border-custom-red' => $errors->has($name_id),
                 'px-4 py-2 rounded-lg' => $small,
                 'px-5 py-4 rounded-xl' => $big,
                 'hidden' => $hidden,
-                'disabled:opacity-50' => $disabled,
-            ])>
+                'opacity-50 cursor-not-allowed bg-gray-100' => $disabled,
+            ])
+            @if ($disabled) disabled aria-disabled="true" tabindex="-1" @endif>
     @endif
 
     <x-form.error name="{{ $name_id }}" />

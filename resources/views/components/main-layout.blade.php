@@ -154,31 +154,33 @@
         <aside id="mobile-menu"
             class="fixed top-20 left-0 w-64 h-screen mt-5 bg-white shadow-md transform -translate-x-full transition-transform lg:hidden overflow-auto z-50">
             <nav>
-                <section
-                    class="flex items-center gap-2 px-5 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer">
-                    <span class="akar-icons--dashboard"></span>
+                <a href="{{ route('admin.dashboard') }}"
+                    class="{{ Request::routeIs('admin.dashboard*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    <div class="w-auto h-auto flex items-center"><span class="akar-icons--dashboard"></span></div>
                     <p>Dashboard</p>
-                </section>
-                <section
-                    class="flex items-center gap-2 px-5 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                    <span class="cuida--users-outline"></span>
+                </a>
+                <a href="{{ route('admin.users') }}"
+                    class="{{ Request::routeIs('admin.users*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    <div class="w-auto h-auto flex items-center"><span class="cuida--users-outline"></span></div>
                     <p>Users</p>
-                </section>
-                <section
-                    class="flex items-center gap-2 px-5 py-5 border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                    <span class="material-symbols--history-rounded w-6 h-6"></span>
+                </a>
+                <a href="{{ route('admin.histories') }}"
+                    class="{{ Request::routeIs('admin.histories*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    <div class="w-auto h-auto flex items-center"><span
+                            class="material-symbols--history-rounded w-6 h-6"></span></div>
                     <p>History</p>
-                </section>
-                <section
-                    class="flex items-center gap-2 px-5 py-5 border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                    <span class="tabler--school"></span>
-                    <p>Schools</p>
-                </section>
-                <section
-                    class="flex items-center gap-2 px-5 py-5 border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                    <span class="cuida--user-outline"></span>
+                </a>
+                {{-- <a href="{{ route('admin.school') }}"
+                        class="{{ Request::routeIs('admin.school*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                        <div class="w-auto h-auto flex items-center"><span
+                                class="tabler--school"></span></div>
+                        <p>School</p>
+                    </a> --}}
+                <a href="{{ route('admin.profile') }}"
+                    class="{{ Request::routeIs('admin.profile*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    <div class="w-auto h-auto flex items-center"><span class="cuida--user-outline"></span></div>
                     <p>Profile</p>
-                </section>
+                </a>
             </nav>
         </aside>
 

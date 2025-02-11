@@ -351,24 +351,32 @@ class UserController extends Controller
         ]);
     }
 
-    public function showAdminUsers(RankingController $rankingController, HistoryController $historyController, Request $request)
+    public function showAdminUsers(RankingController $rankingController, HistoryController $historyController)
     {
-        // $search = $request->input('search');
-        // $users = new User();
-        // $users = $users->search($search)->paginate(9);
-
-        $users = User::all();
-
+        $users = User::get();
 
         $ranking = $rankingController->getRankings();
         $array_daily = $historyController->AllUserDailyAttendance();
 
-        return view('admin.users', [
+        return view('admin.users.index', [
             'users' => $users,
             'ranking' => $ranking,
             'array_daily' => $array_daily,
         ]);
 
+    }
+
+    public function showUserDetails($id, RankingController $rankingController, HistoryController $historyController)
+    {
+        $user = User::find($id);
+
+        $ranking = $rankingController->getRankings();
+        $array_daily = $historyController->AllUserDailyAttendance();
+        return view('admin.users.show', [
+            'user' => $user,
+            'ranking' => $ranking,
+            'array_daily' => $array_daily,
+        ]);
     }
 
     public function edit($id)
@@ -382,14 +390,14 @@ class UserController extends Controller
         $user = User::where('id', $request->user_id)->first();
 
         if (is_null($user)) {
-            return back()->with('invalid', 'The inpud is invalid please try again!');
+            return back()->with('invalid', 'The input is invalid please try again!');
         }
 
         // Exclude user_id from the request data
         $data = $request->except('user_id');
 
         $user->update($data);
-        return back()->with('success', 'The information update has been successful!');
+        return back()->with('update', 'Updated Successfully!');
     }
 
     public function destroy($id)

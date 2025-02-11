@@ -74,14 +74,15 @@ Route::middleware('auth')->group(function () {
     //admin user index page
     Route::get('/admin/users', [UserController::class, 'showAdminUsers'])->name('admin.users');
 
+    //users specific profile
+    Route::get('/admin/users/{id}', [UserController::class, 'showUserDetails'])->name('admin.users.details');
+
     //admin history
     Route::get('/admin/history', [UserController::class, 'showAdminHistory'])->name('admin.histories');
 
     //admin profile
     Route::get('/admin/profile', [UserController::class, 'showAdminProfile'])->name('admin.profile');
 
-    //admin specific profile
-    Route::get('/admin/profile/{id}', [UserController::class, 'showAdminUserProfile'])->name('admin.user.profile');
 
     //admin profile
     //Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('user.profile');
@@ -125,5 +126,5 @@ Route::get('/admin/login', function () {
 
 //search controller
 // Route::get('/search', function () {
-    
+
 // })->name('search');

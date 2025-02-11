@@ -66,7 +66,7 @@
                             placeholder="example@gmail.com" labelClass="text-lg font-medium" small />
                         <x-form.input label="School ID" type="text" name_id="student_no" placeholder="School ID"
                             value="{{ $user->student_no }}" labelClass="text-lg font-medium" small />
-                        <x-form.input disabled label="Starting Date" type="date" name_id="starting_date"
+                        <x-form.input disabled="true" label="Starting Date" type="date" name_id="starting_date"
                             value="{{ $user->starting_date }}" placeholder="MMM DD, YYY"
                             labelClass="text-lg font-medium" small />
                     </div>

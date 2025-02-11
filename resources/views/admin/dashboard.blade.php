@@ -12,12 +12,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 
 @if (session('success'))
-            <x-modal.flash-msg msg="success" />
-        @elseif ($errors->has('invalid'))
-            <x-modal.flash-msg msg="invalid" />
-        @elseif (session('invalid'))
-            <x-modal.flash-msg msg="invalid" />
-        @endif
+    <x-modal.flash-msg msg="success" />
+@elseif ($errors->has('invalid'))
+    <x-modal.flash-msg msg="invalid" />
+@elseif (session('invalid'))
+    <x-modal.flash-msg msg="invalid" />
+@endif
 
 <x-main-layout :array_daily="$array_daily" :ranking="$ranking">
     <main class="container mx-auto max-w-screen-xl">
@@ -110,105 +110,107 @@
     }
 
     async function onScanSuccess(decodedText) {
-    try {
-        const response = await axios.get(`/scanner/${encodeURIComponent(decodedText)}`);
-        console.log(response.data); // Debugging log
+        try {
+            const response = await axios.get(`/scanner/${encodeURIComponent(decodedText)}`);
+            console.log(response.data); // Debugging log
 
-        // Open modal
-        const modalButton = document.querySelector('[name="showTimeShift"]');
-        if (modalButton) {
-            modalButton.click();
-        } else {
-            console.error("Modal button not found!");
-        }
-
-        // Get elements
-        const nameEmail = document.querySelector('[name="email"]');
-        const nameFullname = document.querySelector('[name="fullname"]');
-        const nameStudentNo = document.querySelector('[name="student_no"]');
-        const namePhone = document.querySelector('[name="phone"]');
-        const nameQrCode = document.querySelector('[name="qr_code"]');
-        const nameTotalHours = document.querySelector('[name="total_hours"]');
-        const nameButtonTimeIn = document.querySelector('[name="button_time_in"]');
-        const nameButtonTimeOut = document.querySelector('[name="button_time_out"]');
-        const nameLoadingButton = document.querySelector('[name="loading_button"]');
-
-        // Ensure all elements exist
-        if (!nameStudentNo || !namePhone || !nameQrCode || !nameTotalHours ||
-            !nameButtonTimeIn || !nameButtonTimeOut) {
-            console.error("One or more elements were not found in the DOM.");
-            return;
-        }
-
-        // Assign values
-        nameFullname.textContent = response.data.user.firstname + ' ' + 
-        response.data.user.middlename + ' ' + response.data.user.lastname;
-        nameEmail.textContent = response.data.user.email;
-        nameStudentNo.textContent = response.data.user.student_no;
-        namePhone.textContent = response.data.user.phone;
-        nameQrCode.textContent = response.data.user.qr_code;
-        nameTotalHours.textContent = "0 Hours";
-
-        // Remove old event listeners
-        nameButtonTimeIn.replaceWith(nameButtonTimeIn.cloneNode(true));
-        nameButtonTimeOut.replaceWith(nameButtonTimeOut.cloneNode(true));
-
-        // Get the new button references
-        const newButtonTimeIn = document.querySelector('[name="button_time_in"]');
-        const newButtonTimeOut = document.querySelector('[name="button_time_out"]');
-
-        
-        // Add event listeners
-        newButtonTimeIn.addEventListener('click', async function() {
-            try {
-                newButtonTimeIn.classList.add('hidden');
-                newButtonTimeOut.classList.add('hidden');
-                nameLoadingButton.classList.remove('hidden');
-                nameLoadingButton.classList.add('block');
-                nameLoadingButton.innerHTML = "<div class='flex justify-center items-center w-full'><span class='line-md--loading-loop'></span><span> Time In </span></div>";
-                const res = await axios.post('/history', {
-                    qr_code: response.data.user.qr_code,
-                    type: 'time_in',
-                });
-                console.log("Time In Success", res.data);
-                setTimeout(() => location.reload(true), 0);
-            } catch (error) {
-                console.error("Error in Time In:", error);
+            // Open modal
+            const modalButton = document.querySelector('[name="showTimeShift"]');
+            if (modalButton) {
+                modalButton.click();
+            } else {
+                console.error("Modal button not found!");
             }
-        });
 
-        newButtonTimeOut.addEventListener('click', async function() {
-            try {
-                newButtonTimeIn.classList.add('hidden');
-                newButtonTimeOut.classList.add('hidden');
-                nameLoadingButton.classList.remove('hidden');
-                nameLoadingButton.classList.add('block');
-                nameLoadingButton.innerHTML = "<div class='flex justify-center items-center w-full'><span class='line-md--loading-loop'></span><span> Time Out </span></div>";
+            // Get elements
+            const nameEmail = document.querySelector('[name="email"]');
+            const nameFullname = document.querySelector('[name="fullname"]');
+            const nameStudentNo = document.querySelector('[name="student_no"]');
+            const namePhone = document.querySelector('[name="phone"]');
+            const nameQrCode = document.querySelector('[name="qr_code"]');
+            const nameTotalHours = document.querySelector('[name="total_hours"]');
+            const nameButtonTimeIn = document.querySelector('[name="button_time_in"]');
+            const nameButtonTimeOut = document.querySelector('[name="button_time_out"]');
+            const nameLoadingButton = document.querySelector('[name="loading_button"]');
 
-                const res = await axios.post('/history', {
-                    qr_code: response.data.user.qr_code,
-                    type: 'time_out',
-                });
-                console.log("Time Out Success", res.data);
-                alert(response.data.success); // Display success message
-                setTimeout(() => location.reload(true), 1);
-            } catch (error) {
-                console.error("Error in Time Out:", error);
+            // Ensure all elements exist
+            if (!nameStudentNo || !namePhone || !nameQrCode || !nameTotalHours ||
+                !nameButtonTimeIn || !nameButtonTimeOut) {
+                console.error("One or more elements were not found in the DOM.");
+                return;
             }
-        });
 
-    } catch (error) {
-        console.error("Error fetching QR data:", error.response ? error.response.data : error.message);
+            // Assign values
+            nameFullname.textContent = response.data.user.firstname + ' ' +
+                response.data.user.middlename + ' ' + response.data.user.lastname;
+            nameEmail.textContent = response.data.user.email;
+            nameStudentNo.textContent = response.data.user.student_no;
+            namePhone.textContent = response.data.user.phone;
+            nameQrCode.textContent = response.data.user.qr_code;
+            nameTotalHours.textContent = "0 Hours";
+
+            // Remove old event listeners
+            nameButtonTimeIn.replaceWith(nameButtonTimeIn.cloneNode(true));
+            nameButtonTimeOut.replaceWith(nameButtonTimeOut.cloneNode(true));
+
+            // Get the new button references
+            const newButtonTimeIn = document.querySelector('[name="button_time_in"]');
+            const newButtonTimeOut = document.querySelector('[name="button_time_out"]');
+
+
+            // Add event listeners
+            newButtonTimeIn.addEventListener('click', async function() {
+                try {
+                    newButtonTimeIn.classList.add('hidden');
+                    newButtonTimeOut.classList.add('hidden');
+                    nameLoadingButton.classList.remove('hidden');
+                    nameLoadingButton.classList.add('block');
+                    nameLoadingButton.innerHTML =
+                        "<div class='flex justify-center items-center w-full'><span class='line-md--loading-loop'></span><span> Time In </span></div>";
+                    const res = await axios.post('/history', {
+                        qr_code: response.data.user.qr_code,
+                        type: 'time_in',
+                    });
+                    console.log("Time In Success", res.data);
+                    setTimeout(() => location.reload(true), 0);
+                } catch (error) {
+                    console.error("Error in Time In:", error);
+                }
+            });
+
+            newButtonTimeOut.addEventListener('click', async function() {
+                try {
+                    newButtonTimeIn.classList.add('hidden');
+                    newButtonTimeOut.classList.add('hidden');
+                    nameLoadingButton.classList.remove('hidden');
+                    nameLoadingButton.classList.add('block');
+                    nameLoadingButton.innerHTML =
+                        "<div class='flex justify-center items-center w-full'><span class='line-md--loading-loop'></span><span> Time Out </span></div>";
+
+                    const res = await axios.post('/history', {
+                        qr_code: response.data.user.qr_code,
+                        type: 'time_out',
+                    });
+                    console.log("Time Out Success", res.data);
+                    alert(response.data.success); // Display success message
+                    setTimeout(() => location.reload(true), 1);
+                } catch (error) {
+                    console.error("Error in Time Out:", error);
+                }
+            });
+
+        } catch (error) {
+            console.error("Error fetching QR data:", error.response ? error.response.data : error.message);
+        }
     }
-}
 
 
     const onScanError = (errorMessage) => {
-    // Ignore the specific "No MultiFormat Readers" error
-    if (!errorMessage.includes("No MultiFormat Readers were able to detect the code")) {
-        console.error("QR Scan error:", errorMessage);
-    }
-};
+        // Ignore the specific "No MultiFormat Readers" error
+        if (!errorMessage.includes("No MultiFormat Readers were able to detect the code")) {
+            console.error("QR Scan error:", errorMessage);
+        }
+    };
 
     function timeIn() {
         console.log('hello');
