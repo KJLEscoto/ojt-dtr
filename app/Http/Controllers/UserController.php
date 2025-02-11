@@ -220,16 +220,56 @@ class UserController extends Controller
         return view('admin.users', compact('users'));
     }
 
-    public function showDashboard(RankingController $rankingController)
+    public function showAdminDashboard(RankingController $rankingController)
     {
         $users = Auth::user();
 
-        //check if the user is admin
-        if ($users->role == 'admin') {
-            return $this->showAdminScanner();
+        //dd($users);
+        if($users === null)
+        {
+            return back()->with('invalid', 'The user is invalid!');
+        }
+        
+        
+        $histories = Histories::all();
+        $users = User::get();
+
+        $rankingController = new RankingController();
+        $ranking = $rankingController->getRankings();
+
+        
+        $history = new HistoryController();
+        $totalScan = $history->TotalScan();
+        $totalTimeIn = $history->TotalTimeIn();
+        $totalTimeOut = $history->TotalTimeOut();
+        $totalRegister = $history->TotalRegister();
+        $dailyAttendance = $history->AllUserDailyAttendance();
+        $recentlyAddedUser = $history->AllMonthlyUsers();
+
+        return view('admin.dashboard', [
+            'user' => $users,
+            'totalScans' => $totalScan,
+            'totalTimeIn' => $totalTimeIn,
+            'totalTimeOut' => $totalTimeOut,
+            'totalRegister' => $totalRegister,
+            'array_daily' => $dailyAttendance,
+            'histories' => $histories,
+            'ranking' => $ranking,
+            'recentlyAddedUser' => $recentlyAddedUser,
+        ]);
+    }
+
+    public function showUserDashboard(RankingController $rankingController)
+    {
+        $users = Auth::user();
+
+        if($users === null)
+        {
+            return back()->with('invalid', 'The invalid user!');
         }
 
-        //later if not admin
+        try {
+            //later if not admin
         //convert all the dateitme details
         $histories = $users->history()->latest()->get()->map(function ($history) {
             return [
@@ -260,6 +300,11 @@ class UserController extends Controller
             'histories' => $histories,
             'array_daily' => $dailyAttendance,
         ]);
+        }
+        catch(\Exception $ex)
+        {
+            return back()->with('invalid', 'Invalid user!');
+        }
     }
 
     public function showAdminScanner()
@@ -268,32 +313,7 @@ class UserController extends Controller
 
         //$histories = $users->history()->latest()->get();
 
-        $histories = Histories::all();
-        $users = User::get();
-
-        $rankingController = new RankingController();
-        $ranking = $rankingController->getRankings();
-
         
-        $history = new HistoryController();
-        $totalScan = $history->TotalScan();
-        $totalTimeIn = $history->TotalTimeIn();
-        $totalTimeOut = $history->TotalTimeOut();
-        $totalRegister = $history->TotalRegister();
-        $dailyAttendance = $history->AllUserDailyAttendance();
-        $recentlyAddedUser = $history->AllMonthlyUsers();
-
-        return view('admin.dashboard', [
-            'user' => $users,
-            'totalScans' => $totalScan,
-            'totalTimeIn' => $totalTimeIn,
-            'totalTimeOut' => $totalTimeOut,
-            'totalRegister' => $totalRegister,
-            'array_daily' => $dailyAttendance,
-            'histories' => $histories,
-            'ranking' => $ranking,
-            'recentlyAddedUser' => $recentlyAddedUser,
-        ]);
     }
 
     public function showAdminHistory()
@@ -354,5 +374,13 @@ class UserController extends Controller
         $user = User::find($id);
         $user->delete();
         return redirect()->route('users.profile.index');
+    }
+
+    public function showDashboard()
+    {
+        if (Auth::user()->role === 'admin') {
+            return $this->showAdminDashboard(new RankingController());
+        }
+        return $this->showUserDashboard(new RankingController());
     }
 }

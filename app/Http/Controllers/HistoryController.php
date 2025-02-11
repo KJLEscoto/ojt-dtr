@@ -111,7 +111,7 @@ class HistoryController extends Controller
     {
         try {
 
-            $Today = Carbon::now()->toDateString(); // Gets today's date (YYYY-MM-DD)
+            $Today = Carbon::now()->timezone('Asia/Manila')->toDateString(); // Gets today's date (YYYY-MM-DD)
 
             $DailyAttendance = Histories::whereDate('datetime', $Today)->orderBy('datetime', 'desc')->get()->map(function ($daily){
                 return [
@@ -131,27 +131,29 @@ class HistoryController extends Controller
     }
 
     public function AllMonthlyUsers()
-    {
-        try {
-            $month = Carbon::now()->toDateString();
+{
+    try {
+        $now = Carbon::now()->timezone('Asia/Manila');
+        $month = $now->month;
+        $year = $now->year;
 
-            $users = User::whereDate('created_at', $month)
-                ->orderBy('created_at', 'desc')
-                ->get()
-                ->map(function ($user) {
-                    return [
-                        'fullname' => $user->firstname . ' ' . substr($user->middlename, 0, 1). '. ' . $user->lastname,
-                        'ago' => Carbon::parse($user->created_at)->diffForHumans(), // Shows time difference in human-readable format
-                    ];
-                });
+        $users = User::whereMonth('created_at', $month)
+            ->whereYear('created_at', $year)
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($user) {
+                return [
+                    'fullname' => $user->firstname . ' ' . substr($user->middlename, 0, 1). '. ' . $user->lastname,
+                    'ago' => Carbon::parse($user->created_at)->diffForHumans(),
+                ];
+            });
 
-            return $users;
-
-            //fullname, 
-        }
-        catch(\Exception $ex)
-        {
-            return back()->with('invalid', $ex->getMessage());
-        }
+        return $users;
     }
+    catch(\Exception $ex)
+    {
+        return back()->with('invalid', $ex->getMessage());
+    }
+}
+
 }

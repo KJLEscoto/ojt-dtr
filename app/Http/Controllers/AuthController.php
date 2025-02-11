@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Histories;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
@@ -77,104 +78,91 @@ class AuthController extends Controller
 
     public function login(Request $request, HistoryController $historyController, UserController $userController)
     {
-        //dd($request->all());
-
         $data = $request->validate([
             'email' => 'required|string|email',
             'password' => 'required|string',
-        ]);        
+            'type' => 'required|string|in:admin,user', // Ensure type is either 'admin' or 'user'
+        ]);
 
-            if (Auth::attempt($data)) {
-
-            //session regenerate
+        if (Auth::attempt(['email' => $data['email'], 'password' => $data['password']])) {
             $request->session()->regenerate();
-
-            //get the auth user data
             $user = Auth::user();
 
-            //local variables
-            $isExpired = false;
-            $isActive = false;
-            $isStarted = false;
-
-            if ($user->role == 'admin') {
-                if($request->type === 'user')
-                {
-                    Auth::logout();
-                    return back()->with('invalid', 'This user does not belong here');
-                }
-
-                $userController->showAdminScanner();
-                
+            if ($data['type'] === 'admin') {
+                return $this->adminLogin($request, $user, $userController);
             } else {
-                if($request->type === 'admin')
-                {
-                    Auth::logout();
-                    return back()->with('invalid', 'This user does not belong here');
-                }
-                if ($user->expiry_date < Carbon::now()) {
-                    $user->status = 'inactive';
-                    $user->save();
-                    Auth::logout();
-
-                    //expiry message
-                    return response()->json(
-                        ['error' => 'Your account has expired, Please contact the admin for more inforamtion'],
-                        Response::HTTP_UNAUTHORIZED
-                    );
-                }
-                if (!is_null($user->starting_date) && $user->starting_date <= Carbon::now()) {
-                    $isStarted = true;
-                }
-                else{
-                    if($user->expiry_date < Carbon::now()){
-                        $user->status = 'inactive';
-                        $user->save();
-                        Auth::logout();
-
-                        //expiry message
-                        return response()->json(['error' => 'Your account has expired, Please contact the admin for more inforamtion'],
-                        Response::HTTP_UNAUTHORIZED);
-                    }
-                    if(!is_null($user->starting_date) && $user->starting_date <= Carbon::now()){
-                        $isStarted = true;
-                    }
-                    if(!is_null($user->expiry_date) && $user->expiry_date <= Carbon::now()){
-                        $isExpired = true;
-                    }
-                    if($user->status == 'active'){
-                        $isActive = true;
-                    }
-                    if($isStarted && $isActive && !$isExpired){
-
-                        //redirect to the users dashboard
-                        return redirect()->route('users.dashboard');
-                    }
-                    else{
-                        //this will logout the user and redirect 
-                        Auth::logout();
-                        return response()->json(['error' => 'You are not allowed to login, Please contact the admin for more inforamtion'], 403);
-                    }
-                }
+                return $this->userLogin($request, $user);
             }
         }
 
-        // return back()->with(['invalid' => 'Invalid Login Credentials.']);
-
         throw ValidationException::withMessages([
-            'invalid' => 'Invalid login credentials.'
+            'invalid' => 'Invalid login credentials.',
         ]);
+    }
+
+    private function adminLogin(Request $request, $user, UserController $userController)
+    {
+        if ($user->role !== 'admin') {
+            Auth::logout();
+            return back()->with('invalid', 'The user does not exist');
+        }
+
+        $histories = Histories::all();
+        $users = User::get();
+
+        $rankingController = new RankingController();
+        $ranking = $rankingController->getRankings();
+
+        
+        $history = new HistoryController();
+        $totalScan = $history->TotalScan();
+        $totalTimeIn = $history->TotalTimeIn();
+        $totalTimeOut = $history->TotalTimeOut();
+        $totalRegister = $history->TotalRegister();
+        $dailyAttendance = $history->AllUserDailyAttendance();
+        $recentlyAddedUser = $history->AllMonthlyUsers();
+
+        return redirect()->route('admin.dashboard', [
+            'user' => $users,
+            'totalScans' => $totalScan,
+            'totalTimeIn' => $totalTimeIn,
+            'totalTimeOut' => $totalTimeOut,
+            'totalRegister' => $totalRegister,
+            'array_daily' => $dailyAttendance,
+            'histories' => $histories,
+            'ranking' => $ranking,
+            'recentlyAddedUser' => $recentlyAddedUser,
+        ]);
+    }
+
+    private function userLogin(Request $request, $user)
+    {
+        if ($user->expiry_date < Carbon::now()) {
+            $user->status = 'inactive';
+            $user->save();
+            Auth::logout();
+
+            return response()->json(['error' => 'Your account has expired. Please contact the admin for more information'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $isStarted = !is_null($user->starting_date) && $user->starting_date <= Carbon::now();
+        $isExpired = !is_null($user->expiry_date) && $user->expiry_date <= Carbon::now();
+        $isActive = $user->status === 'active';
+
+        if ($isStarted && $isActive && !$isExpired) {
+            return redirect()->route('users.dashboard');
+        }
+
+        Auth::logout();
+        return response()->json(['error' => 'You are not allowed to log in. Please contact the admin for more information'], 403);
     }
 
     public function logout(Request $request)
     {
         $user = Auth::user();
 
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        //redirect()->route('login');
 
         if ($user->role == 'admin') {
             Auth::logout();
@@ -220,5 +208,4 @@ class AuthController extends Controller
         //return the success response
         return back()->with('success', 'Password reset successfully');
     }
-
 }

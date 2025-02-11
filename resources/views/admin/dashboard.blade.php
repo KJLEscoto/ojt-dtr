@@ -2,9 +2,7 @@
 <x-modal.scanner id="scanner-modal" />
 
 {{-- time in modal --}}
-<span class="hidden" name="time-in-time-out">
-    <x-modal.time-in-time-out-modal id="time-in-time-out-modal" />
-</span>
+<x-modal.time-in-time-out-modal id="time-in-time-out-modal" />
 
 <x-main-layout :array_daily="$array_daily" :ranking="$ranking">
     <main class="container mx-auto max-w-screen-xl">
@@ -49,9 +47,124 @@
                                 <p>{{ $user['ago'] }}</p>
                             </section>
                         @endforeach
+                        <button type="button" data-pd-overlay="#time-in-time-out-modal"
+                            data-modal-target="time-in-time-out-modal" data-modal-toggle="time-in-time-out-modal"
+                            name="showTimeShift" class="hidden modal-button">hello</button>
                     </div>
                 </section>
             </div>
         </div>
     </main>
 </x-main-layout>
+
+
+<script>
+    let scannerInstance = null; // Store scanner instance globally
+
+    function closeCamera() {
+        if (scannerInstance) {
+            alert('hello')
+            scannerInstance.clear()
+                .then(() => {
+                    console.log("Scanner stopped");
+                    document.getElementById("reader").innerHTML = ""; // Clear the scanner UI
+                })
+                .catch(err => {
+                    console.error("Error stopping scanner:", err);
+                });
+        }
+    }
+
+    // Initialize QR Scanner
+    function initScanner() {
+        scannerInstance = new Html5QrcodeScanner('reader', {
+            qrbox: {
+                width: 250,
+                height: 250
+            },
+            fps: 10
+        });
+
+        scannerInstance.render(onScanSuccess, onScanError);
+    }
+
+    async function onScanSuccess(decodedText) {
+        try {
+            const response = await axios.get(`/scanner/${decodedText}`);
+            console.log(response); // Debugging log
+            console.log(response.data.user.firstname);
+
+            // Find the button and trigger the click event
+            const modalButton = document.querySelector('[name="showTimeShift"]');
+            if (modalButton) {
+                modalButton.click(); // Simulate a click on the button
+            } else {
+                console.error("Modal button not found!");
+            }
+
+            const nameStudentNo = document.querySelector('[name="student_no"]');
+            const namePhone = document.querySelector('[name="phone"]');
+            const nameQrCode = document.querySelector('[name="qr_code"]');
+            const nameTotalHours = document.querySelector('[name="total_hours"]');
+            const nameButtonTimeIn = document.querySelector('[name="button_time_in"]');
+            const nameButtonTimeOut = document.querySelector('[name="button_time_out"]');
+
+
+            if (nameStudentNo && namePhone && nameQrCode && nameTotalHours &&
+                nameButtonTimeIn && nameButtonTimeIn && nameButtonTimeOut) {
+
+                nameStudentNo.textContent = response.data.user.student_no; // Use value for input elements
+                namePhone.textContent = response.data.user.phone;
+                nameQrCode.textContent = response.data.user.qr_code;
+                nameTotalHours.textContent = "0 Hours";
+
+                nameButtonTimeIn.addEventListener('click', async function() {
+                    try {
+                        const res = await axios.post('/history', {
+                            qr_code: response.data.user.qr_code,
+                            type: 'time_in',
+                        });
+                        console.error("Time In Success", res.data);
+                    } catch (error) {
+                        console.error("Error in Time in:", error);
+                    }
+                });
+
+                nameButtonTimeOut.addEventListener('click', async function() {
+                    try {
+                        const res = await axios.post('/history', {
+                            qr_code: response.data.user.qr_code,
+                            type: 'time_out',
+                        });
+                        console.error("Time Out Success", res.data);
+                    } catch (error) {
+                        console.error("Error in Time out:", error);
+                    }
+                });
+
+            } else {
+                console.error("error");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    function onScanError(error) {
+        console.warn('QR Scan error:', error);
+
+        alert('error');
+    }
+
+    function timeIn() {
+        console.log('hello');
+    }
+
+    // Ensure DOM is fully loaded before initializing scanner
+    document.addEventListener('DOMContentLoaded', () => {
+        initScanner();
+
+        // Attach event listener to close button after DOM is ready
+        document.getElementById("closeButton").addEventListener("click", closeCamera);
+    });
+</script>

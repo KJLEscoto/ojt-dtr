@@ -24,13 +24,8 @@
                         <div id="reader" class="mt-8 w-full max-w-xl mx-auto"></div>
                     </div>
                     <p class="text-sm text-gray-600">Position the QR code within the frame to scan.</p>
-                    <x-button primary label="STOP SCANNING" leftIcon="mdi--video-off"
-                        className="text-sm px-8 close-modal-button" closeModal="{{ $id }}" />
-                    <button class="hidden" id="">
-                        click time in / time out
-                    </button>
-                    <x-button tertiary label="time in / time out" openModal="time-in-time-out-modal"
-                        className="modal-button" />
+                    <x-button primary label="HIDE SCANNER" leftIcon="mdi--video-off"
+                        className="text-sm px-8 close-modal-button" id="closeButton" closeModal="{{ $id }}" />
                 </div>
             </div>
         </div>
