@@ -64,4 +64,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Histories::class);
     }
+    
+    public function search($query)
+    {
+        return empty($query) ? $this->query() : $this->query()->where('firstname', 'like', "%{$query}%")
+        ->orWhere('lastname', 'like', "%{$query}%")
+        ->orWhere('student_no', 'like', "%{$query}%");
+    }
 }

@@ -122,3 +122,8 @@ Route::get('/login', function () {
 Route::get('/admin/login', function () {
     return view('auth.login');
 })->name('show.admin.login');
+
+//search controller
+// Route::get('/search', function () {
+    
+// })->name('search');
