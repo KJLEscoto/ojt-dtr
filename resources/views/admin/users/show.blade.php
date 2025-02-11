@@ -15,8 +15,9 @@
         @endif
 
         <div class="flex items-center justify-between gap-5">
-            <x-button routePath="admin.users" label="Back" tertiary button />
-            <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" />
+            <x-button routePath="admin.users" label="Back" tertiary button leftIcon="eva--arrow-back-fill"
+                className="px-8" />
+            <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" className="px-8" />
         </div>
 
         <div class="">
@@ -25,7 +26,7 @@
                     <x-image className="w-40 h-40 rounded-full border border-custom-orange"
                         path="resources/img/default-male.png" />
                 </div>
-                <x-button tertiary leftIcon="bx--image" label="Change" button />
+                <x-button tertiary leftIcon="bx--image" label="Change" button className="px-10" />
             </div>
         </div>
         <section class="space-y-5 w-full">

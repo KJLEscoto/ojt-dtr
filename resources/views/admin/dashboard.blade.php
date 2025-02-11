@@ -36,9 +36,9 @@
             @php
                 $totals = [
                     ['label' => 'Total Scans', 'number' => $totalScans],
+                    ['label' => 'Total Registered', 'number' => $totalRegister],
                     ['label' => 'Time In', 'number' => $totalTimeIn],
                     ['label' => 'Time Out', 'number' => $totalTimeOut],
-                    ['label' => 'Total Registered', 'number' => $totalRegister],
                 ];
             @endphp
 

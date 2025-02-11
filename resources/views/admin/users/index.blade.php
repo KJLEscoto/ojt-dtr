@@ -5,13 +5,14 @@
                 <x-form.input name_id="search" placeholder="Search" small />
             </span>
 
-            <x-button primary label="Add User" button className="w-fit" />
+            <x-button primary leftIcon="cuida--user-add-outline" label="Add User" button className="w-fit"
+                className="px-10" />
         </section>
 
         <section class="grid grid-cols-3 gap-5" id="user-container">
             @foreach ($users as $user)
                 <a href="{{ route('admin.users.details', $user->id) }}"
-                    class="p-5 border border-gray-200 rounded-xl cursor-pointer hover:border-custom-orange flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
+                    class="p-5 border border-gray-200 rounded-xl cursor-pointer group animate-transition hover:border-custom-orange flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
                     data-name="{{ strtolower($user->firstname) }}"
                     data-student_no="{{ strtolower($user->student_no) }}">
 
@@ -20,7 +21,8 @@
                             path="resources/img/default-male.png" />
                     </div>
                     <div class="text-center mx-auto w-full">
-                        <h1 class="text-lg font-semibold">{{ $user->firstname }}</h1>
+                        <h1 class="text-lg font-semibold group-hover:text-custom-orange animate-transition">
+                            {{ $user->firstname }}</h1>
                         <p class="text-gray-500">{{ $user->student_no }}</p>
                     </div>
                 </a>

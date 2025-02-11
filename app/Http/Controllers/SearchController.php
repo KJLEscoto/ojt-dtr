@@ -17,73 +17,93 @@ class SearchController extends Controller
     }
 
     public function searchHistory(Request $request)
-{
-    $search = $request->input('query');
+    {
+        $search = $request->input('query');
+        $month = $request->input('date'); // Expected format: YYYY-MM
 
-    $users = User::select('id', 'firstname', 'middlename', 'lastname', 'email')
-        ->where('firstname', 'like', "%$search%")
-        ->orWhere('lastname', 'like', "%$search%")
-        ->orWhere('middlename', 'like', "%$search%")
-        ->orWhere('email', 'like', "%$search%")
-        ->get();
+        $users = User::select('id', 'firstname', 'middlename', 'lastname', 'email')
+            ->where('firstname', 'like', "%$search%")
+            ->orWhere('lastname', 'like', "%$search%")
+            ->orWhere('middlename', 'like', "%$search%")
+            ->orWhere('email', 'like', "%$search%")
+            ->get();
 
-    $records = collect();
+        $records = collect();
 
-    if ($users->isNotEmpty()) {
-        $userIds = $users->pluck('id');
-        $histories = Histories::whereIn('user_id', $userIds)->get();
+        if ($users->isNotEmpty()) {
+            $userIds = $users->pluck('id');
+            $historiesQuery = Histories::whereIn('user_id', $userIds);
 
-        foreach ($histories as $history) {
-            $user = $users->firstWhere('id', $history->user_id);
-            $records->push([
-                'user' => $user,
-                'history' => $history,
-            ]);
+            if ($month) {
+                $historiesQuery->where('datetime', 'like', "$month%");
+            }
+
+            $histories = $historiesQuery->get();
+
+            foreach ($histories as $history) {
+                $user = $users->firstWhere('id', $history->user_id);
+                $records->push([
+                    'user' => $user,
+                    'history' => $history,
+                ]);
+            }
         }
+
+        // Search in histories description
+        $historiesFromDescription = Histories::where('description', 'like', "%$search%");
+
+        if ($month) {
+            $historiesFromDescription->where('datetime', 'like', "$month%");
+        }
+
+        $historiesFromDescription = $historiesFromDescription->get();
+
+        foreach ($historiesFromDescription as $history) {
+            $user = User::find($history->user_id);
+            $exists = $records->contains(fn($record) => $record['history']->id === $history->id);
+
+            if (!$exists) {
+                $records->push([
+                    'user' => $user,
+                    'history' => $history,
+                ]);
+            }
+        }
+
+        // Search in histories datetime
+        $historiesFromDatetime = Histories::where('datetime', 'like', "%$search%");
+
+        if ($month) {
+            $historiesFromDatetime->where('datetime', 'like', "$month%");
+        }
+
+        $historiesFromDatetime = $historiesFromDatetime->get();
+
+        foreach ($historiesFromDatetime as $history) {
+            $user = User::find($history->user_id);
+            $exists = $records->contains(fn($record) => $record['history']->id === $history->id);
+
+            if (!$exists) {
+                $records->push([
+                    'user' => $user,
+                    'history' => $history,
+                ]);
+            }
+        }
+
+        // Paginate results
+        $perPage = 10;
+        $currentPage = request()->get('page', 1);
+        $paginatedRecords = $records->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        return response()->json([
+            'success' => true,
+            'records' => $paginatedRecords,
+            'total' => $records->count(),
+            'perPage' => $perPage,
+            'currentPage' => (int) $currentPage,
+        ]);
     }
 
-    // Search in histories description
-    $historiesFromDescription = Histories::where('description', 'like', "%$search%")->get();
-
-    foreach ($historiesFromDescription as $history) {
-        $user = User::find($history->user_id);
-        $exists = $records->contains(fn($record) => $record['history']->id === $history->id);
-        
-        if (!$exists) {
-            $records->push([
-                'user' => $user,
-                'history' => $history,
-            ]);
-        }
-    }
-
-    // Search in histories datetime
-    $historiesFromDatetime = Histories::where('datetime', 'like', "%$search%")->get();
-
-    foreach ($historiesFromDatetime as $history) {
-        $user = User::find($history->user_id);
-        $exists = $records->contains(fn($record) => $record['history']->id === $history->id);
-        
-        if (!$exists) {
-            $records->push([
-                'user' => $user,
-                'history' => $history,
-            ]);
-        }
-    }
-
-    // Paginate results
-    $perPage = 10;
-    $currentPage = request()->get('page', 1);
-    $paginatedRecords = $records->slice(($currentPage - 1) * $perPage, $perPage)->values();
-
-    return response()->json([
-        'success' => true,
-        'records' => $paginatedRecords,
-        'total' => $records->count(),
-        'perPage' => $perPage,
-        'currentPage' => (int) $currentPage,
-    ]);
-}
 
 }
