@@ -1,5 +1,9 @@
 @props(['id' => ''])
 
+{{-- <x-modal.confirmation-email id="confirmation-email-modal" />
+openModal="confirmation-email-modal"
+className="modal-button" --}}
+
 {{-- email verification --}}
 <div id="{{ $id }}" class="pd-overlay hidden">
     <div
@@ -16,8 +20,7 @@
                 <div class="flex gap-5 items-center justify-end w-full">
                     <x-button tertiary button closeModal="forgot-password-modal" label="Cancel"
                         className="close-modal-button" />
-                    <x-button primary label="Submit" submit 
-                         />
+                    <x-button primary label="Submit" submit />
                 </div>
             </x-form.container>
         </div>

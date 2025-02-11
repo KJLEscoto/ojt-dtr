@@ -1,16 +1,18 @@
 {{-- admin login --}}
 @if (Request::routeIs('show.admin.login'))
-    @if (session('success'))
-        <p>{{ session('success') }}</p>
-    @elseif ($errors->has('invalid'))
-        <div class="text-red-500">
-            {{ $errors->first('invalid') }}
-        </div>
-    @endif
     <main class="container mx-auto max-w-screen-xl">
-        <x-main-layout>
 
+
+        @if (session('success'))
+            <x-modal.flash-msg msg="success" />
+        @elseif ($errors->has('invalid'))
+            <x-modal.flash-msg msg="invalid" />
+        @elseif (session('invalid'))
+            <x-modal.flash-msg msg="invalid" />
+        @endif
+        <x-main-layout>
             <div class="flex items-center justify-center h-screen overflow-auto">
+
                 <x-form.container routeName="show.admin.login" method="POST"
                     className="flex flex-col gap-10 w-1/3 p-10 border border-gray-200 rounded-2xl shadow-xl">
                     <div class="flex justify-center">
@@ -33,24 +35,26 @@
 
     {{-- user/intern login --}}
 @elseif (Request::routeIs('show.login'))
-    @if (session('success'))
-        <p>{{ session('success') }}</p>
-    @elseif ($errors->has('invalid'))
-        <div class="text-red-500">
-            {{ $errors->first('invalid') }}
-        </div>
-    @endif
-
     <span>
         <x-modal.forgot-password id="forgot-password-modal" />
         <x-modal.confirmation-email id="confirmation-email-modal" />
     </span>
+
     <x-main-layout>
         <div class="h-full flex flex-col items-center justify-center w-full">
             {{-- rweb logo --}}
             <div class="w-full">
                 <x-logo />
             </div>
+
+            @if (session('success'))
+                <x-modal.flash-msg msg="success" />
+            @elseif ($errors->has('invalid'))
+                <x-modal.flash-msg msg="invalid" />
+            @elseif (session('invalid'))
+                <x-modal.flash-msg msg="invalid" />
+            @endif
+
             {{-- title --}}
             <div class="flex justify-center mt-10">
                 <x-page-title title="intern login" />
@@ -58,6 +62,7 @@
             {{-- login form --}}
             <x-form.container routeName="login" method="POST" className="space-y-7 w-full">
                 @csrf
+
                 {{-- email --}}
                 <x-form.input label="Email" classLabel="font-medium text-2xl" name_id="email"
                     placeholder="example@gmail.com" labelClass="text-xl font-medium" big />
@@ -82,7 +87,7 @@
 
 
 
-            <div class="flex justify-start w-full mt-20">carousel</div>
+            {{-- <div class="flex justify-start w-full mt-20">carousel</div> --}}
         </div>
     </x-main-layout>
 @endif

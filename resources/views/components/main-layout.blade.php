@@ -26,6 +26,7 @@
     <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+
     <style>
         .swiper-wrapper {
             width: 100%;
@@ -117,7 +118,7 @@
                 </button>
                 <x-logo />
                 <div class="flex items-center gap-2">
-                    <p class="lg:block hidden">Hi, {{Auth::user()->firstname}}</p>
+                    <p class="lg:block hidden">Hi, {{ Auth::user()->firstname }}</p>
                     <button type="button" class="">
                     </button>
                     <div class="dropdown relative inline-flex">
@@ -240,7 +241,7 @@
                                                 <div
                                                     class="bg-custom-orange/5 rounded-md py-10 h-full flex justify-center items-center">
                                                     <span class="text-xl font-semibold text-custom-red">
-                                                        Intern {{ $user['name'] }} {{$user['hours_worked']}} Hours
+                                                        Intern {{ $user['name'] }} {{ $user['hours_worked'] }} Hours
                                                     </span>
                                                 </div>
                                             </div>
@@ -257,94 +258,96 @@
                         class="p-5 w-full border bg-white border-gray-200 rounded-xl h-[500px] overflow-hidden space-y-5">
                         <div class="flex items-end gap-2 text-custom-red justify-between w-full font-semibold">
                             <div class="flex items-start gap-2">
-                            <span class="material-symbols--co-present-outline"></span>
-                            <p class="font-semibold text-lg">Daily Attendance</p>
+                                <span class="material-symbols--co-present-outline"></span>
+                                <p class="font-semibold text-lg">Daily Attendance</p>
                             </div>
-                            
+
                             @foreach ($array_daily as $daily)
-                            <p>{{$daily['datetime']}}</p>
+                                <p>{{ $daily['datetime'] }}</p>
                             @break
-                            @endforeach
-                        </div>
-                        <div
-                            class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
-                            @foreach ($array_daily as $daily)
-                                    <section class="px-7 py-5 w-full flex justify-between even:bg-custom-orange/5 bg-white items-center">
-                                        <div class="flex items-center gap-5">
-                                            <x-image className="w-12 h-12 rounded-full border border-custom-orange"
-                                                path="resources/img/default-male.png" />
+                        @endforeach
+                    </div>
+                    <div class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
+                        @foreach ($array_daily as $daily)
+                            <section
+                                class="px-7 py-5 w-full flex justify-between even:bg-custom-orange/5 bg-white items-center">
+                                <div class="flex items-center gap-5">
+                                    <x-image className="w-12 h-12 rounded-full border border-custom-orange"
+                                        path="resources/img/default-male.png" />
 
-                                            <div>
-                                                <section class="font-bold text-black text-lg">{{$daily['timeFormat']}}</section>
-                                                <p class="text-sm font-medium text-gray-700">{{$daily['name']}}</p>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <section class="font-bold text-black text-lg">{{ $daily['timeFormat'] }}
+                                        </section>
+                                        <p class="text-sm font-medium text-gray-700 capitalize">
+                                            {{ $daily['name'] }}</p>
+                                    </div>
+                                </div>
 
-                                        @if ($daily['description'] === 'time in')
-                                            <div class="text-green-500 flex items-center gap-1 select-none">
-                                                <span class="lets-icons--in"></span>
-                                                <p>Time in</p>
-                                            </div>
-                                        @else
-                                            <div class="text-red-500 flex items-center gap-1 select-none">
-                                                <span class="lets-icons--out"></span>
-                                                <p>Time out</p>
-                                            </div>
-                                        @endif
-                                    </section>
-                            @endforeach
-                        </div>
-                    </section>
-                </div>
-            </aside>
-        </div>
+                                @if ($daily['description'] === 'time in')
+                                    <div class="text-green-500 flex items-center gap-1 select-none">
+                                        <span class="lets-icons--in"></span>
+                                        <p>Time in</p>
+                                    </div>
+                                @else
+                                    <div class="text-red-500 flex items-center gap-1 select-none">
+                                        <span class="lets-icons--out"></span>
+                                        <p>Time out</p>
+                                    </div>
+                                @endif
+                            </section>
+                        @endforeach
+                    </div>
+                </section>
+            </div>
+        </aside>
+    </div>
 
 
-        <script>
-            const menuToggle = document.getElementById("menu-toggle");
-            const mobileMenu = document.getElementById("mobile-menu");
+    <script>
+        const menuToggle = document.getElementById("menu-toggle");
+        const mobileMenu = document.getElementById("mobile-menu");
 
-            menuToggle.addEventListener("click", () => {
-                mobileMenu.classList.toggle("-translate-x-full");
+        menuToggle.addEventListener("click", () => {
+            mobileMenu.classList.toggle("-translate-x-full");
+        });
+
+        // swiper
+        var swiper = new Swiper(".progress-slide-carousel", {
+            loop: true,
+            fraction: true,
+            autoplay: {
+                delay: 1200,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: ".progress-slide-carousel .swiper-pagination",
+                type: "progressbar",
+            },
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const dropdownToggle = document.getElementById("dropdown-toggle");
+            const dropdownMenu = document.getElementById("dropdown-menu");
+
+            // Toggle dropdown visibility on button click
+            dropdownToggle.addEventListener("click", function() {
+                dropdownMenu.classList.toggle("hidden");
             });
 
-            // swiper
-            var swiper = new Swiper(".progress-slide-carousel", {
-                loop: true,
-                fraction: true,
-                autoplay: {
-                    delay: 1200,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: ".progress-slide-carousel .swiper-pagination",
-                    type: "progressbar",
-                },
+            // Close dropdown when clicking outside
+            document.addEventListener("click", function(event) {
+                if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.add("hidden");
+                }
             });
-
-            document.addEventListener("DOMContentLoaded", function() {
-                const dropdownToggle = document.getElementById("dropdown-toggle");
-                const dropdownMenu = document.getElementById("dropdown-menu");
-
-                // Toggle dropdown visibility on button click
-                dropdownToggle.addEventListener("click", function() {
-                    dropdownMenu.classList.toggle("hidden");
-                });
-
-                // Close dropdown when clicking outside
-                document.addEventListener("click", function(event) {
-                    if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                        dropdownMenu.classList.add("hidden");
-                    }
-                });
-            });
-        </script>
-    @else
-        {{-- login / register form --}}
-        <main class="h-screen w-full py-10 bg-white">
-            {{ $slot }}
-        </main>
-    @endif
+        });
+    </script>
+@else
+    {{-- login / register form --}}
+    <main class="h-screen w-full py-10 bg-white">
+        {{ $slot }}
+    </main>
+@endif
 </body>
 
 </html>

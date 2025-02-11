@@ -104,7 +104,7 @@ class AuthController extends Controller
     {
         if ($user->role !== 'admin') {
             Auth::logout();
-            return back()->with('invalid', 'The user does not exist');
+            return back()->with('invalid', 'This user does not exist.');
         }
 
         $histories = Histories::all();
@@ -113,7 +113,7 @@ class AuthController extends Controller
         $rankingController = new RankingController();
         $ranking = $rankingController->getRankings();
 
-        
+
         $history = new HistoryController();
         $totalScan = $history->TotalScan();
         $totalTimeIn = $history->TotalTimeIn();
@@ -142,7 +142,7 @@ class AuthController extends Controller
             $user->save();
             Auth::logout();
 
-            return response()->json(['error' => 'Your account has expired. Please contact the admin for more information'], Response::HTTP_UNAUTHORIZED);
+            return back()->with('invalid', 'This account does not belong here.');
         }
 
         $isStarted = !is_null($user->starting_date) && $user->starting_date <= Carbon::now();
@@ -154,7 +154,9 @@ class AuthController extends Controller
         }
 
         Auth::logout();
-        return response()->json(['error' => 'You are not allowed to log in. Please contact the admin for more information'], 403);
+        // return response()->json(['error' => 'You are not allowed to log in. Please contact the admin for more information'], 403);
+
+        return back()->with('invalid', 'This account is not active yet. Please contact admin for more information.');
     }
 
     public function logout(Request $request)
@@ -206,6 +208,6 @@ class AuthController extends Controller
         $resetPassword = $emailController->EmailResetPassword($user);
 
         //return the success response
-        return back()->with('success', 'Password reset successfully');
+        return back()->with('success', 'We\'ve sent a link to reset your password.');
     }
 }

@@ -13,11 +13,14 @@
     'secondary' => false,
     'tertiary' => false,
     'onClick' => '', // New: JavaScript function or event handler
+    'name' => '',
+    'loading' => false,
+    'disabled' => false,
 ])
 
 @php
     $primaryClasses =
-        'px-16 py-3 rounded-full relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-custom-orange via-custom-orange/70 to-custom-red hover:bg-custom-red';
+        'px-16 py-3 rounded-full relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-custom-orange via-custom-orange/70 to-custom-red hover:bg-custom-red disabled:opacity-50';
     $secondaryClasses =
         'px-16 py-3 border rounded-full hover:bg-white border-white hover:text-custom-orange animate-transition flex items-center justify-center';
     $tertiaryClasses =
@@ -29,7 +32,8 @@
 @endphp
 
 <!-- Main Button -->
-<button class="{{ $className }} {{ $buttonClass }}"
+{{-- disable this button --}}
+<button class="{{ $className }} {{ $buttonClass }}" name="{{ $name }}"
     @if ($closeModal) data-pd-overlay="{{ $closeModal }}" data-modal-target="{{ $closeModal }}" @endif
     @if ($openModal) data-pd-overlay="# . {{ $openModal }}" data-modal-target="{{ $openModal }}" data-modal-toggle="{{ $openModal }}" @endif
     @if ($submit) type="submit" @elseif ($button) type="button" @endif
@@ -41,10 +45,11 @@
     @endif
 
     <p>{{ $label }}</p>
-
     @if ($rightIcon)
         <span class="{{ $rightIcon }}"></span>
     @endif
+
+
 </button>
 
 <script>

@@ -19,7 +19,6 @@
                 <div class="w-full h-auto space-y-5 flex flex-col items-center justify-center">
                     <div
                         class="h-[550px] w-[550px] p-5 overflow-hiddem object-center border bg-white rounded-xl border-black">
-                        <p class="text-center font-bold">CAMERA HERE</p>
                         <!-- Scanner Section -->
                         <div id="reader" class="mt-8 w-full max-w-xl mx-auto"></div>
                     </div>

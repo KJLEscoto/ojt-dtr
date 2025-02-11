@@ -4,7 +4,7 @@
             <x-logo />
         </div>
         @if (session('success'))
-            <p>{{ session('success') }}</p>
+            <x-modal.flash-msg msg="success" />
         @endif
         <div class="flex justify-center mt-10">
             <x-page-title title="create intern account" />

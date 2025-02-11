@@ -1,17 +1,30 @@
 {{-- scanner modal --}}
-<x-modal.scanner id="scanner-modal" />
+{{-- <x-modal.scanner id="scanner-modal" /> --}}
 
 {{-- time in modal --}}
 <x-modal.time-in-time-out-modal id="time-in-time-out-modal" />
+
+
+<!-- HTML5 QR Code Scanner -->
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<!-- Camera -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 
 <x-main-layout :array_daily="$array_daily" :ranking="$ranking">
     <main class="container mx-auto max-w-screen-xl">
         <div class="flex flex-col gap-10 w-full h-auto">
 
-            <div class="w-full gap-2 flex items-center justify-start">
+            {{-- <div class="w-full gap-2 flex items-center justify-start">
                 <x-button primary label="Open QR Scanner" button openModal="scanner-modal"
                     leftIcon="iconamoon--scanner-fill" className="px-7 modal-button" />
+            </div> --}}
+
+            <div class="h-[550px] w-full p-5 overflow-hidden object-center border bg-white rounded-xl border-gray-200">
+                <!-- Scanner Section -->
+                <div id="reader" class="h-full w-full max-w-xl mx-auto"></div>
             </div>
+
             @php
                 $totals = [
                     ['label' => 'Total Scans', 'number' => $totalScans],
@@ -42,7 +55,7 @@
                                 <div class="flex items-center gap-5">
                                     <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                         path="resources/img/default-male.png" />
-                                    <h1 class="font-semibold">{{ $user['fullname'] }}</h1>
+                                    <h1 class="font-semibold capitalize">{{ $user['fullname'] }}</h1>
                                 </div>
                                 <p>{{ $user['ago'] }}</p>
                             </section>
@@ -109,6 +122,7 @@
             const nameButtonTimeIn = document.querySelector('[name="button_time_in"]');
             const nameButtonTimeOut = document.querySelector('[name="button_time_out"]');
 
+            // console.log(nameLoadingButton);
 
             if (nameStudentNo && namePhone && nameQrCode && nameTotalHours &&
                 nameButtonTimeIn && nameButtonTimeIn && nameButtonTimeOut) {
@@ -119,24 +133,39 @@
                 nameTotalHours.textContent = "0 Hours";
 
                 nameButtonTimeIn.addEventListener('click', async function() {
+                    // nameButtonTimeIn.innerHTML = "<span class='line-md--loading-loop'></span>"
+                    // nameLoadingButton.classList.remove('hidden');
+                    // nameLoadingButton.classList.add('block');
+                    // nameButtonTimeIn.classList.add('hidden');
+                    // nameButtonTimeOut.classList.add('hidden');
+
                     try {
                         const res = await axios.post('/history', {
                             qr_code: response.data.user.qr_code,
                             type: 'time_in',
                         });
                         console.error("Time In Success", res.data);
+                        setTimeout(function() {
+                            location.reload(true);
+                        }, 0);
                     } catch (error) {
                         console.error("Error in Time in:", error);
                     }
                 });
 
                 nameButtonTimeOut.addEventListener('click', async function() {
+                    // nameButtonTimeOut.innerHTML = "<span class='line-md--loading-loop'></span>"
+
                     try {
                         const res = await axios.post('/history', {
                             qr_code: response.data.user.qr_code,
                             type: 'time_out',
                         });
                         console.error("Time Out Success", res.data);
+
+                        setTimeout(function() {
+                            location.reload(true);
+                        }, 0);
                     } catch (error) {
                         console.error("Error in Time out:", error);
                     }
