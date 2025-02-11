@@ -6,8 +6,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RankingController;
-
-
+use App\Http\Controllers\SearchController;
 
 // Route::get('/register', function () {
 //     return view('auth.register');
@@ -128,3 +127,5 @@ Route::get('/admin/login', function () {
 // Route::get('/search', function () {
 
 // })->name('search');
+
+Route::post('admin/history/search', [SearchController::class, 'searchHistory'])->name('admin.history.search');
