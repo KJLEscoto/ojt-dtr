@@ -13,8 +13,8 @@
                         path="resources/img/default-male.png" />
                 </div>
                 <div class="text-center space-y-1">
-                    <h1 class="font-semibold text-xl">Full Name</h1>
-                    <p class="text-custom-orange">user email</p>
+                    <h1 class="font-semibold text-xl" name="fullname">fullname_placeholder</h1>
+                    <p class="text-custom-orange" name="email">email_placeholder</p>
                 </div>
 
                 @php
@@ -66,6 +66,8 @@
                     <x-button button name="button_time_out" label="Time Out" primary className="px-2 text-sm w-full" />
                     {{-- <x-button leftIcon="line-md--loading-loop" label="Loading" name="loading_button" secondary
                         className="w-full text-sm px-2 text-custom-orange hidden" /> --}}
+                        <div name="loading_button"
+                        class="w-full text-sm px-2 text-custom-orange hidden"></div>
                 </div>
                 <div class="w-full flex justify-center">
                     <x-button label="Re-scan QR Code" button
