@@ -190,7 +190,11 @@ class UserController extends Controller
     {
         try {
             $users = User::where('qr_code', $qr_code)->first();
-            return response()->json(['user' => $users, 'valid' => true], Response::HTTP_OK);
+
+            return response()->json([
+                'user' => $users,
+                'valid' => true
+            ], Response::HTTP_OK);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage(), 'valid' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
