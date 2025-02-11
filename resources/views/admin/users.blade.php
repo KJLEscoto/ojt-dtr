@@ -8,30 +8,103 @@
             <x-button primary label="Add User" button className="w-fit" />
         </section>
 
-        <section class="grid grid-cols-3 gap-5">
-            @for ($i = 1; $i <= 9; $i++)
+        <section class="grid grid-cols-3 gap-5" id="user-container">
+            @foreach ($users as $user)
                 <div
-                    class="p-5 border border-gray-200 rounded-xl cursor-pointer hover:border-custom-orange flex flex-col gap-5 items-center justify-center h-auto w-full bg-white">
+                    class="p-5 border border-gray-200 rounded-xl cursor-pointer hover:border-custom-orange flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
+                    data-name="{{ strtolower($user->firstname) }}" 
+                    data-student_no="{{ strtolower($user->student_no) }}">
+                    
                     <div class="w-auto h-auto">
                         <x-image className="w-24 h-24 rounded-full border border-custom-orange"
                             path="resources/img/default-male.png" />
                     </div>
                     <div class="text-center mx-auto w-full">
-                        <h1 class="text-lg font-semibold">Full name</h1>
-                        <p class="text-gray-500">Student No.</p>
+                        <h1 class="text-lg font-semibold">{{ $user->firstname }}</h1>
+                        <p class="text-gray-500">{{ $user->student_no }}</p>
                     </div>
                 </div>
-            @endfor
+            @endforeach
         </section>
 
-        <section class="flex items-center justify-between w-full">
+        <!-- Pagination Controls -->
+        <section class="flex items-center justify-between w-full mt-5">
             <p class="text-sm text-gray-500">
-                Showing 9 of 29
+                Showing <span id="first-item">1</span> to <span id="last-item">10</span> of <span id="total-items">{{ count($users) }}</span>
             </p>
 
-            <div>
-                Pagination
+            <div class="flex gap-3">
+                <button id="prev-page" class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50" disabled>Prev</button>
+                <span id="page-info">Page 1</span>
+                <button id="next-page" class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50">Next</button>
             </div>
         </section>
     </div>
 </x-main-layout>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector('[name="search"]');
+        const userContainer = document.getElementById("user-container");
+        const userCards = Array.from(document.querySelectorAll(".user-card"));
+        const firstItem = document.getElementById("first-item");
+        const lastItem = document.getElementById("last-item");
+        const totalItems = document.getElementById("total-items");
+        const prevPageBtn = document.getElementById("prev-page");
+        const nextPageBtn = document.getElementById("next-page");
+        const pageInfo = document.getElementById("page-info");
+
+        let currentPage = 1;
+        const itemsPerPage = 9; // Change this to adjust pagination size
+        let filteredUsers = [...userCards]; // Start with all users
+
+        function renderUsers() {
+            userContainer.innerHTML = ""; // Clear the container
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const paginatedUsers = filteredUsers.slice(start, end);
+
+            paginatedUsers.forEach(user => userContainer.appendChild(user));
+
+            // Update Pagination Info
+            firstItem.textContent = filteredUsers.length === 0 ? 0 : start + 1;
+            lastItem.textContent = Math.min(end, filteredUsers.length);
+            totalItems.textContent = filteredUsers.length;
+            pageInfo.textContent = `Page ${currentPage}`;
+
+            // Enable/Disable Buttons
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = end >= filteredUsers.length;
+        }
+
+        function handleSearch() {
+            const query = searchInput.value.toLowerCase();
+            filteredUsers = userCards.filter(card => {
+                const name = card.dataset.name;
+                const studentNo = card.dataset.student_no;
+                return name.includes(query) || studentNo.includes(query);
+            });
+
+            currentPage = 1; // Reset to first page after search
+            renderUsers();
+        }
+
+        searchInput.addEventListener("input", handleSearch);
+
+        prevPageBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderUsers();
+            }
+        });
+
+        nextPageBtn.addEventListener("click", () => {
+            if (currentPage * itemsPerPage < filteredUsers.length) {
+                currentPage++;
+                renderUsers();
+            }
+        });
+
+        renderUsers(); // Initial Render
+    });
+</script>

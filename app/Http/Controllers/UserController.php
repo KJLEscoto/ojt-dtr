@@ -351,9 +351,14 @@ class UserController extends Controller
         ]);
     }
 
-    public function showAdminUsers(RankingController $rankingController, HistoryController $historyController)
+    public function showAdminUsers(RankingController $rankingController, HistoryController $historyController, Request $request)
     {
-        $users = User::get();
+        // $search = $request->input('search');
+        // $users = new User();
+        // $users = $users->search($search)->paginate(9);
+
+        $users = User::all();
+
 
         $ranking = $rankingController->getRankings();
         $array_daily = $historyController->AllUserDailyAttendance();
@@ -362,7 +367,6 @@ class UserController extends Controller
             'users' => $users,
             'ranking' => $ranking,
             'array_daily' => $array_daily,
-
         ]);
 
     }
