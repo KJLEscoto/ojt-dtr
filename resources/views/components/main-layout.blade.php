@@ -108,7 +108,10 @@
         </div>
 
         {{-- admin layout --}}
-    @elseif (Request::routeIs('admin.dashboard*'))
+    @elseif (Request::routeIs('admin.dashboard*') ||
+            Request::routeIs('admin.users*') ||
+            Request::routeIs('admin.histories*') ||
+            Request::routeIs('admin.profile*'))
         @props(['array_daily' => '', 'ranking' => ''])
         <!-- Navbar (Sticky at the Top) -->
         <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
@@ -118,7 +121,7 @@
                 </button>
                 <x-logo />
                 <div class="flex items-center gap-2">
-                    <p class="lg:block hidden">Hi, {{ Auth::user()->firstname }}</p>
+                    <p class="lg:block hidden capitalize">Hi, {{ Auth::user()->firstname }}!</p>
                     <button type="button" class="">
                     </button>
                     <div class="dropdown relative inline-flex">
@@ -185,31 +188,33 @@
                 class="hidden lg:block md:col-span-2 bg-white shadow-xl sticky top-20 h-[calc(100vh-6rem)] overflow-auto py-5">
                 <!-- Navigation -->
                 <nav>
-                    <section
-                        class="flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer">
-                        <span class="akar-icons--dashboard"></span>
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="{{ Request::routeIs('admin.dashboard*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                        <div class="w-auto h-auto flex items-center"><span class="akar-icons--dashboard"></span></div>
                         <p>Dashboard</p>
-                    </section>
-                    <section
-                        class="flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                        <span class="cuida--users-outline"></span>
+                    </a>
+                    <a href="{{ route('admin.users') }}"
+                        class="{{ Request::routeIs('admin.users*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                        <div class="w-auto h-auto flex items-center"><span class="cuida--users-outline"></span></div>
                         <p>Users</p>
-                    </section>
-                    <section
-                        class="flex items-center gap-2 px-10 py-5 border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                        <span class="material-symbols--history-rounded w-6 h-6"></span>
+                    </a>
+                    <a href="{{ route('admin.histories') }}"
+                        class="{{ Request::routeIs('admin.histories*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                        <div class="w-auto h-auto flex items-center"><span
+                                class="material-symbols--history-rounded w-6 h-6"></span></div>
                         <p>History</p>
-                    </section>
-                    <section
-                        class="flex items-center gap-2 px-10 py-5 border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                        <span class="tabler--school"></span>
-                        <p>Schools</p>
-                    </section>
-                    <section
-                        class="flex items-center gap-2 px-10 py-5 border-r-8 border-white font-semibold text-gray-500 cursor-pointer">
-                        <span class="cuida--user-outline"></span>
+                    </a>
+                    {{-- <a href="{{ route('admin.school') }}"
+                        class="{{ Request::routeIs('admin.school*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                        <div class="w-auto h-auto flex items-center"><span
+                                class="tabler--school"></span></div>
+                        <p>School</p>
+                    </a> --}}
+                    <a href="{{ route('admin.profile') }}"
+                        class="{{ Request::routeIs('admin.profile*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                        <div class="w-auto h-auto flex items-center"><span class="cuida--user-outline"></span></div>
                         <p>Profile</p>
-                    </section>
+                    </a>
                 </nav>
             </aside>
 
@@ -263,7 +268,7 @@
                             </div>
 
                             @foreach ($array_daily as $daily)
-                                <p>{{ $daily['datetime'] }}</p>
+                                <p class="text-sm font-semibold">{{ $daily['datetime'] }}</p>
                             @break
                         @endforeach
                     </div>

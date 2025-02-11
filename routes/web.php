@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
     //user settings
     Route::get('/settings', [UserController::class, 'showSettings'])->name('users.settings');
 
-   Route::get('/admin/dashboard', [UserController::class, 'showAdminDashboard'])->name('admin.dashboard');
+    Route::get('/admin/dashboard', [UserController::class, 'showAdminDashboard'])->name('admin.dashboard');
 
     //user index page
     Route::get('/users', [UserController::class, 'index'])->name('users.profile.index');
@@ -68,7 +68,7 @@ Route::middleware('auth')->group(function () {
     //scanner user validation data
     Route::get('scanner/{qr_code}', [UserController::class, 'AdminScannerValidation'])->name('admin.scanner.validation');
 
-    
+
     //admin scanner
     //Route::get('/admin/scanner', [UserController::class, 'showAdminScanner'])->name('admin.scanner');
     //admin user index page
@@ -78,8 +78,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/history', [UserController::class, 'showAdminHistory'])->name('admin.histories');
 
     //admin profile
-    Route::get('/admin/profile/{id}', [UserController::class, 'showProfile'])->name('admin.user.profile');
-    
+    Route::get('/admin/profile', [UserController::class, 'showAdminProfile'])->name('admin.profile');
+
+    //admin specific profile
+    Route::get('/admin/profile/{id}', [UserController::class, 'showAdminUserProfile'])->name('admin.user.profile');
+
     //admin profile
     //Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('user.profile');
 

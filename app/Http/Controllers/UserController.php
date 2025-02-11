@@ -14,6 +14,7 @@ use App\Mail\EmailShiftNotification;
 class UserController extends Controller
 {
 
+
     //this function will return all the users data in the database
     public function index()
     {
@@ -152,7 +153,19 @@ class UserController extends Controller
         }
     }
 
-    public function showProfile($id)
+    public function showAdminProfile(RankingController $rankingController, HistoryController $historyController)
+    {
+        $ranking = $rankingController->getRankings();
+        $array_daily = $historyController->AllUserDailyAttendance();
+
+        return view('admin.profile.index', [
+            'ranking' => $ranking,
+            'array_daily' => $array_daily,
+
+        ]);
+    }
+
+    public function showAdminUserProfile($id)
     {
 
         //access user with authenticated user
@@ -200,12 +213,6 @@ class UserController extends Controller
         }
     }
 
-    public function showAdminHistories()
-    {
-        $histories = Histories::all();
-        return view('admin.histories', compact('histories'));
-    }
-
     public function store(Request $request)
     {
         $user = User::create($request->all());
@@ -229,19 +236,18 @@ class UserController extends Controller
         $users = Auth::user();
 
         //dd($users);
-        if($users === null)
-        {
+        if ($users === null) {
             return back()->with('invalid', 'The user is invalid!');
         }
-        
-        
+
+
         $histories = Histories::all();
         $users = User::get();
 
         $rankingController = new RankingController();
         $ranking = $rankingController->getRankings();
 
-        
+
         $history = new HistoryController();
         $totalScan = $history->TotalScan();
         $totalTimeIn = $history->TotalTimeIn();
@@ -267,46 +273,43 @@ class UserController extends Controller
     {
         $users = Auth::user();
 
-        if($users === null)
-        {
+        if ($users === null) {
             return back()->with('invalid', 'The invalid user!');
         }
 
         try {
             //later if not admin
-        //convert all the dateitme details
-        $histories = $users->history()->latest()->get()->map(function ($history) {
-            return [
-                'user' => $history->firstname . ' ' . $history->lastname,
-                'description' => $history->description,
-                'datetime' => Carbon::parse($history->datetime)->format('F j, Y'),
-                'timeFormat' => Carbon::parse($history->datetime)->format('g:i A'),
-            ];
-        })->toArray();
+            //convert all the dateitme details
+            $histories = $users->history()->latest()->get()->map(function ($history) {
+                return [
+                    'user' => $history->firstname . ' ' . $history->lastname,
+                    'description' => $history->description,
+                    'datetime' => Carbon::parse($history->datetime)->format('F j, Y'),
+                    'timeFormat' => Carbon::parse($history->datetime)->format('g:i A'),
+                ];
+            })->toArray();
 
-        $history = new HistoryController();
-        $totalScan = $history->UserTotalScan();
-        $totalTimeIn = $history->UserTotalTimeIn();
-        $totalTimeOut = $history->UserTotalTimeOut();
-        $totalRegister = $history->UserTotalRegister();
-        $dailyAttendance = $history->AllUserDailyAttendance();
+            $history = new HistoryController();
+            $totalScan = $history->UserTotalScan();
+            $totalTimeIn = $history->UserTotalTimeIn();
+            $totalTimeOut = $history->UserTotalTimeOut();
+            $totalRegister = $history->UserTotalRegister();
+            $dailyAttendance = $history->AllUserDailyAttendance();
 
-        //ranking controller
-        $userRanking = $rankingController->getRankings();
+            //ranking controller
+            $userRanking = $rankingController->getRankings();
 
-        return view('users.dashboard', [
-            'user' => $users,
-            'userTimeStarted' => Carbon::parse($users->starting_date)->format('F j, Y'),
-            'totalScan' => $totalScan,
-            'totalTimeIn' => $totalTimeIn,
-            'totalTimeOut' => $totalTimeOut,
-            'totalRegister' => $totalRegister,
-            'histories' => $histories,
-            'array_daily' => $dailyAttendance,
-        ]);
-        }
-        catch(\Exception $ex)
-        {
+            return view('users.dashboard', [
+                'user' => $users,
+                'userTimeStarted' => Carbon::parse($users->starting_date)->format('F j, Y'),
+                'totalScan' => $totalScan,
+                'totalTimeIn' => $totalTimeIn,
+                'totalTimeOut' => $totalTimeOut,
+                'totalRegister' => $totalRegister,
+                'histories' => $histories,
+                'array_daily' => $dailyAttendance,
+            ]);
+        } catch (\Exception $ex) {
             return back()->with('invalid', 'Invalid user!');
         }
     }
@@ -317,10 +320,10 @@ class UserController extends Controller
 
         //$histories = $users->history()->latest()->get();
 
-        
+
     }
 
-    public function showAdminHistory()
+    public function showAdminHistory(RankingController $rankingController, HistoryController $historyController)
     {
         $histories = Histories::with('user')->get();
         $users = User::with('history')->get();
@@ -336,20 +339,32 @@ class UserController extends Controller
             ];
         }
 
+        $ranking = $rankingController->getRankings();
+        $array_daily = $historyController->AllUserDailyAttendance();
+
         //dd($records);
 
         return view('admin.histories', [
             'records' => $records,
+            'ranking' => $ranking,
+            'array_daily' => $array_daily,
         ]);
     }
 
-    public function showAdminUsers()
+    public function showAdminUsers(RankingController $rankingController, HistoryController $historyController)
     {
         $users = User::get();
 
+        $ranking = $rankingController->getRankings();
+        $array_daily = $historyController->AllUserDailyAttendance();
+
         return view('admin.users', [
             'users' => $users,
+            'ranking' => $ranking,
+            'array_daily' => $array_daily,
+
         ]);
+
     }
 
     public function edit($id)
