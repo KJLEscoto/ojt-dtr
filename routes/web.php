@@ -54,7 +54,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/download-pdf', [PDFController::class, 'download'])->name('download.pdf');
+    Route::post('/download-pdf', [PDFController::class, 'download'])->name('download.pdf');
 
     //user dashboard
     Route::get('/dashboard', [UserController::class, 'showUserDashboard'])->name('users.dashboard');

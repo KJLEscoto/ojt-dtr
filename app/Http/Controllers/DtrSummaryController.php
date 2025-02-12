@@ -114,9 +114,16 @@ class DtrSummaryController extends Controller
     public function ShowUserDtrPagination(Request $request)
     {
         
+        
         $currentDate = Carbon::now();
         $selectedMonth = $request->input('month', $currentDate->month);
         $selectedYear = $request->input('year', $currentDate->year);
+        
+        if($request->searchDate){
+            $selectedDate = Carbon::parse($request->searchDate);
+            $selectedMonth = $selectedDate->month;
+            $selectedYear = $selectedDate->year;
+        }
         
         $selectedDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1);
         $previousMonth = (clone $selectedDate)->subMonth();
@@ -140,11 +147,11 @@ class DtrSummaryController extends Controller
         
         for ($day = 1; $day <= $daysInMonth; $day++) {
             $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
-            echo "\nProcessing date: $dateKey\n";
+            //echo "\nProcessing date: $dateKey\n";
 
             if (isset($logsByDate[$dateKey])) {
                 $logs = $logsByDate[$dateKey];
-                echo "Found " . $logs->count() . " logs for this date\n";
+                //echo "Found " . $logs->count() . " logs for this date\n";
 
                 // Get first time in and last time out for the day
                 $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
@@ -167,14 +174,14 @@ class DtrSummaryController extends Controller
                             'hours_worked' => $hoursWorked,
                         ];
 
-                        echo "Valid time in/out found - First In: {$timeIn->format('h:i A')}, Last Out: {$timeOut->format('h:i A')}, Hours: $hoursWorked\n";
+                        //echo "Valid time in/out found - First In: {$timeIn->format('h:i A')}, Last Out: {$timeOut->format('h:i A')}, Hours: $hoursWorked\n";
                     } else {
                         $groupedData[$dateKey] = [
                             'time_in' => $timeIn->format('h:i A'),
                             'time_out' => $timeOut->format('h:i A'),
                             'hours_worked' => '—',
                         ];
-                        echo "Invalid time range - Time out is before time in\n";
+                        //echo "Invalid time range - Time out is before time in\n";
                     }
                 } else {
                     $groupedData[$dateKey] = [
@@ -182,7 +189,7 @@ class DtrSummaryController extends Controller
                         'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
                         'hours_worked' => '—',
                     ];
-                    echo "Incomplete logs - Missing " . (!$firstTimeIn ? "time in" : "time out") . "\n";
+                    //echo "Incomplete logs - Missing " . (!$firstTimeIn ? "time in" : "time out") . "\n";
                 }
             } else {
                 $groupedData[$dateKey] = [
@@ -190,7 +197,7 @@ class DtrSummaryController extends Controller
                     'time_out' => '—',
                     'hours_worked' => '—',
                 ];
-                echo "No logs found for this date\n";
+                //echo "No logs found for this date\n";
             }
         }
         
@@ -198,11 +205,11 @@ class DtrSummaryController extends Controller
         foreach ($groupedData as $key => $value) {
             if ($value['hours_worked'] !== '—') {
                 $totalHoursPerMonth += $value['hours_worked'];
-                echo "Adding hours for $key: {$value['hours_worked']}\n";
+                //echo "Adding hours for $key: {$value['hours_worked']}\n";
             }
         }
 
-        echo "\nFinal total hours for month: $totalHoursPerMonth\n";
+        //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
         
         $records = [];
         foreach ($groupedData as $date => $data) {
@@ -276,11 +283,11 @@ class DtrSummaryController extends Controller
 
         for ($day = 1; $day <= $daysInMonth; $day++) {
             $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
-            echo "\nProcessing date: $dateKey\n";
+            //echo "\nProcessing date: $dateKey\n";
 
             if (isset($logsByDate[$dateKey])) {
                 $logs = $logsByDate[$dateKey];
-                echo "Found " . $logs->count() . " logs for this date\n";
+                //echo "Found " . $logs->count() . " logs for this date\n";
 
                 // Get first time in and last time out for the day
                 $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
@@ -303,14 +310,14 @@ class DtrSummaryController extends Controller
                             'hours_worked' => $hoursWorked,
                         ];
 
-                        echo "Valid time in/out found - First In: {$timeIn->format('h:i A')}, Last Out: {$timeOut->format('h:i A')}, Hours: $hoursWorked\n";
+                        //echo "Valid time in/out found - First In: {$timeIn->format('h:i A')}, Last Out: {$timeOut->format('h:i A')}, Hours: $hoursWorked\n";
                     } else {
                         $groupedData[$dateKey] = [
                             'time_in' => $timeIn->format('h:i A'),
                             'time_out' => $timeOut->format('h:i A'),
                             'hours_worked' => '—',
                         ];
-                        echo "Invalid time range - Time out is before time in\n";
+                        //echo "Invalid time range - Time out is before time in\n";
                     }
                 } else {
                     $groupedData[$dateKey] = [
@@ -318,7 +325,7 @@ class DtrSummaryController extends Controller
                         'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
                         'hours_worked' => '—',
                     ];
-                    echo "Incomplete logs - Missing " . (!$firstTimeIn ? "time in" : "time out") . "\n";
+                    //echo "Incomplete logs - Missing " . (!$firstTimeIn ? "time in" : "time out") . "\n";
                 }
             } else {
                 $groupedData[$dateKey] = [
@@ -326,7 +333,7 @@ class DtrSummaryController extends Controller
                     'time_out' => '—',
                     'hours_worked' => '—',
                 ];
-                echo "No logs found for this date\n";
+                //echo "No logs found for this date\n";
             }
         }
 
@@ -334,11 +341,11 @@ class DtrSummaryController extends Controller
         foreach ($groupedData as $key => $value) {
             if ($value['hours_worked'] !== '—') {
                 $totalHoursPerMonth += $value['hours_worked'];
-                echo "Adding hours for $key: {$value['hours_worked']}\n";
+                //echo "Adding hours for $key: {$value['hours_worked']}\n";
             }
         }
 
-        echo "\nFinal total hours for month: $totalHoursPerMonth\n";
+        //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
         
         $records = [];
         foreach ($groupedData as $date => $data) {

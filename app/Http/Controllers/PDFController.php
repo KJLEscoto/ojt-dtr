@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\View;
 
 class PDFController extends Controller
 {
-    public function download()
+    public function download(Request $request)
     {
         // Get current month and year
         $month = Carbon::now()->format('F Y');
@@ -33,7 +33,12 @@ class PDFController extends Controller
             'days' => $days,
         ];
 
-        $pdf = Pdf::loadView('pdf.dtr', $data);
+        $pdf = Pdf::loadView('pdf.dtr', [
+            'user' => $user,
+            'records' => $request->records,
+            'pagination' => $request->pagination,
+            'totalHoursPerMonth' => $request->totalHoursPerMonth,
+        ]);
         return $pdf->download('DTR_Report.pdf');
     }
 }
