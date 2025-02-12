@@ -47,7 +47,7 @@
 <body class="hedvig-letters-sans-regular tracking-wide overflow-hidden">
 
     {{-- guest layout --}}
-    @if (Request::routeIs('show.login') || Request::routeIs('show.register'))
+    @if (Request::routeIs('show.login*') || Request::routeIs('show.register*'))
         <main class="w-full h-screen flex">
 
             {{-- guest form content --}}
@@ -75,10 +75,7 @@
         </main>
 
         {{-- users/intern layout --}}
-    @elseif (Request::routeIs('users.dashboard') ||
-            Request::routeIs('users.settings') ||
-            Request::routeIs('users.dtr') ||
-            Request::routeIs('users.dtr.summary'))
+    @elseif (Request::routeIs('users.dashboard*') || Request::routeIs('users.settings*') || Request::routeIs('users.dtr*'))
         {{-- <div class="w-full h-auto">
             <nav class="fixed top-0 left-0 w-full h-auto z-50 bg-white">
                 <div class="grid grid-cols-3 text-nowrap h-auto px-20 border shadow-md">

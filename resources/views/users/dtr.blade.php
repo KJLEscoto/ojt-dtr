@@ -139,7 +139,8 @@
                 </section>
 
                 <section class="flex items-center gap-3 col-span-1 justify-end">
-                    <x-button tertiary label="DTR Summary" button className="text-xs px-8" />
+                    <x-button tertiary label="DTR Summary" routePath="users.dtr.summary" button
+                        className="text-xs px-8" />
                     <form
                         action="{{ route('download.pdf', ['records' => $records, 'pagination' => $pagination, 'totalHoursPerMonth' => $totalHoursPerMonth]) }}"
                         method="POST">

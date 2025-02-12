@@ -239,8 +239,66 @@
                     </div>
                 </section>
                 <section
-                    class="col-span-4 w-full bg-gradient-to-r from-custom-orange via-custom-orange/90 to-custom-red">
-                    right
+                    class="col-span-4 w-full h-[calc(100vh-7rem)] overflow-auto p-10 sticky top-0 bg-gradient-to-r from-custom-orange via-custom-orange/90 to-custom-red">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere qui quis, expedita ducimus quae
+                    incidunt iure nulla nobis aspernatur? Eligendi quo optio magni blanditiis adipisci delectus
+                    voluptatibus rerum accusamus. Iure.
+                    Optio fugit harum, rerum aliquam omnis aspernatur at unde aut officia quaerat? Neque facilis sed
+                    non, error debitis dolorem aliquam saepe deleniti harum sint a esse eos voluptate possimus quam.
+                    Odio, omnis? Natus adipisci labore voluptas ut a enim ex, aliquam dolor laboriosam modi ipsam
+                    provident exercitationem officiis praesentium suscipit recusandae minus laudantium assumenda
+                    delectus quisquam consectetur dolorum. Velit, laboriosam.
+                    Quaerat itaque aspernatur nobis aliquid maiores ullam obcaecati. Aliquid, ut eaque unde veniam harum
+                    quisquam quo culpa alias a distinctio, asperiores, atque necessitatibus dolorem odit! Consectetur
+                    minima at soluta magni!
+                    Cumque quaerat accusantium aut autem doloremque consequuntur, animi minus deleniti. Minus illum
+                    voluptas numquam sequi rem non odit molestias nam veritatis debitis explicabo neque ipsum, rerum
+                    corporis commodi minima in?
+                    Eveniet, natus quidem consequuntur molestias assumenda dolorem itaque soluta, odio doloremque
+                    tempore unde quia autem enim minima maxime exercitationem cum. Tenetur inventore nam molestias nisi
+                    maiores mollitia a iusto alias?
+                    Rerum nulla architecto voluptatum autem nobis sit amet porro dolore dolorem cum tenetur laudantium
+                    corrupti hic, sint unde aut enim aliquid incidunt quibusdam, itaque dignissimos vel impedit!
+                    Quaerat, itaque pariatur!
+                    Ducimus praesentium nisi deleniti expedita voluptate fugit voluptatum accusantium quae libero,
+                    quidem maxime et delectus, animi commodi suscipit rem dignissimos tempora, doloribus ex facilis?
+                    Mollitia at perspiciatis unde asperiores eaque.
+                    Suscipit excepturi nulla consequuntur ipsa iusto, corrupti quaerat repellendus molestias eaque aut
+                    eos, dicta reprehenderit! Officia eos, fuga unde explicabo odit, assumenda qui et itaque illum
+                    quisquam rerum eligendi obcaecati.
+                    Dicta numquam autem saepe sint quisquam delectus placeat necessitatibus omnis odit maxime cupiditate
+                    ratione cumque quidem consectetur assumenda dolorum illo velit dolores, sequi dolore eius.
+                    Dignissimos officia commodi voluptates ex.
+                    Delectus ex deleniti reprehenderit nemo dolorem sed libero, maxime excepturi pariatur eaque
+                    dignissimos. Modi facilis veniam doloribus cumque voluptatibus temporibus a recusandae quae,
+                    suscipit, praesentium sit aut perferendis, necessitatibus cum!
+                    Nisi consectetur magni, accusantium aliquam soluta excepturi sunt dolore totam iure ipsa ullam
+                    corrupti assumenda suscipit, illum, dignissimos repellat! Obcaecati sunt ad, aspernatur dolorum
+                    deserunt voluptatibus labore soluta. Blanditiis, accusamus?
+                    Expedita animi excepturi facere obcaecati odit voluptatem consequatur, dolore eveniet magnam? Ab
+                    autem aperiam distinctio placeat debitis? Ea voluptate provident voluptas vitae ut dolorem odit
+                    accusantium ex porro architecto? Sapiente.
+                    Magnam tempora dolor commodi saepe explicabo perspiciatis sint pariatur facere iste ipsa iure
+                    praesentium esse ipsam maxime accusantium, qui et vero est quos sed molestiae reiciendis? Sed soluta
+                    culpa impedit.
+                    Quo culpa doloribus dolorum voluptatum reprehenderit eligendi nam, ab sequi corporis dolor odio
+                    distinctio non ut pariatur, aliquam quia maxime odit eum fugiat dolore similique! Iste repellat
+                    dolore laboriosam suscipit!
+                    Voluptas nisi cum illo id eligendi accusamus reprehenderit ipsum vitae iste odit nulla doloremque
+                    consequatur optio, doloribus repellendus dignissimos asperiores at, non ad aliquid maiores odio.
+                    Necessitatibus vitae inventore dolor.
+                    Maiores dicta dignissimos incidunt sapiente debitis rerum harum repellendus soluta quos unde numquam
+                    molestiae quaerat quia sunt culpa aliquid aut et perferendis eum quam blanditiis, accusamus
+                    corporis! Iste, excepturi odio.
+                    Quos, in iste libero corporis fugit voluptatibus eaque vitae porro ipsam cum a adipisci odio numquam
+                    itaque esse qui hic? Accusamus assumenda hic, debitis eos perspiciatis vitae magni voluptatum
+                    commodi.
+                    Assumenda voluptatem, id molestiae quasi ducimus neque sequi cumque, dignissimos voluptate, ratione
+                    mollitia? Reiciendis, rem culpa non nulla, tempora iusto, sapiente explicabo iure accusamus
+                    accusantium qui eaque pariatur itaque maiores?
+                    Recusandae dolores id ut cumque molestiae. Qui reiciendis quam nihil cumque sit illo, aut delectus
+                    rem laboriosam ullam ipsum animi amet nostrum harum, quo eius aliquam placeat. Voluptatem,
+                    accusantium quam!
                 </section>
             </div>
         </div>
