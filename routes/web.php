@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DtrSummaryController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\UserController;
@@ -93,7 +94,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/dtr', [UserController::class, 'showAdminDTR'])->name('admin.user.dtr');
 
     //dtr page
-    Route::get('/dtr', [UserController::class, 'showDTR'])->name('user.dtr');
+    Route::get('/dtr', [DtrSummaryController::class, 'showUserDtr'])->name('users.dtr');
+
+    Route::post('/dtr/post', [DtrSummaryController::class, 'ShowUserDtrPagination'])->name('users.dtr.post');
 
     //admin history post method
     Route::post('/history', [UserController::class, 'AdminScannerTimeCheck'])->name('admin.history.time.check');

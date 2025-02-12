@@ -137,11 +137,11 @@ class AuthController extends Controller
 
     private function userLogin(Request $request, $user)
     {
-        if ($user->expiry_date < Carbon::now()) {
+        if ($user->expiry_date <= Carbon::now()) {
             $user->status = 'inactive';
             $user->save();
             Auth::logout();
-
+            
             return back()->with('invalid', 'This account does not belong here.');
         }
 
