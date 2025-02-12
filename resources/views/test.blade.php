@@ -92,8 +92,7 @@
                     </section>
                     <section class="flex items-center gap-3">
                         <x-button tertiary label="DTR Summary" button className="text-xs px-8" />
-                        <x-button primary label="Download PDF" button className="text-xs px-8"
-                            onClick="window.location.href='{{ route('download.pdf') }}'" />
+                        <x-button primary label="Download PDF" button className="text-xs px-8" routeName='{{ route('download.pdf', ['records' => $records, 'pagination ' => $pagination, 'totalHoursPerMonth' => $totalHoursPerMonth]) }}'" />
                     </section>
                 </div>
 

@@ -38,7 +38,7 @@ class SearchController extends Controller
                 $historiesQuery->where('datetime', 'like', "$month%");
             }
 
-            $histories = $historiesQuery->get();
+            $histories = $historiesQuery->orderBy('datetime', 'desc')->get();
 
             foreach ($histories as $history) {
                 $user = $users->firstWhere('id', $history->user_id);
@@ -56,7 +56,7 @@ class SearchController extends Controller
             $historiesFromDescription->where('datetime', 'like', "$month%");
         }
 
-        $historiesFromDescription = $historiesFromDescription->get();
+        $historiesFromDescription = $historiesFromDescription->orderBy('datetime', 'desc')->get();
 
         foreach ($historiesFromDescription as $history) {
             $user = User::find($history->user_id);
@@ -77,7 +77,7 @@ class SearchController extends Controller
             $historiesFromDatetime->where('datetime', 'like', "$month%");
         }
 
-        $historiesFromDatetime = $historiesFromDatetime->get();
+        $historiesFromDatetime = $historiesFromDatetime->orderBy('datetime', 'desc')->get();
 
         foreach ($historiesFromDatetime as $history) {
             $user = User::find($history->user_id);
@@ -91,8 +91,13 @@ class SearchController extends Controller
             }
         }
 
+        // Final sort of all records by datetime before pagination
+        $records = $records->sortByDesc(function ($record) {
+            return $record['history']->datetime;
+        });
+
         // Paginate results
-        $perPage = 10;
+        $perPage = 9;
         $currentPage = request()->get('page', 1);
         $paginatedRecords = $records->slice(($currentPage - 1) * $perPage, $perPage)->values();
 

@@ -111,26 +111,29 @@
         }
     </style>
 </head>
-
 <body class="hedvig-letters-sans-regular">
-    <div class="flex">
-        <img class="rweb-logo" src="resources/img/rweb_logo.png" alt="sti-logo">
-        <img class="sti-logo" src="resources/img/school-logo/sti.png" alt="sti-logo">
+    <div style="display: flex; position: absolute; width: 100%; min-height: 100px;">
+        <div style="position: absolute; left: 0; top: 0%; transform: translateY(-50%); width: 40%;">
+            <img class="rweb-logo" src="resources/img/rweb_logo.png" alt="rweb-logo" style="max-width: 100%; height: auto;">
+        </div>
+        <div style="position: absolute; right: 0; top: 0%; transform: translateY(-50%); width: 10%;">
+            <img class="sti-logo" src="resources/img/school-logo/sti.png" alt="sti-logo" style="max-width: 100%; height: auto;">
+        </div>
     </div>
 
-    <div class="header">
+    <div class="header" style="margin-top: 70px;">
         <h4>OJT Daily Time Record</h4>
-        <h1>{{ $month }}</h1>
+        <h1>{{ $pagination['currentMonth']['name'] }}</h1>
     </div>
 
     <hr>
 
-    <div class="info">
-        <p class="capitalize"><strong>Name:</strong> {{ $name }}</p>
-        <p><strong>Position:</strong> {{ $position }}</p>
-        <div class="flex">
-            <p><strong>Hours This Month:</strong> {{ $hoursThisMonth }}</p>
-            <p><strong>Approved By:</strong> ______________</p>
+    <div class="info" style="position: relative;">
+        <p class="capitalize"><strong>Name:</strong> {{ $user->firstname }} {{ $user->middlename }} {{ $user->lastname }}</p>
+        <p><strong>Position:</strong> Intern</p>
+        <div style="position: relative;">
+            <p><strong>Hours This Month:</strong> {{ $totalHoursPerMonth }} Hours</p>
+            <p style="position: absolute; right: 0; top: 0;"><strong>Approved By:</strong> ______________</p>
         </div>
     </div>
 
@@ -144,14 +147,39 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($days as $day)
+            {{-- @foreach ($records as $record)
                 <tr>
-                    <td>{{ $day }}</td>
-                    <td>8:00 AM</td>
-                    <td>6:00 PM</td>
-                    <td>8 Hours</td>
+                    <td>{{ \Carbon\Carbon::parse($record['date'])->format(' j') }}</td>
+                    <td>{{ $record['time_in'] }}</td>
+                    <td>{{ $record['time_out'] }}</td>
+                    <td>{{ $record['hours_worked'] }} Hours</td>
                 </tr>
-            @endforeach
+            @endforeach --}}
+            @if(isset($records) && count($records) > 0)
+                @foreach($records as $date => $data)
+                    <tr>
+                        {{-- <td class="border border-gray-300 px-4 py-2">{{ \Carbon\Carbon::parse($date)->format('F j, Y') }}</td> --}}
+                        <td>{{ \Carbon\Carbon::parse($data['date'])->format(' j') }}</td>
+                        <td>{{ $data['time_in'] }}</td>
+                        <td>{{ $data['time_out'] }}</td>
+                        @if($data['hours_worked'] == '—')
+                            <td>—</td>
+                        @else
+                            @if($data['hours_worked'] < 0)
+                                <td>Less than 1 hour</td>
+                            @elseif($data['hours_worked'] <= 1)
+                                <td>{{ $data['hours_worked'] }} hour</td>
+                            @elseif($data['hours_worked'] > 1)
+                                <td>{{ $data['hours_worked'] }} hours</td>
+                            @endif
+                        @endif
+                    </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="4">No records found</td>
+                </tr>
+            @endif
         </tbody>
     </table>
 </body>
