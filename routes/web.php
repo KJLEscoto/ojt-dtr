@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -12,9 +13,9 @@ use App\Http\Controllers\SearchController;
 //     return view('auth.register');
 // })->name('show.register');
 
-// Route::get('/test', function () {
-//     return view('test');
-// })->name('test');
+Route::get('/test', function () {
+    return view('test');
+})->name('test');
 
 // Route::get('/dashboard', function () {
 //     return view('users.dashboard');
@@ -51,6 +52,8 @@ Route::middleware('guest')->group(function () {
 //register post method
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/download-pdf', [PDFController::class, 'download'])->name('download.pdf');
 
     //user dashboard
     Route::get('/dashboard', [UserController::class, 'showUserDashboard'])->name('users.dashboard');

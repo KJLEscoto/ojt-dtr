@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -79,4 +79,85 @@
 
 </body>
 
-</html>
+</html> --}}
+
+
+<x-main-layout>
+    <main class="container mx-auto h-full max-w-screen-xl">
+        <div class="h-auto w-full flex items-center justify-center py-20">
+            <div class="space-y-7 w-1/2 ">
+                <div class="w-full flex flex-wrap items-end justify-between gap-5">
+                    <section>
+                        Pagination
+                    </section>
+                    <section class="flex items-center gap-3">
+                        <x-button tertiary label="DTR Summary" button className="text-xs px-8" />
+                        <x-button primary label="Download PDF" button className="text-xs px-8"
+                            onClick="window.location.href='{{ route('download.pdf') }}'" />
+                    </section>
+                </div>
+
+                {{-- download this --}}
+                <div class="w-auto h-auto border border-gray-100 shadow-md resize-none p-8 space-y-5 select-none">
+                    <section class="flex items-start justify-between">
+                        <x-logo />
+                        <x-image path="resources/img/school-logo/sti.png" className="w-16 h-auto" />
+                    </section>
+                    <section class="my-7 text-center">
+                        <p class="text-custom-orange font-semibold">OJT Daily Time Record</p>
+                        <h1 class="text-xl mt-2">FEBRUARY 2025</h1>
+                    </section>
+                    <hr>
+                    <section class="space-y-2">
+                        <p class="text-sm font-semibold">Name: <span class="font-normal text-base">Full Name</span></p>
+                        <p class="text-sm font-semibold">Position: <span class="font-normal text-base">Intern</span></p>
+                        <div class="flex items-center justify-between gap-3">
+                            <p class="text-sm font-semibold">Hours This Month: <span class="font-normal text-base">69
+                                    Hours</span></p>
+                            <p class="text-sm font-semibold">Approved By: <span
+                                    class="font-normal">__________________</span></p>
+                        </div>
+                    </section>
+
+                    <section class="h-auto w-full border border-gray-200 overflow-x-auto">
+                        <table class="w-full border-collapse border border-gray-300">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th
+                                        class="border text-sm text-white bg-custom-orange border-custom-orange/80 px-4 py-2">
+                                        Day
+                                    </th>
+                                    <th
+                                        class="border text-sm text-white bg-custom-orange border-custom-orange/80 px-4 py-2">
+                                        Time In</th>
+                                    <th
+                                        class="border text-sm text-white bg-custom-orange border-custom-orange/80 px-4 py-2">
+                                        Time Out
+                                    </th>
+                                    <th
+                                        class="border text-sm text-white bg-custom-orange border-custom-orange/80 px-4 py-2">
+                                        Total Hours
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for ($day = 1; $day <= 28; $day++)
+                                    <tr class="text-center">
+                                        <td class="border border-gray-300 px-4 py-2">{{ $day }}</td>
+                                        <td class="border border-gray-300 px-4 py-2">8:00 AM</td>
+                                        <td class="border border-gray-300 px-4 py-2">6:00 PM</td>
+                                        <td class="border border-gray-300 px-4 py-2">8 Hours</td>
+                                    </tr>
+                                @endfor
+                            </tbody>
+                        </table>
+                    </section>
+
+                </div>
+
+                {{-- end of download --}}
+            </div>
+        </div>
+    </main>
+
+</x-main-layout>

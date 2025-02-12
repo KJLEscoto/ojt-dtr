@@ -351,7 +351,7 @@
     </script>
 @else
     {{-- login / register form --}}
-    <main class="h-screen w-full py-10 bg-white">
+    <main class="h-screen w-full overflow-auto bg-white">
         {{ $slot }}
     </main>
 @endif
