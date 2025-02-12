@@ -25,30 +25,41 @@
     
             <!-- Hours Summary -->
             <div class="mt-6">
-                <h3 class="text-lg font-semibold mb-4">Monthly Hours Summary</h3>
+                <h3 class="text-lg font-semibold mb-4">Yearly Hours Summary</h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-4 py-2 font-semibold">Month</th>
-                                <th class="px-4 py-2 font-semibold text-right">Total Hours</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            @php $totalHoursOverall = 0; @endphp
-                            @foreach($monthlyTotals as $monthData)
-                                @php $totalHoursOverall += $monthData['total_hours']; @endphp
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3">{{ $monthData['month_name'] }}</td>
-                                    <td class="px-4 py-3 text-right">{{ $monthData['total_hours'] }} hrs</td>
-                                </tr>
-                            @endforeach
-                            <tr class="bg-gray-50 font-semibold">
-                                <td class="px-4 py-3">Total Overall Hours</td>
-                                <td class="px-4 py-3 text-right">{{ $totalHoursOverall }} hrs</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    @php $totalHoursOverall = 0; @endphp
+                    @foreach($yearlyTotals as $yearData)
+                        @php $totalHoursOverall += $yearData['total_hours']; @endphp
+                        
+                        <div class="mb-8">
+                            <h4 class="text-md font-semibold bg-gray-100 p-3 rounded">
+                                Year {{ $yearData['year'] }}
+                                <span class="float-right">Total: {{ $yearData['total_hours'] }} hrs</span>
+                            </h4>
+                            
+                            <table class="w-full text-left text-sm mt-2">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    @foreach($yearData['months'] as $monthData)
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-4 py-3">{{ $monthData['month_name'] }}</td>
+                                            <td class="px-4 py-3 text-right">{{ $monthData['total_hours'] }} hrs</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endforeach
+
+                    <div class="mt-6 border-t pt-4">
+                        <div class="text-lg font-semibold flex justify-between">
+                            <span>Total Overall Hours</span>
+                            <span>{{ $totalHoursOverall }} hrs</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
