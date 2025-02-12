@@ -91,10 +91,13 @@ Route::middleware('auth')->group(function () {
     //Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('user.profile');
 
     //admin dtr page
-    Route::get('/admin/dtr', [UserController::class, 'showAdminDTR'])->name('admin.user.dtr');
+    Route::get('/admin/dtr', [DtrSummaryController::class, 'showAdminSingleUserDtr'])->name('admin.users.dtr');
 
     //dtr page
     Route::get('/dtr', [DtrSummaryController::class, 'showUserDtr'])->name('users.dtr');
+
+    //dtr summary page
+    Route::get('/dtr/summary', [DtrSummaryController::class, 'showUserDtrSummary'])->name('users.dtr.summary');
 
     Route::post('/dtr/post', [DtrSummaryController::class, 'ShowUserDtrPagination'])->name('users.dtr.post');
 
