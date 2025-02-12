@@ -23,7 +23,9 @@
                             </th>
                             <th class="px-6 py-3 text-left text-sm font-semibold text-custom-orange border">Date & Time
                             </th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-custom-orange border">Action</th>
+                            {{-- 
+                                currently not used
+                            <th class="px-6 py-3 text-left text-sm font-semibold text-custom-orange border">Action</th> --}}
                         </tr>
                     </thead>
                     <tbody id="recordsBody">

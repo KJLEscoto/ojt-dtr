@@ -216,8 +216,10 @@
         console.log('hello');
     }
 
+    //load all functions if the page is loaded
     // Ensure DOM is fully loaded before initializing scanner
     document.addEventListener('DOMContentLoaded', () => {
+        //initialize scanner
         initScanner();
 
         // Attach event listener to close button after DOM is ready

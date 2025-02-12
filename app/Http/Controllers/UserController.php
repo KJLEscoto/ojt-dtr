@@ -78,81 +78,105 @@ class UserController extends Controller
         }
     }
 
-    public function showDTR(DtrSummaryController $dtrSummaryController, Request $request)
-    {
-        try {
+    // public function showDTR(DtrSummaryController $dtrSummaryController, Request $request)
+    // {
+    //     try {
 
-            //initialize the local variables
-            //this variables only to be used in this function so it wont conflict with the global variables 
-            $users = null;
-            $histories = null;
-            $records = [];
+    //         //initialize the local variables
+    //         //this variables only to be used in this function so it wont conflict with the global variables 
+    //         $users = null;
+    //         $histories = null;
+    //         $records = [];
 
-            //get the user access that is currently logged in
-            $user_access = Auth::user();
+    //         //get the user access that is currently logged in
+    //         $user_access = Auth::user();
 
-            //get the total hours of the user
-            //the return of this function is an array
-            //eaxmple
-            //$groupedData
-            //$groupedData['Time in']
-            //$groupedData['Time out']
-            //$groupedData['Hours worked']
-            $totalHours = $dtrSummaryController->DtrSummary($request);
+    //         //get the total hours of the user
+    //         //the return of this function is an array
+    //         //eaxmple
+    //         //$groupedData
+    //         //$groupedData['Time in']
+    //         //$groupedData['Time out']
+    //         //$groupedData['Hours worked']
+    //         //$totalHours = $dtrSummaryController->ShowUserDtrSummary($request);
 
-            //check if the auth user is admin which is based on their role
-            if ($user_access->role == 'admin') {
+    //         //check if the auth user is admin which is based on their role
+    //         if ($user_access->role == 'admin') {
 
-                //get the user history data with history relation
-                $users = User::with('history')->get();
+    //             //get the user history data with history relation
+    //             $users = User::with('history')->get();
 
-                //get the history data with user relation
-                $histories = Histories::with('user')->get();
+    //             //get the history data with user relation
+    //             $histories = Histories::with('user')->get();
 
-                //this lopp will parse the history data and the user data
-                //and will return the data in an array
-                foreach ($histories as $history) {
-                    $user = $users->firstWhere('id', $history->user_id);
-                    $records[] = [
-                        'user' => $user,
-                        'history' => $history,
-                    ];
-                }
-            }
+    //             //this lopp will parse the history data and the user data
+    //             //and will return the data in an array
+    //             foreach ($histories as $history) {
+    //                 $user = $users->firstWhere('id', $history->user_id);
+    //                 $records[] = [
+    //                     'user' => $user,
+    //                     'history' => $history,
+    //                 ];
+    //             }
+    //         }
 
-            //if the role is admin it will go to this page
-            if ($user_access->role == 'admin') {
-                return view('dtr.index', [
-                    'records' => $records,
-                    'type' => 'admin',
-                ]);
-            } else {
+    //         //if the role is admin it will go to this page
+    //         if ($user_access->role == 'admin') {
+    //             return view('dtr.index', [
+    //                 'records' => $records,
+    //                 'type' => 'admin',
+    //             ]);
+    //         } 
+    //         else {
 
-                //this data will be store in the requrest object
-                $data = [
-                    'year' => Carbon::now()->year,
-                    'month' => Carbon::now()->month,
-                ];
+    //             //this data will be store in the requrest object
+    //             if($request->month == null && $request->year == null){
+    //                 $data = [
+    //                     'year' => Carbon::now()->year,
+    //                     'month' => Carbon::now()->month,
+    //                 ];
+    //             }
+    //             else{
+    //                 $data = [
+    //                     'year' => $request->year,
+    //                     'month' => $request->month,
+    //                 ];
+    //             }
 
-                //this will return the total hours of the user
-                $request = new Request($data);
+    //             //this will return the total hours of the user
+    //             $request = new Request($data);
 
-                //then the $request will be passed to the DtrSummary function
-                $totalHours = $dtrSummaryController->DtrSummary($request);
+    //             //then the $request will be passed to the DtrSummary function
+    //             $totalHours = $dtrSummaryController->ShowUserDtrSummary($request);
 
-                //then the $totalHours will be passed to the view dtr.index
-                //with the data of array['type' => 'user', 'groupedData' => $totalHours]
-                //dd($totalHours);
-                return view('dtr.index', [
-                    'type' => 'user',
-                    'groupedData' => $totalHours,
-                ]);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage(), 'valid' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-    }
+    //             //then the $totalHours will be passed to the view dtr.index
+    //             //with the data of array['type' => 'user', 'groupedData' => $totalHours]
+                
+    //             return redirect()->route('users.dtr', [
+    //                 // 'type' => 'user',
+    //                 // 'groupedData' => $totalHours,
+    //                 // 'selectedMonth' => $totalHours['selectedMonth'],
+    //                 // 'selectedYear' => $totalHours['selectedYear'],
+    //                 // 'totalHoursPerMonth' => $totalHours['totalHoursPerMonth'],
 
+    //             ]);
+    //         }
+
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage(), 'valid' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
+    //     }
+    // }
+
+    
+    // public function showDTR(DtrSummaryController $dtrSummaryController, Request $request)
+    // {
+    //     try {
+    //         $totalHours = $dtrSummaryController->ShowUserDtrSummary($request);
+    //         dd('stop');
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => $e->getMessage(), 'valid' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
+    //     }
+    // }
     public function showAdminProfile(RankingController $rankingController, HistoryController $historyController)
     {
         $ranking = $rankingController->getRankings();

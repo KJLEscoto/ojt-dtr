@@ -64,6 +64,13 @@
                 <x-form.input label="Starting Date" type="date" name_id="starting_date"
                     value="{{ $user->starting_date }}" placeholder="MMM DD, YYY" labelClass="text-lg font-medium"
                     small />
+                <x-form.input label="Expiry Date" type="date" name_id="expiry_date"
+                    value="{{ $user->expiry_date }}" placeholder="MMM DD, YYY" labelClass="text-lg font-medium"
+                    small />
+                <x-form.input label="Status" type="select" name_id="status"
+                    value="{{ $user->status }}" placeholder="{{ ucfirst($user->status) }}"
+                    :options="['active' => 'Active', 'inactive' => 'Inactive']" labelClass="text-lg font-medium"
+                    small />
             </div>
         </section>
 

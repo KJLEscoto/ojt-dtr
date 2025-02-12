@@ -69,6 +69,9 @@
                         <x-form.input disabled="true" label="Starting Date" type="date" name_id="starting_date"
                             value="{{ $user->starting_date }}" placeholder="MMM DD, YYY"
                             labelClass="text-lg font-medium" small />
+                        <x-form.input disabled="true" label="Expiry Date" type="date" name_id="expiry_date"
+                            value="{{ $user->expiry_date }}" placeholder="MMM DD, YYY"
+                            labelClass="text-lg font-medium" small />
                     </div>
                 </section>
 
