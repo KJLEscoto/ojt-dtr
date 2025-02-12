@@ -75,8 +75,11 @@
         </main>
 
         {{-- users/intern layout --}}
-    @elseif (Request::routeIs('users.dashboard') || Request::routeIs('users.settings')|| Request::routeIs('users.dtr') || Request::routeIs('users.dtr.summary'))
-        <div class="w-full h-auto">
+    @elseif (Request::routeIs('users.dashboard') ||
+            Request::routeIs('users.settings') ||
+            Request::routeIs('users.dtr') ||
+            Request::routeIs('users.dtr.summary'))
+        {{-- <div class="w-full h-auto">
             <nav class="fixed top-0 left-0 w-full h-auto z-50 bg-white">
                 <div class="grid grid-cols-3 text-nowrap h-auto px-20 border shadow-md">
                     <section class="flex items-center justify-start">
@@ -106,11 +109,49 @@
                     </x-form.container>
                 </div>
             </nav>
-            {{-- container max-w-screen-xl w-full mx-auto --}}
+
             <main class="pt-20">
                 {{ $slot }}
             </main>
+        </div> --}}
+
+
+        <div class="w-full h-auto">
+            <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
+                <div class="grid grid-cols-3 text-nowrap h-auto px-10 border shadow-md">
+                    <section class="flex items-center justify-start">
+                        <x-logo />
+                    </section>
+                    <section class="flex items-center justify-center">
+                        <a href="{{ route('users.dashboard') }}"
+                            class="{{ Request::routeIs('users.dashboard*') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-8 px-7 border-b-4 flex items-center gap-2' }}">
+                            <span class="akar-icons--dashboard"></span>
+                            <p>Dashboard</p>
+                        </a>
+                        <a href="{{ route('users.dtr') }}"
+                            class="{{ Request::routeIs('users.dtr*') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-8 px-7 border-b-4 flex items-center gap-2' }}">
+                            <span class="mingcute--paper-line"></span>
+                            <p>DTR</p>
+                        </a>
+                        <a href="{{ route('users.settings') }}"
+                            class="{{ Request::routeIs('users.settings') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-8 px-7 border-b-4 flex items-center gap-2' }}">
+                            <span class="solar--settings-linear"></span>
+                            <p>Settings</p>
+                        </a>
+                    </section>
+                    <x-form.container routeName="logout" className="flex items-center justify-end">
+                        @csrf
+                        <x-button primary label="Logout" leftIcon="material-symbols--logout-rounded" submit
+                            className="px-10 py-3" />
+                    </x-form.container>
+                </div>
+            </nav>
+            {{-- container max-w-screen-xl w-full mx-auto --}}
+            <main class="mt-28">
+                {{ $slot }}
+            </main>
         </div>
+
 
         {{-- admin layout --}}
     @elseif (Request::routeIs('admin.dashboard*') ||
