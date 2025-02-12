@@ -75,7 +75,7 @@
         </main>
 
         {{-- users/intern layout --}}
-    @elseif (Request::routeIs('users.dashboard') || Request::routeIs('users.settings')|| Request::routeIs('users.dtr'))
+    @elseif (Request::routeIs('users.dashboard') || Request::routeIs('users.settings')|| Request::routeIs('users.dtr') || Request::routeIs('users.dtr.summary'))
         <div class="w-full h-auto">
             <nav class="fixed top-0 left-0 w-full h-auto z-50 bg-white">
                 <div class="grid grid-cols-3 text-nowrap h-auto px-20 border shadow-md">
