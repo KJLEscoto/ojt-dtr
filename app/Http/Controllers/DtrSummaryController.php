@@ -254,9 +254,7 @@ class DtrSummaryController extends Controller
 
     public function showUserDtrSummary(Request $request)
     {
-        //temporary user id 
         $user = Auth::user();
-        // Get first and last records to determine date range
         $firstRecord = Histories::where('user_id', $user->id)
             ->orderBy('datetime', 'asc')
             ->first();
@@ -265,20 +263,23 @@ class DtrSummaryController extends Controller
             ->first();
 
         if (!$firstRecord || !$lastRecord) {
-            return view('users.dtr', [
-                'monthlyTotals' => []
+            return view('users.dtr-summary', [
+                'yearlyTotals' => []
             ]);
         }
 
         $startDate = Carbon::parse($firstRecord->datetime)->startOfMonth();
         $endDate = Carbon::parse($lastRecord->datetime)->endOfMonth();
-        $monthlyTotals = [];
+        $yearlyTotals = [];
 
         while ($startDate->lte($endDate)) {
+            $currentYear = $startDate->year;
+            $currentMonth = $startDate->format('m');
+
             // Get all logs for the current month
             $monthLogs = Histories::where('user_id', $user->id)
-                ->whereYear('datetime', $startDate->year)
-                ->whereMonth('datetime', $startDate->month)
+                ->whereYear('datetime', $currentYear)
+                ->whereMonth('datetime', $currentMonth)
                 ->orderBy('datetime', 'asc')
                 ->get();
 
@@ -310,21 +311,36 @@ class DtrSummaryController extends Controller
 
             // Only add months that have hours
             if ($monthlyHours > 0) {
-                $monthlyTotals[$startDate->format('Y-m')] = [
+                if (!isset($yearlyTotals[$currentYear])) {
+                    $yearlyTotals[$currentYear] = [
+                        'year' => $currentYear,
+                        'total_hours' => 0,
+                        'months' => []
+                    ];
+                }
+
+                $yearlyTotals[$currentYear]['months'][$startDate->format('Y-m')] = [
                     'month_name' => $startDate->format('F Y'),
                     'total_hours' => $monthlyHours
                 ];
+
+                $yearlyTotals[$currentYear]['total_hours'] += $monthlyHours;
             }
 
             $startDate->addMonth();
         }
 
-        // Sort months in descending order
-        $monthlyTotals = array_reverse($monthlyTotals);
+        // Sort years in descending order
+        krsort($yearlyTotals);
+
+        // Sort months in descending order within each year
+        foreach ($yearlyTotals as &$yearData) {
+            krsort($yearData['months']);
+        }
 
         return view('users.dtr-summary', [
             'user' => $user,
-            'monthlyTotals' => $monthlyTotals
+            'yearlyTotals' => $yearlyTotals
         ]);
     }
 
