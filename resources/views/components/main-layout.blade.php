@@ -88,6 +88,11 @@
                             <span class="akar-icons--dashboard"></span>
                             <p>Dashboard</p>
                         </a>
+                        <a href="{{ route('users.dtr') }}"
+                            class="{{ Request::routeIs('users.dtr') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-10 px-7 border-b-4 flex items-center gap-2' }}">
+                            <span class="solar--calendar-linear"></span>
+                            <p>DTR</p>
+                        </a>
                         <a href="{{ route('users.settings') }}"
                             class="{{ Request::routeIs('users.settings') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-10 px-7 border-b-4 flex items-center gap-2' }}">
                             <span class="solar--settings-linear"></span>

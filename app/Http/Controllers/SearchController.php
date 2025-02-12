@@ -104,6 +104,4 @@ class SearchController extends Controller
             'currentPage' => (int) $currentPage,
         ]);
     }
-
-
 }
