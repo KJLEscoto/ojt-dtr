@@ -112,24 +112,28 @@
     </style>
 </head>
 <body class="hedvig-letters-sans-regular">
-    <div class="flex">
-        <img class="rweb-logo" src="resources/img/rweb_logo.png" alt="sti-logo">
-        <img class="sti-logo" src="resources/img/school-logo/sti.png" alt="sti-logo">
+    <div style="display: flex; position: absolute; width: 100%; min-height: 100px;">
+        <div style="position: absolute; left: 0; top: 0%; transform: translateY(-50%); width: 40%;">
+            <img class="rweb-logo" src="resources/img/rweb_logo.png" alt="rweb-logo" style="max-width: 100%; height: auto;">
+        </div>
+        <div style="position: absolute; right: 0; top: 0%; transform: translateY(-50%); width: 10%;">
+            <img class="sti-logo" src="resources/img/school-logo/sti.png" alt="sti-logo" style="max-width: 100%; height: auto;">
+        </div>
     </div>
 
-    <div class="header">
+    <div class="header" style="margin-top: 70px;">
         <h4>OJT Daily Time Record</h4>
         <h1>{{ $pagination['currentMonth']['name'] }}</h1>
     </div>
 
     <hr>
 
-    <div class="info">
+    <div class="info" style="position: relative;">
         <p class="capitalize"><strong>Name:</strong> {{ $user->firstname }} {{ $user->middlename }} {{ $user->lastname }}</p>
         <p><strong>Position:</strong> Intern</p>
-        <div class="flex">
+        <div style="position: relative;">
             <p><strong>Hours This Month:</strong> {{ $totalHoursPerMonth }} Hours</p>
-            <p><strong>Approved By:</strong> ______________</p>
+            <p style="position: absolute; right: 0; top: 0;"><strong>Approved By:</strong> ______________</p>
         </div>
     </div>
 
