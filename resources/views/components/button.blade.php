@@ -16,15 +16,16 @@
     'name' => '',
     'loading' => false,
     'disabled' => false,
+    'showLabel' => false,
 ])
 
 @php
     $primaryClasses =
-        'px-16 py-3 rounded-full relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-custom-orange via-custom-orange/70 to-custom-red hover:bg-custom-red disabled:opacity-50';
+        'px-16 py-3 rounded-full relative overflow-hidden font-medium text-white flex items-center justify-center gap-2 animate-transition bg-gradient-to-r from-custom-orange via-custom-orange/70 to-custom-red hover:bg-custom-red disabled:opacity-50 lg:text-sm text-xs';
     $secondaryClasses =
-        'px-16 py-3 border rounded-full hover:bg-white border-white hover:text-custom-orange animate-transition flex items-center justify-center';
+        'px-16 py-3 border rounded-full hover:bg-white border-white hover:text-custom-orange animate-transition flex items-center justify-center lg:text-sm text-xs';
     $tertiaryClasses =
-        'px-16 py-3 border rounded-full text-custom-orange hover:border-custom-orange animate-transition flex items-center justify-center gap-2';
+        'px-16 py-3 border rounded-full text-custom-orange hover:border-custom-orange animate-transition flex items-center justify-center gap-2 lg:text-sm text-xs';
 
     // Assign correct classes based on button type
     $buttonClass = $primary ? $primaryClasses : ($secondary ? $secondaryClasses : ($tertiary ? $tertiaryClasses : ''));
@@ -44,19 +45,15 @@
         <span class="{{ $leftIcon }}"></span>
     @endif
 
-    <p>{{ $label }}</p>
+    @if ($showLabel)
+        <p class="md:block hidden">{{ $label }}</p>
+    @else
+        <p>{{ $label }}</p>
+    @endif
+
     @if ($rightIcon)
         <span class="{{ $rightIcon }}"></span>
     @endif
 
 
 </button>
-
-<script>
-    //testing if the onClick="even()" in the dashboard.php to onclick="even()" button.php
-    //for now its not working
-    //oridinary button like <button> with event is working normally
-    function myFunction() {
-        console.log('hello');
-    }
-</script>

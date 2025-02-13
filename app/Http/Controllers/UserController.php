@@ -151,7 +151,7 @@ class UserController extends Controller
 
     //             //then the $totalHours will be passed to the view dtr.index
     //             //with the data of array['type' => 'user', 'groupedData' => $totalHours]
-                
+
     //             return redirect()->route('users.dtr', [
     //                 // 'type' => 'user',
     //                 // 'groupedData' => $totalHours,
@@ -167,7 +167,7 @@ class UserController extends Controller
     //     }
     // }
 
-    
+
     // public function showDTR(DtrSummaryController $dtrSummaryController, Request $request)
     // {
     //     try {

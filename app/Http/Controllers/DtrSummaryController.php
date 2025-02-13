@@ -16,7 +16,7 @@ class DtrSummaryController extends Controller
     //     if(is_null($request)){
     //         return null;
     //     }
-        
+
     //     // Get selected month and year (default to current month/year)
     //     $selectedMonth = request('month', Carbon::now()->month);
     //     $selectedYear = request('year', Carbon::now()->year);
@@ -45,7 +45,7 @@ class DtrSummaryController extends Controller
     //     //this will be the array
     //     //the content of this array will be the time in, time out, and hours worked
     //     $groupedData = [];
-        
+
     //     //set the totalhours to 0
     //     //settings the totalhours at default value 0 since it will be used again in the dtr summary page
     //     $totalHours = 0;
@@ -109,7 +109,7 @@ class DtrSummaryController extends Controller
     //     ];
     // }
 
-    
+
     //post function
     public function ShowUserDtrPagination(Request $request)
     {
@@ -117,13 +117,13 @@ class DtrSummaryController extends Controller
         $currentDate = Carbon::now();
         $selectedMonth = $request->input('month', $currentDate->month);
         $selectedYear = $request->input('year', $currentDate->year);
-        
-        if($request->searchDate){
+
+        if ($request->searchDate) {
             $selectedDate = Carbon::parse($request->searchDate);
             $selectedMonth = $selectedDate->month;
             $selectedYear = $selectedDate->year;
         }
-        
+
         $selectedDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1);
         $previousMonth = (clone $selectedDate)->subMonth();
         $nextMonth = (clone $selectedDate)->addMonth();
@@ -134,16 +134,16 @@ class DtrSummaryController extends Controller
             ->whereMonth('datetime', $selectedMonth)
             ->orderBy('datetime', 'asc')
             ->get();
-        
+
         $logsByDate = $userLogs->groupBy(function ($log) {
             return Carbon::parse($log->datetime)->format('Y-m-d');
         });
-        
+
         $daysInMonth = Carbon::createFromDate($request->year, $request->month, 1)->daysInMonth;
-        
+
         $groupedData = [];
         $totalHours = 0;
-        
+
         for ($day = 1; $day <= $daysInMonth; $day++) {
             $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
             //echo "\nProcessing date: $dateKey\n";
@@ -162,7 +162,7 @@ class DtrSummaryController extends Controller
                 if ($firstTimeIn && $lastTimeOut) {
                     $timeIn = Carbon::parse($firstTimeIn->datetime);
                     $timeOut = Carbon::parse($lastTimeOut->datetime);
-                    
+
                     // Only calculate hours if time out is after time in
                     if ($timeOut->gt($timeIn)) {
                         $hoursWorked = floor($timeIn->diffInHours($timeOut));
@@ -199,7 +199,7 @@ class DtrSummaryController extends Controller
                 //echo "No logs found for this date\n";
             }
         }
-        
+
         $totalHoursPerMonth = 0;
         foreach ($groupedData as $key => $value) {
             if ($value['hours_worked'] !== '—') {
@@ -209,7 +209,7 @@ class DtrSummaryController extends Controller
         }
 
         //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
-        
+
         $records = [];
         foreach ($groupedData as $date => $data) {
             $records[] = [
@@ -219,37 +219,37 @@ class DtrSummaryController extends Controller
                 'time_out' => $data['time_out'],
                 'hours_worked' => $data['hours_worked']
             ];
-        }        
+        }
 
         return redirect()->route('users.dtr', [
             'month' => $selectedMonth,
             'year' => $selectedYear
         ])->with('records', [
-            'user' => Auth::user(),
-            'records' => $groupedData,
-            'totalHoursPerMonth' => $totalHoursPerMonth,
-            'selectedMonth' => $selectedMonth,
-            'selectedYear' => $selectedYear,
-            'pagination' => [
-                'currentMonth' => [
-                    'name' => $selectedDate->format('F Y'),
-                    'month' => $selectedMonth,
-                    'year' => $selectedYear
-                ],
-                'previousMonth' => [
-                    'name' => $previousMonth->format('F Y'),
-                    'month' => $previousMonth->month,
-                    'year' => $previousMonth->year,
-                    'url' => route('users.dtr', ['month' => $previousMonth->month, 'year' => $previousMonth->year])
-                ],
-                'nextMonth' => [
-                    'name' => $nextMonth->format('F Y'),
-                    'month' => $nextMonth->month,
-                    'year' => $nextMonth->year,
-                    'url' => route('users.dtr', ['month' => $nextMonth->month, 'year' => $nextMonth->year])
-                ]
-            ]
-        ]);
+                    'user' => Auth::user(),
+                    'records' => $groupedData,
+                    'totalHoursPerMonth' => $totalHoursPerMonth,
+                    'selectedMonth' => $selectedMonth,
+                    'selectedYear' => $selectedYear,
+                    'pagination' => [
+                        'currentMonth' => [
+                            'name' => $selectedDate->format('F Y'),
+                            'month' => $selectedMonth,
+                            'year' => $selectedYear
+                        ],
+                        'previousMonth' => [
+                            'name' => $previousMonth->format('F Y'),
+                            'month' => $previousMonth->month,
+                            'year' => $previousMonth->year,
+                            'url' => route('users.dtr', ['month' => $previousMonth->month, 'year' => $previousMonth->year])
+                        ],
+                        'nextMonth' => [
+                            'name' => $nextMonth->format('F Y'),
+                            'month' => $nextMonth->month,
+                            'year' => $nextMonth->year,
+                            'url' => route('users.dtr', ['month' => $nextMonth->month, 'year' => $nextMonth->year])
+                        ]
+                    ]
+                ]);
     }
 
     public function showUserDtrSummary(Request $request)
@@ -301,7 +301,7 @@ class DtrSummaryController extends Controller
                 if ($firstTimeIn && $lastTimeOut) {
                     $timeIn = Carbon::parse($firstTimeIn->datetime);
                     $timeOut = Carbon::parse($lastTimeOut->datetime);
-                    
+
                     if ($timeOut->gt($timeIn)) {
                         $hoursWorked = floor($timeIn->diffInHours($timeOut));
                         $monthlyHours += $hoursWorked;
@@ -351,7 +351,7 @@ class DtrSummaryController extends Controller
         $currentDate = Carbon::now();
         $selectedMonth = $request->input('month', $currentDate->month);
         $selectedYear = $request->input('year', $currentDate->year);
-        
+
         $selectedDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1);
         $previousMonth = (clone $selectedDate)->subMonth();
         $nextMonth = (clone $selectedDate)->addMonth();
@@ -366,7 +366,7 @@ class DtrSummaryController extends Controller
         $logsByDate = $userLogs->groupBy(function ($log) {
             return Carbon::parse($log->datetime)->format('Y-m-d');
         });
-        
+
         $daysInMonth = Carbon::createFromDate($request->year, $request->month, 1)->daysInMonth;
 
         $groupedData = [];
@@ -390,7 +390,7 @@ class DtrSummaryController extends Controller
                 if ($firstTimeIn && $lastTimeOut) {
                     $timeIn = Carbon::parse($firstTimeIn->datetime);
                     $timeOut = Carbon::parse($lastTimeOut->datetime);
-                    
+
                     // Only calculate hours if time out is after time in
                     if ($timeOut->gt($timeIn)) {
                         $hoursWorked = floor($timeIn->diffInHours($timeOut));
@@ -437,7 +437,7 @@ class DtrSummaryController extends Controller
         }
 
         //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
-        
+
         $records = [];
         foreach ($groupedData as $date => $data) {
             $records[] = [
@@ -448,7 +448,7 @@ class DtrSummaryController extends Controller
                 'hours_worked' => $data['hours_worked']
             ];
         }
-        
+
         return view('users.dtr', [
             'user' => Auth::user(),
             'records' => $records,
@@ -487,7 +487,7 @@ class DtrSummaryController extends Controller
     //     $currentDate = Carbon::now();
     //     $selectedMonth = $request->input('month', $currentDate->month);
     //     $selectedYear = $request->input('year', $currentDate->year);
-        
+
     //     $selectedDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1);
     //     $previousMonth = (clone $selectedDate)->subMonth();
     //     $nextMonth = (clone $selectedDate)->addMonth();
@@ -538,7 +538,7 @@ class DtrSummaryController extends Controller
     //     $logsByDate = $userLogs->groupBy(function ($log) {
     //         return Carbon::parse($log->datetime)->format('Y-m-d');
     //     });
-        
+
     //     $daysInMonth = Carbon::createFromDate($request->year, $request->month, 1)->daysInMonth;
 
     //     $groupedData = [];
@@ -562,7 +562,7 @@ class DtrSummaryController extends Controller
     //             if ($firstTimeIn && $lastTimeOut) {
     //                 $timeIn = Carbon::parse($firstTimeIn->datetime);
     //                 $timeOut = Carbon::parse($lastTimeOut->datetime);
-                    
+
     //                 // Only calculate hours if time out is after time in
     //                 if ($timeOut->gt($timeIn)) {
     //                     $hoursWorked = floor($timeIn->diffInHours($timeOut));
@@ -609,7 +609,7 @@ class DtrSummaryController extends Controller
     //     }
 
     //     echo "\nFinal total hours for month: $totalHoursPerMonth\n";
-        
+
     //     $records = [];
     //     foreach ($groupedData as $date => $data) {
     //         $records[] = [
@@ -620,7 +620,7 @@ class DtrSummaryController extends Controller
     //             'hours_worked' => $data['hours_worked']
     //         ];
     //     }
-        
+
     //     return view('users.dtr', [
     //         'user' => Auth::user(),
     //         'records' => $groupedData,
@@ -680,7 +680,7 @@ class DtrSummaryController extends Controller
         while ($startDate->lte($endDate)) {
             $currentMonth = $startDate->format('Y-m');
             $daysInMonth = $startDate->daysInMonth;
-            
+
             $monthLogs = $userLogs->filter(function ($log) use ($startDate) {
                 return Carbon::parse($log->datetime)->format('Y-m') === $startDate->format('Y-m');
             });
@@ -706,7 +706,7 @@ class DtrSummaryController extends Controller
                     if ($firstTimeIn && $lastTimeOut) {
                         $timeIn = Carbon::parse($firstTimeIn->datetime);
                         $timeOut = Carbon::parse($lastTimeOut->datetime);
-                        
+
                         if ($timeOut->gt($timeIn)) {
                             $hoursWorked = floor($timeIn->diffInHours($timeOut));
                             $monthlyHours += $hoursWorked;
@@ -740,16 +740,20 @@ class DtrSummaryController extends Controller
             }
 
             // Only add months that have data
-            if (!empty(array_filter($monthData, function($data) {
-                return $data['time_in'] !== '—' || $data['time_out'] !== '—';
-            }))) {
+            if (
+                !empty(array_filter($monthData, function ($data) {
+                    return $data['time_in'] !== '—' || $data['time_out'] !== '—';
+                }))
+            ) {
                 $allMonthsData[$currentMonth] = [
                     'month_name' => $startDate->format('F Y'),
-                    'users' => [[
-                        'user' => User::find(3),
-                        'records' => $monthData,
-                        'total_hours' => $monthlyHours
-                    ]]
+                    'users' => [
+                        [
+                            'user' => User::find(3),
+                            'records' => $monthData,
+                            'total_hours' => $monthlyHours
+                        ]
+                    ]
                 ];
             }
 
@@ -799,7 +803,7 @@ class DtrSummaryController extends Controller
             while ($startDate->lte($endDate)) {
                 $currentMonth = $startDate->format('Y-m');
                 $daysInMonth = $startDate->daysInMonth;
-                
+
                 $monthLogs = $userLogs->filter(function ($log) use ($startDate) {
                     return Carbon::parse($log->datetime)->format('Y-m') === $startDate->format('Y-m');
                 });
@@ -825,7 +829,7 @@ class DtrSummaryController extends Controller
                         if ($firstTimeIn && $lastTimeOut) {
                             $timeIn = Carbon::parse($firstTimeIn->datetime);
                             $timeOut = Carbon::parse($lastTimeOut->datetime);
-                            
+
                             if ($timeOut->gt($timeIn)) {
                                 $hoursWorked = floor($timeIn->diffInHours($timeOut));
                                 $monthlyHours += $hoursWorked;
@@ -859,9 +863,11 @@ class DtrSummaryController extends Controller
                 }
 
                 // Only add months that have data
-                if (!empty(array_filter($monthData, function($data) {
-                    return $data['time_in'] !== '—' || $data['time_out'] !== '—';
-                }))) {
+                if (
+                    !empty(array_filter($monthData, function ($data) {
+                        return $data['time_in'] !== '—' || $data['time_out'] !== '—';
+                    }))
+                ) {
                     $monthlyGroupedData[$currentMonth] = [
                         'month_name' => $startDate->format('F Y'),
                         'records' => $monthData,
@@ -893,10 +899,10 @@ class DtrSummaryController extends Controller
     public function ShowAdminDtrSummary(Request $request)
     {
         //check if the requerst is null it was used for year and month passing in the controller
-        if(is_null($request)){
+        if (is_null($request)) {
             return null;
         }
-        
+
         // Get selected month and year (default to current month/year)
         $selectedMonth = request('month', Carbon::now()->month);
         $selectedYear = request('year', Carbon::now()->year);

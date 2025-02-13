@@ -1,1 +1,3 @@
-<x-image path="resources/img/rweb_logo.png" className="w-[250px] h-auto select-none" />
+@props(['width' => 'w-[250px]'])
+
+<x-image path="resources/img/rweb_logo.png" className="{{ $width }} h-auto select-none" />

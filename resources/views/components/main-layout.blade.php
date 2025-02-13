@@ -76,46 +76,16 @@
 
         {{-- users/intern layout --}}
     @elseif (Request::routeIs('users.dashboard*') || Request::routeIs('users.settings*') || Request::routeIs('users.dtr*'))
-        {{-- <div class="w-full h-auto">
-            <nav class="fixed top-0 left-0 w-full h-auto z-50 bg-white">
-                <div class="grid grid-cols-3 text-nowrap h-auto px-20 border shadow-md">
-                    <section class="flex items-center justify-start">
-                        <x-logo />
-                    </section>
-                    <section class="flex items-center justify-center">
-                        <a href="{{ route('users.dashboard') }}"
-                            class="{{ Request::routeIs('users.dashboard*') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-10 px-7 border-b-4 flex items-center gap-2' }}">
-                            <span class="akar-icons--dashboard"></span>
-                            <p>Dashboard</p>
-                        </a>
-                        <a href="{{ route('users.dtr') }}"
-                            class="{{ Request::routeIs('users.dtr*') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-10 px-7 border-b-4 flex items-center gap-2' }}">
-                            <span class="solar--calendar-linear"></span>
-                            <p>DTR</p>
-                        </a>
-                        <a href="{{ route('users.settings') }}"
-                            class="{{ Request::routeIs('users.settings') ? 'border-custom-red text-custom-red py-10 px-7 border-b-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-10 px-7 border-b-4 flex items-center gap-2' }}">
-                            <span class="solar--settings-linear"></span>
-                            <p>Settings</p>
-                        </a>
-                    </section>
-                    <x-form.container routeName="logout" className="flex items-center justify-end">
-                        @csrf
-                        <x-button primary label="Logout" leftIcon="material-symbols--logout-rounded" submit
-                            className="px-10 py-3" />
-                    </x-form.container>
-                </div>
-            </nav>
-
-            <main class="pt-20">
-                {{ $slot }}
-            </main>
-        </div> --}}
-
-
         <div class="w-full h-auto">
             <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
-                <div class="grid grid-cols-3 text-nowrap h-auto px-10 border shadow-md">
+                <div class="lg:hidden flex items-center justify-between gap-5 px-5 py-3">
+                    <x-logo width="w-[200px]" />
+                    <button id="intern-menu-toggle" class="p-2 border rounded-md">
+                        ☰
+                    </button>
+                </div>
+
+                <div class="hidden lg:grid grid-cols-3 text-nowrap h-auto px-10 border shadow-md">
                     <section class="flex items-center justify-start">
                         <x-logo />
                     </section>
@@ -138,17 +108,85 @@
                     </section>
                     <x-form.container routeName="logout" className="flex items-center justify-end">
                         @csrf
-                        <x-button primary label="Logout" leftIcon="material-symbols--logout-rounded" submit
-                            className="px-10 py-3" />
+                        <button
+                            class="flex items-center opacity-100 gap-1 w-fit px-8 py-3 rounded-lg font-semibold bg-custom-red hover:bg-custom-red/80 text-white animate-transition"><span
+                                class="material-symbols--logout-rounded"></span>Logout</button>
                     </x-form.container>
                 </div>
             </nav>
-            {{-- container max-w-screen-xl w-full mx-auto --}}
-            <main class="mt-28">
+
+            <aside id="mobile-menu"
+                class="fixed top-[70px] right-0 mt-1 w-64 h-[calc(100vh-3rem)] bg-white shadow-md transform translate-x-full transition-transform lg:hidden overflow-auto z-50 flex flex-col justify-between">
+                <nav>
+                    <a href="{{ route('users.dashboard') }}"
+                        class="{{ Request::routeIs('users.dashboard*') ? 'border-custom-red text-custom-red py-5 px-7 border-l-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-5 px-7 border-l-4 flex items-center gap-2' }}">
+                        <span class="akar-icons--dashboard"></span>
+                        <p>Dashboard</p>
+                    </a>
+                    <a href="{{ route('users.dtr') }}"
+                        class="{{ Request::routeIs('users.dtr*') ? 'border-custom-red text-custom-red py-5 px-7 border-l-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-5 px-7 border-l-4 flex items-center gap-2' }}">
+                        <span class="mingcute--paper-line"></span>
+                        <p>DTR</p>
+                    </a>
+                    <a href="{{ route('users.settings') }}"
+                        class="{{ Request::routeIs('users.settings*') ? 'border-custom-red text-custom-red py-5 px-7 border-l-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-5 px-7 border-l-4 flex items-center gap-2' }}">
+                        <span class="solar--settings-linear"></span>
+                        <p>Settings</p>
+                    </a>
+                </nav>
+
+                <x-form.container routeName="logout" className="flex items-center justify-center">
+                    @csrf
+                    <button
+                        class="flex items-center opacity-100 gap-1 w-full px-8 py-5 font-semibold bg-custom-red hover:bg-custom-red/80 text-white animate-transition"><span
+                            class="material-symbols--logout-rounded"></span>Logout</button>
+                </x-form.container>
+            </aside>
+
+            <main class="lg:mt-28 mt-[75px] bg-gray-100">
                 {{ $slot }}
             </main>
         </div>
 
+        <script>
+            const menuToggle = document.getElementById("intern-menu-toggle");
+            const mobileMenu = document.getElementById("mobile-menu");
+
+            menuToggle.addEventListener("click", () => {
+                mobileMenu.classList.toggle("translate-x-full");
+            });
+
+            // swiper
+            var swiper = new Swiper(".progress-slide-carousel", {
+                loop: true,
+                fraction: true,
+                autoplay: {
+                    delay: 1200,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".progress-slide-carousel .swiper-pagination",
+                    type: "progressbar",
+                },
+            });
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const dropdownToggle = document.getElementById("dropdown-toggle");
+                const dropdownMenu = document.getElementById("dropdown-menu");
+
+                // Toggle dropdown visibility on button click
+                dropdownToggle.addEventListener("click", function() {
+                    dropdownMenu.classList.toggle("hidden");
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener("click", function(event) {
+                    if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                        dropdownMenu.classList.add("hidden");
+                    }
+                });
+            });
+        </script>
 
         {{-- admin layout --}}
     @elseif (Request::routeIs('admin.dashboard*') ||
