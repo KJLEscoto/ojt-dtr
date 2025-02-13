@@ -48,29 +48,23 @@
 
     {{-- guest layout --}}
     @if (Request::routeIs('show.login*') || Request::routeIs('show.register*'))
-        <main class="w-full h-screen flex">
-
-            {{-- guest form content --}}
-            <div class="w-2/3 h-screen">
-                <div class="container mx-auto max-w-screen-xl px-20 py-10 w-full h-full overflow-auto">
+        <main class="container max-w-screen-xl mx-auto">
+            <div class="md:!grid md:!grid-cols-12 h-[calc(100vh)] w-full overflow-auto">
+                <section class="md:col-span-8 md:h-[calc(100vh)] overflow-auto w-full md:!p-10 p-5 bg-white">
                     {{ $slot }}
-                </div>
+                </section>
 
-            </div>
+                <section class="md:col-span-4 md:h-[calc(100vh)] w-full h-[calc(100vh-50%)] md:sticky md:top-0">
+                    @if (Request::routeIs('show.register'))
+                        <x-form.option imgPath="/resources/img/register.png" title="Have an account?"
+                            routePath="show.login" desc="Stay on top of your schedule!" btnLabel="Login" />
 
-            {{-- options --}}
-            <div class="fixed top-0 right-0 w-1/3">
-
-                {{-- login button --}}
-                @if (Request::routeIs('show.register'))
-                    <x-form.option imgPath="/resources/img/register.png" title="Have an account?" routePath="show.login"
-                        desc="Stay on top of your schedule!" btnLabel="Login" />
-
-                    {{-- register button --}}
-                @elseif (Request::routeIs('show.login'))
-                    <x-form.option imgPath="/resources/img/login.png" title="New Intern?" routePath="show.register"
-                        desc="Sign up to keep track of your daily attendance." btnLabel="Register" />
-                @endif
+                        {{-- register button --}}
+                    @elseif (Request::routeIs('show.login'))
+                        <x-form.option imgPath="/resources/img/login.png" title="New Intern?" routePath="show.register"
+                            desc="Sign up to keep track of your daily attendance." btnLabel="Register" />
+                    @endif
+                </section>
             </div>
         </main>
 
@@ -196,11 +190,11 @@
         @props(['array_daily' => '', 'ranking' => ''])
         <!-- Navbar (Sticky at the Top) -->
         <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
-            <div class="flex justify-between items-center px-10 py-4">
+            <div class="flex justify-between items-center lg:px-10 px-5 py-4">
                 <button id="menu-toggle" class="lg:hidden p-2 border rounded-md">
                     ☰
                 </button>
-                <x-logo />
+                <x-logo width="lg:!w-[250px] sm:!w-[200px] !w-[150px]" />
                 <div class="flex items-center gap-2">
                     <p class="lg:block hidden capitalize">Hi, {{ Auth::user()->firstname }}!</p>
                     <button type="button" class="">
@@ -233,7 +227,7 @@
 
         <!-- Sidebar Menu (Hidden on Large Screens) -->
         <aside id="mobile-menu"
-            class="fixed top-20 left-0 w-64 h-screen mt-5 bg-white shadow-md transform -translate-x-full transition-transform lg:hidden overflow-auto z-50">
+            class="fixed top-22 left-0 w-64 h-screen bg-white shadow-md transform -translate-x-full transition-transform lg:hidden overflow-auto z-50">
             <nav>
                 <a href="{{ route('admin.dashboard') }}"
                     class="{{ Request::routeIs('admin.dashboard*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
@@ -265,10 +259,12 @@
             </nav>
         </aside>
 
-        <div class="mt-24 h-[calc(100vh-6rem)] w-full grid lg:grid-cols-12 grid-cols-10">
+        {{-- <main class="container max-w-screen-xl mx-auto"> --}}
+        <div class="lg:mt-[93px] mt-[89px] h-full w-full lg:grid lg:grid-cols-12">
+
             <!-- Left Sidebar (Sticky on Large Screens) -->
             <aside
-                class="hidden lg:block md:col-span-2 bg-white shadow-xl sticky top-20 h-[calc(100vh-6rem)] overflow-auto py-5">
+                class="hidden lg:block md:col-span-2 bg-white shadow-xl sticky top-20 h-[calc(100vh-5rem)] overflow-auto py-5">
                 <!-- Navigation -->
                 <nav>
                     <a href="{{ route('admin.dashboard') }}"
@@ -287,12 +283,6 @@
                                 class="material-symbols--history-rounded w-6 h-6"></span></div>
                         <p>History</p>
                     </a>
-                    {{-- <a href="{{ route('admin.school') }}"
-                        class="{{ Request::routeIs('admin.school*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
-                        <div class="w-auto h-auto flex items-center"><span
-                                class="tabler--school"></span></div>
-                        <p>School</p>
-                    </a> --}}
                     <a href="{{ route('admin.profile') }}"
                         class="{{ Request::routeIs('admin.profile*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
                         <div class="w-auto h-auto flex items-center"><span class="cuida--user-outline"></span></div>
@@ -302,19 +292,32 @@
             </aside>
 
             <!-- Main Content (Auto Scroll) -->
-            <main class="md:col-span-6 col-span-full overflow-auto p-10 h-[calc(100vh-6rem)] bg-gray-100">
+            <main class="lg:col-span-6 overflow-auto lg:!p-10 px-5 pt-5 pb-20 h-[calc(100vh-5rem)] bg-gray-100">
                 {{ $slot }}
             </main>
 
-            <!-- Right Sidebar (Sticky on Large Screens) -->
-            <aside
-                class="hidden md:block md:col-span-4 bg-gradient-to-r from-custom-orange via-custom-orange/90 to-custom-red shadow-md sticky h-[calc(100vh-6rem)] top-20 p-10 overflow-auto">
-                <div class="w-full h-auto space-y-10">
+            <!-- ✅ Unique Button for Toggling (Outside Panel) -->
+            <button id="toggleAttendance"
+                class="w-full sticky bottom-0 lg:hidden flex items-center justify-center py-3 bg-custom-red text-white">
+                View Attendance
+            </button>
+
+            <!-- ✅ Attendance Panel -->
+            <aside id="attendancePanel"
+                class="lg:col-span-4 lg:!h-[calc(100vh-5rem)] lg:static bg-gradient-to-r from-custom-orange via-custom-orange/90 to-custom-red shadow-md fixed bottom-0 left-0 w-full h-1/2 lg:!p-10 p-5 overflow-auto hidden lg:block z-30">
+
+                <!-- ✅ Unique Button for Hiding (Inside Panel) -->
+                <button id="toggleAttendance"
+                    class="fixed bottom-1/2 left-0 w-full lg:hidden flex items-center justify-center py-3 bg-custom-red text-white z-30">
+                    Hide Attendance
+                </button>
+
+                <div class="w-full h-auto space-y-7">
                     <section class="w-full h-fit">
                         <div class="p-5 rounded-xl border border-gray-200 bg-white h-auto w-full space-y-5">
                             <section class="flex gap-2 items-start text-custom-red">
                                 <span class="hugeicons--champion"></span>
-                                <div class="flex items-end justify-between w-full">
+                                <div class="flex flex-wrap gap-x-2 items-end justify-between w-full">
                                     <p class="font-semibold text-lg">Top 3 Performer</p>
                                     <p class="text-sm font-semibold">Highest Hour Basis</p>
                                 </div>
@@ -324,7 +327,7 @@
                             <div class="w-full relative h-fit">
                                 <div class="swiper progress-slide-carousel swiper-container relative">
                                     <div class="swiper-wrapper">
-                                        @foreach ($ranking as $user)
+                                        @forelse ($ranking as $user)
                                             <div class="swiper-slide">
                                                 <div
                                                     class="bg-custom-orange/5 rounded-md py-10 h-full flex justify-center items-center">
@@ -333,7 +336,12 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                        @endforeach
+                                        @empty
+                                            <div
+                                                class="flex w-full items-center justify-center h-full font-semibold text-gray-500">
+                                                No top performer yet.
+                                            </div>
+                                        @endforelse
                                     </div>
                                     <div
                                         class="swiper-pagination !bottom-5 !top-auto !w-80 right-0 mx-auto bg-gray-100">
@@ -356,15 +364,16 @@
                         @endforeach
                     </div>
                     <div class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
-                        @foreach ($array_daily as $daily)
+                        @forelse ($array_daily as $daily)
                             <section
-                                class="px-7 py-5 w-full flex justify-between even:bg-custom-orange/5 bg-white items-center">
+                                class="px-7 py-5 w-full flex justify-between odd:bg-custom-orange/5 bg-white items-center">
                                 <div class="flex items-center gap-5">
                                     <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                         path="resources/img/default-male.png" />
 
                                     <div>
-                                        <section class="font-bold text-black text-lg">{{ $daily['timeFormat'] }}
+                                        <section class="font-bold text-black text-lg">
+                                            {{ $daily['timeFormat'] }}
                                         </section>
                                         <p class="text-sm font-medium text-gray-700 capitalize">
                                             {{ $daily['name'] }}</p>
@@ -383,12 +392,40 @@
                                     </div>
                                 @endif
                             </section>
-                        @endforeach
+                        @empty
+                            <h1
+                                class="text-center flex items-center justify-center h-full font-semibold text-gray-500">
+                                Waiting for attendees...
+                            </h1>
+                        @endforelse
                     </div>
                 </section>
             </div>
         </aside>
     </div>
+
+    <script>
+        document.querySelectorAll('#toggleAttendance').forEach(button => {
+            button.addEventListener('click', function() {
+                const panel = document.getElementById('attendancePanel');
+                const allButtons = document.querySelectorAll('#toggleAttendance');
+
+                const isHidden = panel.classList.contains('hidden');
+
+                if (isHidden) {
+                    panel.classList.remove('hidden');
+                    panel.classList.add('block'); // Show panel
+                    allButtons.forEach(btn => btn.textContent = 'Hide Attendance');
+                } else {
+                    panel.classList.remove('block');
+                    panel.classList.add('hidden'); // Hide panel
+                    allButtons.forEach(btn => btn.textContent = 'View Attendance');
+                }
+            });
+        });
+    </script>
+
+    {{-- </main> --}}
 
 
     <script>
@@ -432,7 +469,7 @@
     </script>
 @else
     {{-- login / register form --}}
-    <main class="h-screen w-full overflow-auto bg-white">
+    <main class="h-full w-full bg-white">
         {{ $slot }}
     </main>
 @endif

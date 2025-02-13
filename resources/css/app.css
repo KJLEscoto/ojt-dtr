@@ -19,11 +19,11 @@
 }
 
 ::-webkit-scrollbar-track {
-    @apply bg-gray-300 rounded-r
+    @apply bg-gray-300 
 }
 
 ::-webkit-scrollbar-thumb {
-    @apply bg-gray-500 rounded-md
+    @apply bg-gray-500 
 }
 
 ::-webkit-scrollbar-thumb:hover {

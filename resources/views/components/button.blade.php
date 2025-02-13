@@ -17,6 +17,7 @@
     'loading' => false,
     'disabled' => false,
     'showLabel' => false,
+    'big' => false,
 ])
 
 @php
@@ -34,7 +35,9 @@
 
 <!-- Main Button -->
 {{-- disable this button --}}
-<button class="{{ $className }} {{ $buttonClass }}" name="{{ $name }}"
+<button
+    class="{{ $className }} {{ $buttonClass }} @if ($big) 'py-4 lg:text-lg sm:text-base text-sm' @endif"
+    name="{{ $name }}"
     @if ($closeModal) data-pd-overlay="{{ $closeModal }}" data-modal-target="{{ $closeModal }}" @endif
     @if ($openModal) data-pd-overlay="# . {{ $openModal }}" data-modal-target="{{ $openModal }}" data-modal-toggle="{{ $openModal }}" @endif
     @if ($submit) type="submit" @elseif ($button) type="button" @endif

@@ -1,4 +1,4 @@
-@props(['title' => 'title here', 'vectorClass' => 'lg:h-5 h-3', 'titleClass' => 'text-3xl'])
+@props(['title' => 'title here', 'vectorClass' => 'lg:h-5 h-3', 'titleClass' => ''])
 
 <div class="flex items-center gap-2 select-none">
     <x-image path="resources/img/vector_icon.png" className="w-auto {{ $vectorClass }}" />

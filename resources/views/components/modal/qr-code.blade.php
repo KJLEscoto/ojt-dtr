@@ -16,13 +16,13 @@
                 </div>
                 <div class="w-full h-auto space-y-5 flex flex-col items-center justify-center">
                     <div id="qr-code-container"
-                        class="h-[350px] w-[350px] p-10 overflow-hidden object-center border bg-white rounded-xl border-black">
+                        class="lg:h-auto md:h-98 md:w-98 h-60 w-60 lg:w-auto p-5 overflow-hidden object-center flex items-center justify-center border bg-white rounded-xl border-black">
                         {{-- 
                             I removed it because it wont replace the old qr to the new generated qr
 
                             <img id="large-qr-image" src="{{ asset('resources/img/sample-qr.png') }}" class="h-full w-full" /> 
                         --}}
-                        <div id="large-qr-code-img"></div>
+                        <div id="large-qr-code-img" class="lg:w-[600px] lg:h-[600px] w-52 h-52 m-auto"></div>
                     </div>
                     <p class="text-sm">
                         <span class="font-bold">QR CODE:</span> <span id="qr-code-text">N/A</span>
