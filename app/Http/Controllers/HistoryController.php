@@ -12,7 +12,7 @@ class HistoryController extends Controller
 {
     //the functions for calculating the total scan, total time in, total time out, total register, 
     //and total hours in the current day from AM to PM
-    
+
     //admin
     public function TotalScan()
     {
@@ -35,7 +35,7 @@ class HistoryController extends Controller
 
     public function TotalRegister()
     {
-        $user = User::count();  
+        $user = User::count();
         return $user;
     }
 
@@ -113,9 +113,9 @@ class HistoryController extends Controller
 
             $Today = Carbon::now()->timezone('Asia/Manila')->toDateString(); // Gets today's date (YYYY-MM-DD)
 
-            $DailyAttendance = Histories::whereDate('datetime', $Today)->orderBy('datetime', 'desc')->get()->map(function ($daily){
+            $DailyAttendance = Histories::whereDate('datetime', $Today)->orderBy('datetime', 'desc')->get()->map(function ($daily) {
                 return [
-                    'name' => User::where('id', $daily->user_id)->first()->firstname .' ' . substr(User::where('id', $daily->user_id)->first()->middlename, 0, 1) . '. ' . User::where('id', $daily->user_id)->first()->lastname,   
+                    'name' => User::where('id', $daily->user_id)->first()->firstname . ' ' . substr(User::where('id', $daily->user_id)->first()->middlename, 0, 1) . '. ' . User::where('id', $daily->user_id)->first()->lastname,
                     'description' => $daily->description,
                     'datetime' => Carbon::parse($daily->datetime)->format('F j, Y'),
                     'timeFormat' => Carbon::parse($daily->datetime)->format('g:i A'),
@@ -123,37 +123,34 @@ class HistoryController extends Controller
             })->toArray();
 
             return $DailyAttendance;
-        }
-        catch(\Exception $ex)
-        {
+        } catch (\Exception $ex) {
             return back()->with('invalid', $ex->getMessage());
         }
     }
 
     public function AllMonthlyUsers()
-{
-    try {
-        $now = Carbon::now()->timezone('Asia/Manila');
-        $month = $now->month;
-        $year = $now->year;
-
-        $users = User::whereMonth('created_at', $month)
-            ->whereYear('created_at', $year)
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function ($user) {
-                return [
-                    'fullname' => $user->firstname . ' ' . substr($user->middlename, 0, 1). '. ' . $user->lastname,
-                    'ago' => Carbon::parse($user->created_at)->diffForHumans(),
-                ];
-            });
-
-        return $users;
-    }
-    catch(\Exception $ex)
     {
-        return back()->with('invalid', $ex->getMessage());
+        try {
+            $now = Carbon::now()->timezone('Asia/Manila');
+            $month = $now->month;
+            $year = $now->year;
+
+            $users = User::whereMonth('created_at', $month)
+                ->whereYear('created_at', $year)
+                ->orderBy('created_at', 'desc')
+                ->get()
+                ->map(function ($user) {
+                    return [
+                        'id' => $user->id,
+                        'fullname' => $user->firstname . ' ' . substr($user->middlename, 0, 1) . '. ' . $user->lastname,
+                        'ago' => Carbon::parse($user->created_at)->diffForHumans(),
+                    ];
+                });
+
+            return $users;
+        } catch (\Exception $ex) {
+            return back()->with('invalid', $ex->getMessage());
+        }
     }
-}
 
 }

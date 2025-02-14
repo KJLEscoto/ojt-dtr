@@ -34,62 +34,62 @@ class UserController extends Controller
     }
 
     public function AdminScannerTimeCheck(Request $request, EmailController $emailController)
-{
-    try {
-        // initialized the success text
-        $success_text = "";
-
-        // get the user data from the qr code
-        $userData = User::where('qr_code', $request->qr_code)->first();
-
-        // Check if the user exists
-        if (!$userData) {
-            return back()->with('error', 'User not found.');
-        }
-
-        // initialized the histories object(table)
-        $timeCheck = new Histories();
-
-        // set the user id
-        $timeCheck->user_id = $userData->id;
-
-        // set the datetime
-        // internet global time
-        $timeCheck->datetime = Carbon::now()->timezone('Asia/Manila');
-
-        // Validate the type of time check
-        if (!in_array($request->type, ['time_in', 'time_out'])) {
-            return back()->with('error', 'Invalid time check type.');
-        }
-
-        // it will be depends if time in or time out
-        if ($request->type == 'time_in') {
-            // this will set the description to time in
-            $timeCheck->description = 'time in';
-            $success_text = "Time in checked successfully";
-        } else if ($request->type == 'time_out') {
-            // this will set the description to time out
-            $timeCheck->description = 'time out';
-            $success_text = "Time out checked successfully";
-        }
-
-        // save the data to the database
-        $timeCheck->save();
-
-        // send the shift notification email
+    {
         try {
-            $sendShiftNotification = $emailController->EmailShiftNotification($userData, $timeCheck);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Failed to send shift notification.');
-        }
+            // initialized the success text
+            $success_text = "";
 
-        // return the success text
-        // return back()->with('success', $success_text);
-        return response()->json(['success' => true, 'message' => $success_text]);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'message' => 'Something went wrong.']);
+            // get the user data from the qr code
+            $userData = User::where('qr_code', $request->qr_code)->first();
+
+            // Check if the user exists
+            if (!$userData) {
+                return back()->with('error', 'User not found.');
+            }
+
+            // initialized the histories object(table)
+            $timeCheck = new Histories();
+
+            // set the user id
+            $timeCheck->user_id = $userData->id;
+
+            // set the datetime
+            // internet global time
+            $timeCheck->datetime = Carbon::now()->timezone('Asia/Manila');
+
+            // Validate the type of time check
+            if (!in_array($request->type, ['time_in', 'time_out'])) {
+                return back()->with('error', 'Invalid time check type.');
+            }
+
+            // it will be depends if time in or time out
+            if ($request->type == 'time_in') {
+                // this will set the description to time in
+                $timeCheck->description = 'time in';
+                $success_text = "Time in checked successfully";
+            } else if ($request->type == 'time_out') {
+                // this will set the description to time out
+                $timeCheck->description = 'time out';
+                $success_text = "Time out checked successfully";
+            }
+
+            // save the data to the database
+            $timeCheck->save();
+
+            // send the shift notification email
+            try {
+                $sendShiftNotification = $emailController->EmailShiftNotification($userData, $timeCheck);
+            } catch (\Exception $e) {
+                return back()->with('error', 'Failed to send shift notification.');
+            }
+
+            // return the success text
+            // return back()->with('success', $success_text);
+            return response()->json(['success' => true, 'message' => $success_text]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Something went wrong.']);
+        }
     }
-}
 
 
     // public function showDTR(DtrSummaryController $dtrSummaryController, Request $request)
@@ -195,8 +195,10 @@ class UserController extends Controller
     {
         $ranking = $rankingController->getRankings();
         $array_daily = $historyController->AllUserDailyAttendance();
+        $user = Auth::user();
 
         return view('admin.profile.index', [
+            'user' => $user,
             'ranking' => $ranking,
             'array_daily' => $array_daily,
 
@@ -246,7 +248,7 @@ class UserController extends Controller
                 'user' => $users,
                 'valid' => true
             ], Response::HTTP_OK);
-            
+
             // return back()->with('success', 'User validated successfully')->with('user', $users);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage(), 'valid' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -376,6 +378,7 @@ class UserController extends Controller
             $records[] = [
                 'user' => $user,
                 'history' => $history,
+                'formatted_datetime' => Carbon::parse($history->datetime)->format('M d, Y - h:i a'),
             ];
         }
 
@@ -441,6 +444,19 @@ class UserController extends Controller
             'array_daily' => $array_daily,
             'histories' => $histories,
             //'yearlyTotals' => $yearlyTotals,
+        ]);
+    }
+
+    public function showEditUsers($id, RankingController $rankingController, HistoryController $historyController)
+    {
+        $user = User::where('id', $id)->first();
+        $ranking = $rankingController->getRankings();
+        $array_daily = $historyController->AllUserDailyAttendance();
+
+        return view('admin.users.edit', [
+            'user' => $user,
+            'ranking' => $ranking,
+            'array_daily' => $array_daily,
         ]);
     }
 

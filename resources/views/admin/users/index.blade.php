@@ -1,12 +1,14 @@
 <x-main-layout :array_daily="$array_daily" :ranking="$ranking">
     <div class="w-full h-auto space-y-10">
-        <section class="flex items-center justify-between w-full gap-10">
-            <span class="w-1/2">
+        <section class="flex md:flex-row flex-col-reverse items-center lg:justify-between w-full gap-5">
+            <span class="w-full">
                 <x-form.input name_id="search" placeholder="Search" small />
             </span>
 
-            <x-button primary leftIcon="cuida--user-add-outline" label="Add User" button className="w-fit"
-                className="px-10" />
+            <span class="flex md:justify-end w-full">
+                <x-button primary leftIcon="cuida--user-add-outline" label="Add User" routePath="admin.users.create" button
+                    className="w-fit" className="px-10" />
+            </span>
         </section>
 
         <section class="grid md:grid-cols-3 grid-cols-2 gap-5" id="user-container">
@@ -21,8 +23,9 @@
                             path="resources/img/default-male.png" />
                     </div>
                     <div class="text-center mx-auto w-full">
-                        <h1 class="text-lg font-semibold group-hover:text-custom-orange animate-transition truncate">
-                            {{ $user->firstname }}</h1>
+                        <h1
+                            class="text-sm font-semibold group-hover:text-custom-orange animate-transition truncate capitalize">
+                            {{ $user->firstname }} {{ substr($user->middlename, 0, 1) }}. {{ $user->lastname }}</h1>
                         <p class="text-gray-500 truncate">{{ $user->student_no }}</p>
                     </div>
                 </a>
@@ -30,7 +33,7 @@
         </section>
 
         <!-- Pagination Controls -->
-        <section class="flex items-center justify-between w-full mt-5">
+        <section class="flex lg:flex-row flex-col gap-3 items-center justify-between w-full mt-5">
             <p class="text-sm text-gray-500">
                 Showing <span id="first-item">1</span> - <span id="last-item">10</span> of <span
                     id="total-items">{{ count($users) }}</span>

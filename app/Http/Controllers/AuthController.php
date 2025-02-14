@@ -71,6 +71,69 @@ class AuthController extends Controller
         ]);
     }
 
+    public function showAdminUsersCreate(RankingController $rankingController, HistoryController $historyController, )
+    {
+        $ranking = $rankingController->getRankings();
+        $array_daily = $historyController->AllUserDailyAttendance();
+
+        return view('admin.users.create', [
+            'ranking' => $ranking,
+            'array_daily' => $array_daily,
+        ]);
+    }
+
+    public function showAdminUsersCreatePost(Request $request)
+    {
+        $data = $request->validate([
+            'firstname' => 'required|string|max:255',
+            'middlename' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|string|max:255',
+            'gender' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'school' => 'required|string|max:255',
+            'student_no' => 'required|string|max:255',
+
+            'emergency_contact_fullname' => 'required|string|max:255',
+            'emergency_contact_number' => 'required|string|max:255',
+            'emergency_contact_address' => 'required|string|max:255',
+
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        //return response()->json(['message' => $request->all()],Response::HTTP_INTERNAL_SERVER_ERROR);
+
+        //dd($data);
+        //Generate QR Code
+        $qr_code = 'QR' . '_' . Str::random(10) . '_' . Str::random(10);
+
+        //dd($qr_code);
+        $user = User::create(
+            [
+                'firstname' => $data['firstname'],
+                'middlename' => $data['middlename'],
+                'lastname' => $data['lastname'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'phone' => $data['phone'],
+                'gender' => $data['gender'],
+                'address' => $data['address'],
+                'school' => $data['school'],
+                'student_no' => $data['student_no'],
+                'emergency_contact_fullname' => $data['emergency_contact_fullname'],
+                'emergency_contact_number' => $data['emergency_contact_number'],
+                'emergency_contact_address' => $data['emergency_contact_address'],
+                'qr_code' => $qr_code,
+                'expiry_date' => Carbon::now()->addMonths(3),
+            ]
+        );
+
+        return back()->with([
+            'success' => 'Account Created Successfully!',
+        ]);
+    }
+
     public function showLogin()
     {
         return view('auth.login');
@@ -141,7 +204,7 @@ class AuthController extends Controller
             $user->status = 'inactive';
             $user->save();
             Auth::logout();
-            
+
             return back()->with('invalid', 'This account does not belong here.');
         }
 

@@ -4,8 +4,8 @@
 
 <x-main-layout :array_daily="$array_daily" :ranking="$ranking">
     <div class="h-auto w-full space-y-10">
-        <section class="flex items-center justify-between w-full gap-10">
-            <span class="w-1/2">
+        <section class="flex lg:flex-row flex-col items-center justify-between w-full gap-5">
+            <span class="lg:!w-1/2 w-full">
                 <x-form.input id="search" name_id="search" placeholder="Search" small />
             </span>
 
@@ -34,14 +34,16 @@
                                 <td class="px-6 py-4 border">{{ $record['user']->firstname }}</td>
                                 <td class="px-6 py-4 border">{{ $record['user']->email }}</td>
                                 <td class="px-6 py-4 border">{{ $record['history']->description }}</td>
-                                <td class="px-6 py-4 border">{{ $record['history']->datetime }}</td>
+                                <td class="px-6 py-4 border">
+                                    {{ \Carbon\Carbon::parse($record['history']->datetime)->format('F d - h: i A') }}
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <!-- Pagination Controls -->
-            <div class="flex items-center justify-between mt-4">
+            <div class="flex lg:flex-row flex-col gap-3 items-center justify-between mt-4">
                 <span id="pagination-info" class="text-sm text-gray-600"></span>
                 <div class="flex items-center gap-3">
                     <button id="prev-page"
@@ -99,7 +101,7 @@
                         <td class="px-6 py-4 border">
                             <span class="${descriptionClass}">${record.history.description}</span>
                         </td>
-                        <td class="px-6 py-4 border">${record.history.datetime}</td>
+                        <td class="px-6 py-4 border">{{ \Carbon\Carbon::parse($record['history']->datetime)->format('F d - h: i A') }}</td>
                     `;
 
                     recordsBody.appendChild(row);

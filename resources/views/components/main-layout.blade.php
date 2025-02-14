@@ -209,7 +209,7 @@
                             <ul class="py-2">
                                 <li>
                                     <a class="block px-6 py-2 hover:bg-gray-100 text-gray-900 font-semibold"
-                                        href="javascript:;"> Profile </a>
+                                        href="{{ route('admin.profile') }}"> Profile </a>
                                 </li>
                             </ul>
                             <div class="pt-2">
@@ -227,20 +227,20 @@
 
         <!-- Sidebar Menu (Hidden on Large Screens) -->
         <aside id="mobile-menu"
-            class="fixed top-22 left-0 w-64 h-screen bg-white shadow-md transform -translate-x-full transition-transform lg:hidden overflow-auto z-50">
+            class="fixed top-22 left-0 w-64 h-[calc(100vh-5rem)] bg-white shadow-md transform -translate-x-full transition-transform lg:hidden overflow-auto z-50">
             <nav>
                 <a href="{{ route('admin.dashboard') }}"
-                    class="{{ Request::routeIs('admin.dashboard*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    class="{{ Request::routeIs('admin.dashboard*') ? 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
                     <div class="w-auto h-auto flex items-center"><span class="akar-icons--dashboard"></span></div>
                     <p>Dashboard</p>
                 </a>
                 <a href="{{ route('admin.users') }}"
-                    class="{{ Request::routeIs('admin.users*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    class="{{ Request::routeIs('admin.users*') ? 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
                     <div class="w-auto h-auto flex items-center"><span class="cuida--users-outline"></span></div>
                     <p>Users</p>
                 </a>
                 <a href="{{ route('admin.histories') }}"
-                    class="{{ Request::routeIs('admin.histories*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    class="{{ Request::routeIs('admin.histories*') ? 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
                     <div class="w-auto h-auto flex items-center"><span
                             class="material-symbols--history-rounded w-6 h-6"></span></div>
                     <p>History</p>
@@ -252,7 +252,7 @@
                         <p>School</p>
                     </a> --}}
                 <a href="{{ route('admin.profile') }}"
-                    class="{{ Request::routeIs('admin.profile*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    class="{{ Request::routeIs('admin.profile*') ? 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
                     <div class="w-auto h-auto flex items-center"><span class="cuida--user-outline"></span></div>
                     <p>Profile</p>
                 </a>
@@ -264,7 +264,7 @@
 
             <!-- Left Sidebar (Sticky on Large Screens) -->
             <aside
-                class="hidden lg:block md:col-span-2 bg-white shadow-xl sticky top-20 h-[calc(100vh-5rem)] overflow-auto py-5">
+                class="hidden lg:block md:col-span-2 bg-white shadow-xl sticky top-20 h-[calc(100vh-5rem)] overflow-auto">
                 <!-- Navigation -->
                 <nav>
                     <a href="{{ route('admin.dashboard') }}"
@@ -298,9 +298,9 @@
 
             <!-- ✅ Unique Button for Toggling (Outside Panel) -->
             <button id="toggleAttendance"
-                class="w-full sticky bottom-0 lg:hidden flex items-center justify-center py-3 bg-custom-red text-white">
+                class="w-full sticky bottom-0 lg:hidden flex items-center justify-center py-3 bg-custom-red text-white text-sm font-semibold">
                 <span class="icon-park-outline--to-top-one mr-2"></span>
-                View Attendance
+                Highlights
             </button>
 
             <!-- ✅ Attendance Panel -->
@@ -309,21 +309,21 @@
 
                 <!-- ✅ Unique Button for Hiding (Inside Panel) -->
                 <button id="toggleAttendance"
-                    class="fixed bottom-1/2 left-0 w-full lg:hidden flex items-center justify-center py-3 bg-custom-red text-white z-30">
+                    class="fixed bottom-1/2 left-0 w-full lg:hidden flex items-center justify-center py-3 bg-custom-red text-white z-30 text-sm font-semibold">
                     <span class="icon-park-outline--to-top-one mr-2 rotate-180"></span>
-                    Hide Attendance
+                    Highlights
                 </button>
 
                 <div class="w-full h-auto space-y-7">
                     <section class="w-full h-fit">
                         <div class="p-5 rounded-xl border border-gray-200 bg-white h-auto w-full space-y-5">
                             <div
-                                class="flex items-end flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
-                                <div class="flex items-start gap-2">
+                                class="flex lg:items-end items-center flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
+                                <div class="flex lg:items-start items-center gap-2">
                                     <span class="hugeicons--champion"></span>
-                                    <p class="font-semibold text-lg">Top 3 Performer</p>
+                                    <p class="font-semibold lg:!text-lg text-sm">Top 3 Performer</p>
                                 </div>
-                                <p class="text-sm font-semibold">Highest Hour Basis</p>
+                                <p class="md:text-sm text-xs font-semibold">Highest Hour Basis</p>
                             </div>
 
                             <!--HTML CODE-->
@@ -373,13 +373,14 @@
                     <section
                         class="p-5 w-full border bg-white border-gray-200 rounded-xl h-[500px] overflow-hidden space-y-5">
                         <div
-                            class="flex items-end flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
-                            <div class="flex items-start gap-2">
+                            class="flex lg:items-end items-center flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
+                            <div class="flex lg:items-start items-center gap-2">
                                 <span class="material-symbols--co-present-outline"></span>
-                                <p class="font-semibold text-lg">Daily Attendance</p>
+                                <p class="font-semibold lg:!text-lg text-sm">Daily Attendance</p>
                             </div>
 
-                            <div class="text-sm font-semibold">{{ \Carbon\Carbon::now()->format('M d, Y') }}</div>
+                            <div class="md:text-sm text-xs font-semibold">
+                                {{ \Carbon\Carbon::now()->format('M d, Y') }}</div>
                         </div>
                         <div class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
                             @forelse ($array_daily as $daily)
@@ -389,7 +390,7 @@
                                         <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                             path="resources/img/default-male.png" />
                                         <div class="flex items-center flex-wrap justify-between w-full gap-x-2">
-                                            <div>
+                                            <div class="w-1/2 ">
                                                 <section class="font-bold text-black text-lg truncate">
                                                     {{ $daily['timeFormat'] }}
                                                 </section>
@@ -397,13 +398,15 @@
                                                     {{ $daily['name'] }}</p>
                                             </div>
                                             @if ($daily['description'] === 'time in')
-                                                <div class="text-green-500 flex items-center gap-1 select-none">
-                                                    <span class="lets-icons--in"></span>
+                                                <div
+                                                    class="text-green-500 flex items-center gap-1 select-none text-sm font-semibold">
+                                                    {{-- <span class="lets-icons--in"></span> --}}
                                                     <p>Time in</p>
                                                 </div>
                                             @else
-                                                <div class="text-red-500 flex items-center gap-1 select-none">
-                                                    <span class="lets-icons--out"></span>
+                                                <div
+                                                    class="text-red-500 flex items-center gap-1 select-none text-sm font-semibold">
+                                                    {{-- <span class="lets-icons--out"></span> --}}
                                                     <p>Time out</p>
                                                 </div>
                                             @endif
@@ -437,12 +440,12 @@
                             panel.classList.remove('hidden');
                             panel.classList.add('block'); // Show panel
                             btn.innerHTML =
-                                '<span class="icon-park-outline--to-top-one mr-2 rotate-180"></span> Hide Attendance';
+                                '<span class="icon-park-outline--to-top-one mr-2 rotate-180"></span> Highlights';
                         } else {
                             panel.classList.remove('block');
                             panel.classList.add('hidden'); // Hide panel
                             btn.innerHTML =
-                                '<span class="icon-park-outline--to-top-one mr-2"></span> View Attendance';
+                                '<span class="icon-park-outline--to-top-one mr-2"></span> Highlights';
                         }
                     });
                 });

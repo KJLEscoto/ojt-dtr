@@ -40,14 +40,14 @@
             "closeButton": true,
             "progressBar": true,
             "positionClass": "toast-top-right",
-            "timeOut": "5000",  // The message will stay for 5 seconds
+            "timeOut": "5000", // The message will stay for 5 seconds
         };
 
         // Display the message
         if (toastData.status == 'success') {
-            toastr.success(toastData.message);  // Display success toast
+            toastr.success(toastData.message); // Display success toast
         } else if (toastData.status == 'error') {
-            toastr.error(toastData.message);  // Display error toast
+            toastr.error(toastData.message); // Display error toast
         }
     </script>
 @endif
@@ -100,18 +100,19 @@
                 </div>
                 <div class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
                     @foreach ($recentlyAddedUser as $user)
-                        <section class="px-7 py-5 w-full flex justify-between items-center even:bg-custom-orange/5">
-                            <div class="flex items-center gap-5">
+                        <a href="{{ route('admin.users.details', ['id' => $user['id']]) }}"
+                            class="px-7 py-5 w-full flex justify-between items-center even:bg-custom-orange/5 hover:bg-gray-100 cursor-pointer">
+                            <div class="flex items-center gap-5 w-1/2">
                                 <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                     path="resources/img/default-male.png" />
-                                <h1 class="font-semibold capitalize">{{ $user['fullname'] }}</h1>
+                                <h1 class="font-semibold capitalize truncate">{{ $user['fullname'] }}</h1>
                             </div>
                             <p>{{ $user['ago'] }}</p>
-                        </section>
+                        </a>
                     @endforeach
-                    <button type="button" data-pd-overlay="#time-in-time-out-modal"
+                    {{-- <button type="button" data-pd-overlay="#time-in-time-out-modal"
                         data-modal-target="time-in-time-out-modal" data-modal-toggle="time-in-time-out-modal"
-                        name="showTimeShift" class="hidden modal-button">hello</button>
+                        name="showTimeShift" class="hidden modal-button">hello</button> --}}
                 </div>
             </section>
         </div>
@@ -213,11 +214,11 @@
                     });
 
                     if (res.data.success) {
-                    toastr.success("Time In checked successfully");
+                        toastr.success("Time In checked successfully");
                     } else {
                         toastr.error("Failed to check Time In");
                     }
-                    
+
                     setTimeout(() => location.reload(true), 2000);
                 } catch (error) {
                     console.error("Error in Time In:", error);
@@ -239,9 +240,9 @@
                     });
 
                     if (res.data.success) {
-                    toastr.success("Time In checked successfully");
+                        toastr.success("Time Out checked successfully");
                     } else {
-                        toastr.error("Failed to check Time In");
+                        toastr.error("Failed to check Time Out");
                     }
 
                     setTimeout(() => location.reload(true), 2000);
