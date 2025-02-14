@@ -79,6 +79,12 @@ Route::middleware('auth')->group(function () {
 
     //users specific profile
     Route::get('/admin/users/{id}', [UserController::class, 'showUserDetails'])->name('admin.users.details');
+    
+    //admin user dtr page
+    Route::get('/admin/users/{id}/dtr', [DtrSummaryController::class, 'showAdminUserDtr'])->name('admin.users.dtr');
+
+    Route::post('/admin/users/{id}/dtr/post', [DtrSummaryController::class, 'ShowAdminUserDtrPagination'])->name('admin.users.dtr.post');
+
 
     //admin history
     Route::get('/admin/history', [UserController::class, 'showAdminHistory'])->name('admin.histories');
@@ -91,7 +97,7 @@ Route::middleware('auth')->group(function () {
     //Route::get('/profile/{id}', [UserController::class, 'showProfile'])->name('user.profile');
 
     //admin dtr page
-    Route::get('/admin/dtr', [DtrSummaryController::class, 'showAdminSingleUserDtr'])->name('admin.users.dtr');
+    //Route::get('/admin/dtr', [DtrSummaryController::class, 'showAdminSingleUserDtr'])->name('admin.users.dtr');
 
     //dtr page
     Route::get('/dtr', [DtrSummaryController::class, 'showUserDtr'])->name('users.dtr');

@@ -11,15 +11,57 @@
 <!-- Camera -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.26/webcam.min.js"></script>
 
-@if (session('success'))
+<!-- Include Toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+
+<!-- Include jQuery (required for Toastr) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<!-- Include Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+
+{{-- @if (session('success'))
     <x-modal.flash-msg msg="success" />
 @elseif ($errors->has('invalid'))
     <x-modal.flash-msg msg="invalid" />
 @elseif (session('invalid'))
     <x-modal.flash-msg msg="invalid" />
+@endif --}}
+
+<!-- Check if there is a toast session message -->
+@if (session('toast'))
+    <script>
+        // Show the Toastr notification based on the session data
+        var toastData = @json(session('toast'));
+
+        // Customize the options for Toastr
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "timeOut": "5000",  // The message will stay for 5 seconds
+        };
+
+        // Display the message
+        if (toastData.status == 'success') {
+            toastr.success(toastData.message);  // Display success toast
+        } else if (toastData.status == 'error') {
+            toastr.error(toastData.message);  // Display error toast
+        }
+    </script>
 @endif
 
+
 <x-main-layout :array_daily="$array_daily" :ranking="$ranking">
+
+    {{-- <span name="time_in_success" id="time_in_success" class="hidden">
+    <x-flash-msg msg="Time In checked successfully"/>
+    </span>
+    <span name="time_out_success" id="time_out_success" class="hidden">
+    <x-flash-msg msg="Time Out checked successfully"/>
+    </span> --}}
+
     <div class="flex flex-col gap-5 w-full h-auto">
 
         {{-- <div class="w-full gap-2 flex items-center justify-start">
@@ -169,8 +211,14 @@
                         qr_code: response.data.user.qr_code,
                         type: 'time_in',
                     });
-                    console.log("Time In Success", res.data);
-                    setTimeout(() => location.reload(true), 0);
+
+                    if (res.data.success) {
+                    toastr.success("Time In checked successfully");
+                    } else {
+                        toastr.error("Failed to check Time In");
+                    }
+                    
+                    setTimeout(() => location.reload(true), 2000);
                 } catch (error) {
                     console.error("Error in Time In:", error);
                 }
@@ -189,9 +237,14 @@
                         qr_code: response.data.user.qr_code,
                         type: 'time_out',
                     });
-                    console.log("Time Out Success", res.data);
-                    alert(response.data.success); // Display success message
-                    setTimeout(() => location.reload(true), 1);
+
+                    if (res.data.success) {
+                    toastr.success("Time In checked successfully");
+                    } else {
+                        toastr.error("Failed to check Time In");
+                    }
+
+                    setTimeout(() => location.reload(true), 2000);
                 } catch (error) {
                     console.error("Error in Time Out:", error);
                 }

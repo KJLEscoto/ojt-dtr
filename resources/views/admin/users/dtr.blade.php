@@ -1,6 +1,6 @@
-<x-main-layout>
-    <main class="lg:container max-w-screen-xl mx-auto">
-        <section class="w-full lg:h-[calc(100vh-7rem)] h-[calc(100vh-4rem)] overflow-auto lg:p-10 p-5 space-y-7">
+
+<x-main-layout :array_daily="$array_daily" :ranking="$ranking">
+        <section class="w-full h-auto overflow-auto lg:p-10 p-5 space-y-7">
 
             {{-- <x-modal.dtr-summary id="dtr-summary-modal" /> --}}
             <div class="flex w-full items-center justify-center">
@@ -107,25 +107,25 @@
                 </div>
 
                 <div
-                    class="w-full grid lg:grid-cols-3 grid-cols-2 text-nowrap gap-5 bg-white p-3 border border-gray-200 shadow-lg absolute bottom-5 z-30 rounded-full max-w-screen-xl mx-auto">
+                    class="w-full grid lg:grid-cols-2 grid-cols-1 text-nowrap gap-5 bg-white p-3 border border-gray-200 shadow-lg absolute bottom-5 z-30 rounded-full max-w-screen-xl mx-auto">
 
                     <section class="lg:col-span-1 lg:flex justify-start items-start hidden">
-                        <form action="{{ route('users.dtr.post') }}" method="POST" class="flex items-center">
+                        <form action="{{ route('admin.users.dtr.post', ['id' => $user->id]) }}" method="POST" class="inline">
                             @csrf
                             @method('POST')
-                            <div class="flex items-center gap-5">
-
-                                <form action="{{ route('users.dtr.post') }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('POST')
-                                    <input type="month" name="searchDate" id="searchDate"
-                                        class="px-5 py-2 rounded-full cursor-pointer border border-gray-200 text-sm"
-                                        value="{{ \Carbon\Carbon::parse($pagination['currentMonth']['name'])->format('Y-m') }}"
-                                        onchange="this.form.submit()">
-                                </form>
+                            <input type="month" name="searchDate" id="searchDate"
+                                class="px-5 py-2 rounded-full cursor-pointer border border-gray-200 text-sm"
+                                value="{{ \Carbon\Carbon::parse($pagination['currentMonth']['name'])->format('Y-m') }}"
+                                onchange="this.form.submit()">
+                        </form>
+                        {{-- <form action="{{ route('admin.users.dtr.post') }}" method="POST" class="flex items-center">
+                            @csrf
+                            @method('POST')
+                            <div class="flex items-center gap-5"> --}}
+                            
                     </section>
 
-                    <section class="flex items-center gap-3 col-span-1 lg:justify-center justify-start">
+                    {{-- <section class="flex items-center gap-3 col-span-1 lg:justify-center justify-start">
                         <form action="{{ route('users.dtr.post') }}" method="POST" class="inline">
                             @csrf
                             @method('POST')
@@ -156,11 +156,11 @@
                                 </svg>
                             </button>
                         </form>
-                    </section>
+                    </section> --}}
 
                     <section class="flex items-center gap-3 col-span-1 justify-end">
-                        <x-button tertiary label="DTR Summary" routePath="users.dtr.summary"
-                            className="text-xs px-8 modal-button" />
+                        {{-- <x-button tertiary label="DTR Summary" routePath="users.dtr.summary"
+                            className="text-xs px-8 modal-button" /> --}}
                         <form
                             action="{{ route('download.pdf', ['records' => $records, 'pagination' => $pagination, 'totalHoursPerMonth' => $totalHoursPerMonth]) }}"
                             method="POST">
@@ -176,5 +176,4 @@
 
 
         </section>
-    </main>
 </x-main-layout>

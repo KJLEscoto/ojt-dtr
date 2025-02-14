@@ -477,6 +477,367 @@ class DtrSummaryController extends Controller
         ]);
     }
 
+    public function showAdminUserDtr(Request $request, $id, RankingController $rankingController, HistoryController $historyController)
+    {
+        $currentDate = Carbon::now();
+        $selectedMonth = $request->input('month', $currentDate->month);
+        $selectedYear = $request->input('year', $currentDate->year);
+
+        $selectedDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1);
+        $previousMonth = (clone $selectedDate)->subMonth();
+        $nextMonth = (clone $selectedDate)->addMonth();
+
+        // Get all logs for the month
+        $userLogs = Histories::where('user_id', $id)
+            ->whereYear('datetime', $selectedYear)
+            ->whereMonth('datetime', $selectedMonth)
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $logsByDate = $userLogs->groupBy(function ($log) {
+            return Carbon::parse($log->datetime)->format('Y-m-d');
+        });
+
+        $daysInMonth = Carbon::createFromDate($request->year, $request->month, 1)->daysInMonth;
+
+        $groupedData = [];
+        $totalHours = 0;
+
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
+            //echo "\nProcessing date: $dateKey\n";
+
+            if (isset($logsByDate[$dateKey])) {
+                $logs = $logsByDate[$dateKey];
+                //echo "Found " . $logs->count() . " logs for this date\n";
+
+                // Get first time in and last time out for the day
+                $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
+                $timeOutLogs = $logs->where('description', 'time out')->sortByDesc('datetime');
+
+                $firstTimeIn = $timeInLogs->first();
+                $lastTimeOut = $timeOutLogs->first(); // This gets the last time out since we sorted desc
+
+                if ($firstTimeIn && $lastTimeOut) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
+                    $timeOut = Carbon::parse($lastTimeOut->datetime);
+
+                    // Only calculate hours if time out is after time in
+                    if ($timeOut->gt($timeIn)) {
+                        $hoursWorked = floor($timeIn->diffInHours($timeOut));
+
+                        $groupedData[$dateKey] = [
+                            'time_in' => $timeIn->format('h:i A'),
+                            'time_out' => $timeOut->format('h:i A'),
+                            'hours_worked' => $hoursWorked,
+                        ];
+
+                        //echo "Valid time in/out found - First In: {$timeIn->format('h:i A')}, Last Out: {$timeOut->format('h:i A')}, Hours: $hoursWorked\n";
+                    } else {
+                        $groupedData[$dateKey] = [
+                            'time_in' => $timeIn->format('h:i A'),
+                            'time_out' => $timeOut->format('h:i A'),
+                            'hours_worked' => '—',
+                        ];
+                        //echo "Invalid time range - Time out is before time in\n";
+                    }
+                } else {
+                    $groupedData[$dateKey] = [
+                        'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
+                        'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
+                        'hours_worked' => '—',
+                    ];
+                    //echo "Incomplete logs - Missing " . (!$firstTimeIn ? "time in" : "time out") . "\n";
+                }
+            } else {
+                $groupedData[$dateKey] = [
+                    'time_in' => '—',
+                    'time_out' => '—',
+                    'hours_worked' => '—',
+                ];
+                //echo "No logs found for this date\n";
+            }
+        }
+
+        $totalHoursPerMonth = 0;
+        foreach ($groupedData as $key => $value) {
+            if ($value['hours_worked'] !== '—') {
+                $totalHoursPerMonth += $value['hours_worked'];
+                //echo "Adding hours for $key: {$value['hours_worked']}\n";
+            }
+        }
+
+        //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
+
+        $records = [];
+        foreach ($groupedData as $date => $data) {
+            $records[] = [
+                'date' => $date,
+                'user' => User::find($request->id),
+                'time_in' => $data['time_in'],
+                'time_out' => $data['time_out'],
+                'hours_worked' => $data['hours_worked']
+            ];
+        }
+
+
+
+        return view('admin.users.dtr', [
+            'ranking' => $rankingController->getRankings(),
+            'array_daily' => $historyController->AllUserDailyAttendance(),
+            'user' => User::find($request->id),
+            'records' => $records,
+            'totalHoursPerMonth' => $totalHoursPerMonth,
+            'selectedMonth' => $selectedMonth,
+            'selectedYear' => $selectedYear,
+            'pagination' => [
+                'currentMonth' => [
+                    'name' => $selectedDate->format('F Y'),
+                    'month' => $selectedMonth,
+                    'year' => $selectedYear
+                ],
+                'previousMonth' => [
+                    'name' => $previousMonth->format('F Y'),
+                    'month' => $previousMonth->month,
+                    'year' => $previousMonth->year,
+                    'url' => route('users.dtr', ['month' => $previousMonth->month, 'year' => $previousMonth->year])
+                ],
+                'nextMonth' => [
+                    'name' => $nextMonth->format('F Y'),
+                    'month' => $nextMonth->month,
+                    'year' => $nextMonth->year,
+                    'url' => route('users.dtr', ['month' => $nextMonth->month, 'year' => $nextMonth->year])
+                ]
+            ]
+        ]);
+    }
+
+    public function ShowAdminUserDtrPagination(Request $request, $id, RankingController $rankingController, HistoryController $historyController)
+    {
+        $currentDate = Carbon::now();
+        $selectedMonth = $request->input('month', $currentDate->month);
+        $selectedYear = $request->input('year', $currentDate->year);
+
+        if ($request->searchDate) {
+            $selectedDate = Carbon::parse($request->searchDate);
+            $selectedMonth = $selectedDate->month;
+            $selectedYear = $selectedDate->year;
+        }
+
+        $selectedDate = Carbon::createFromDate($selectedYear, $selectedMonth, 1);
+        $previousMonth = (clone $selectedDate)->subMonth();
+        $nextMonth = (clone $selectedDate)->addMonth();
+
+        // Get all logs for the month
+        $userLogs = Histories::where('user_id', $id)
+            ->whereYear('datetime', $selectedYear)
+            ->whereMonth('datetime', $selectedMonth)
+            ->orderBy('datetime', 'asc')
+            ->get();
+
+        $logsByDate = $userLogs->groupBy(function ($log) {
+            return Carbon::parse($log->datetime)->format('Y-m-d');
+        });
+
+        $daysInMonth = Carbon::createFromDate($selectedYear, $selectedMonth, 1)->daysInMonth;
+
+        $groupedData = [];
+        $totalHours = 0;
+
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $dateKey = Carbon::createFromDate($selectedYear, $selectedMonth, $day)->format('Y-m-d');
+            //echo "\nProcessing date: $dateKey\n";
+
+            if (isset($logsByDate[$dateKey])) {
+                $logs = $logsByDate[$dateKey];
+                //echo "Found " . $logs->count() . " logs for this date\n";
+
+                // Get first time in and last time out for the day
+                $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
+                $timeOutLogs = $logs->where('description', 'time out')->sortByDesc('datetime');
+
+                $firstTimeIn = $timeInLogs->first();
+                $lastTimeOut = $timeOutLogs->first(); // This gets the last time out since we sorted desc
+
+                if ($firstTimeIn && $lastTimeOut) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
+                    $timeOut = Carbon::parse($lastTimeOut->datetime);
+
+                    // Only calculate hours if time out is after time in
+                    if ($timeOut->gt($timeIn)) {
+                        $hoursWorked = floor($timeIn->diffInHours($timeOut));
+
+                        $groupedData[$dateKey] = [
+                            'time_in' => $timeIn->format('h:i A'),
+                            'time_out' => $timeOut->format('h:i A'),
+                            'hours_worked' => $hoursWorked,
+                        ];
+
+                        //echo "Valid time in/out found - First In: {$timeIn->format('h:i A')}, Last Out: {$timeOut->format('h:i A')}, Hours: $hoursWorked\n";
+                    } else {
+                        $groupedData[$dateKey] = [
+                            'time_in' => $timeIn->format('h:i A'),
+                            'time_out' => $timeOut->format('h:i A'),
+                            'hours_worked' => '—',
+                        ];
+                        //echo "Invalid time range - Time out is before time in\n";
+                    }
+                } else {
+                    $groupedData[$dateKey] = [
+                        'time_in' => $firstTimeIn ? Carbon::parse($firstTimeIn->datetime)->format('h:i A') : '—',
+                        'time_out' => $lastTimeOut ? Carbon::parse($lastTimeOut->datetime)->format('h:i A') : '—',
+                        'hours_worked' => '—',
+                    ];
+                    //echo "Incomplete logs - Missing " . (!$firstTimeIn ? "time in" : "time out") . "\n";
+                }
+            } else {
+                $groupedData[$dateKey] = [
+                    'time_in' => '—',
+                    'time_out' => '—',
+                    'hours_worked' => '—',
+                ];
+                //echo "No logs found for this date\n";
+            }
+        }
+
+        $totalHoursPerMonth = 0;
+        foreach ($groupedData as $key => $value) {
+            if ($value['hours_worked'] !== '—') {
+                $totalHoursPerMonth += $value['hours_worked'];
+                //echo "Adding hours for $key: {$value['hours_worked']}\n";
+            }
+        }
+
+        //echo "\nFinal total hours for month: $totalHoursPerMonth\n";
+
+        $records = [];
+        foreach ($groupedData as $date => $data) {
+            $records[] = [
+                'date' => $date,
+                'user' => User::find($id),
+                'time_in' => $data['time_in'],
+                'time_out' => $data['time_out'],
+                'hours_worked' => $data['hours_worked']
+            ];
+        }
+
+        return view('admin.users.dtr', [
+            'user' => User::find($id),
+            'ranking' => $rankingController->getRankings(),
+            'array_daily' => $historyController->AllUserDailyAttendance(),
+            'records' => $records,
+            'totalHoursPerMonth' => $totalHoursPerMonth,
+            'selectedMonth' => $selectedMonth,
+            'selectedYear' => $selectedYear,
+            'pagination' => [
+                'currentMonth' => [
+                    'name' => $selectedDate->format('F Y'),
+                    'month' => $selectedMonth,
+                    'year' => $selectedYear
+                ],
+                'previousMonth' => [
+                    'name' => $previousMonth->format('F Y'),
+                    'month' => $previousMonth->month,
+                    'year' => $previousMonth->year,
+                    'url' => route('users.dtr', ['month' => $previousMonth->month, 'year' => $previousMonth->year])
+                ],
+                'nextMonth' => [
+                    'name' => $nextMonth->format('F Y'),
+                    'month' => $nextMonth->month,
+                    'year' => $nextMonth->year,
+                    'url' => route('users.dtr', ['month' => $nextMonth->month, 'year' => $nextMonth->year])
+                ]
+            ]
+        ]);
+    }
+
+    public function showAdminUserDtrSummary(Request $request)
+    {
+        $user = User::find($request->id);
+        $firstRecord = Histories::where('user_id', $user->id)
+            ->orderBy('datetime', 'asc')
+            ->first();
+        $lastRecord = Histories::where('user_id', $user->id)
+            ->orderBy('datetime', 'desc')
+            ->first();
+
+        if (!$firstRecord || !$lastRecord) {
+            return [];
+        }
+
+        $startDate = Carbon::parse($firstRecord->datetime)->startOfMonth();
+        $endDate = Carbon::parse($lastRecord->datetime)->endOfMonth();
+        $yearlyTotals = [];
+
+        while ($startDate->lte($endDate)) {
+            $currentYear = $startDate->year;
+            $currentMonth = $startDate->format('m');
+
+            // Get all logs for the current month
+            $monthLogs = Histories::where('user_id', $user->id)
+                ->whereYear('datetime', $currentYear)
+                ->whereMonth('datetime', $currentMonth)
+                ->orderBy('datetime', 'asc')
+                ->get();
+
+            // Group logs by date
+            $logsByDate = $monthLogs->groupBy(function ($log) {
+                return Carbon::parse($log->datetime)->format('Y-m-d');
+            });
+
+            $monthlyHours = 0;
+
+            // Calculate total hours for the month
+            foreach ($logsByDate as $dateKey => $logs) {
+                $timeInLogs = $logs->where('description', 'time in')->sortBy('datetime');
+                $timeOutLogs = $logs->where('description', 'time out')->sortByDesc('datetime');
+
+                $firstTimeIn = $timeInLogs->first();
+                $lastTimeOut = $timeOutLogs->first();
+
+                if ($firstTimeIn && $lastTimeOut) {
+                    $timeIn = Carbon::parse($firstTimeIn->datetime);
+                    $timeOut = Carbon::parse($lastTimeOut->datetime);
+
+                    if ($timeOut->gt($timeIn)) {
+                        $hoursWorked = floor($timeIn->diffInHours($timeOut));
+                        $monthlyHours += $hoursWorked;
+                    }
+                }
+            }
+
+            // Only add months that have hours
+            if ($monthlyHours > 0) {
+                if (!isset($yearlyTotals[$currentYear])) {
+                    $yearlyTotals[$currentYear] = [
+                        'year' => $currentYear,
+                        'total_hours' => 0,
+                        'months' => []
+                    ];
+                }
+
+                $yearlyTotals[$currentYear]['months'][$startDate->format('Y-m')] = [
+                    'month_name' => $startDate->format('F Y'),
+                    'total_hours' => $monthlyHours
+                ];
+
+                $yearlyTotals[$currentYear]['total_hours'] += $monthlyHours;
+            }
+
+            $startDate->addMonth();
+        }
+
+        // Sort years in descending order
+        krsort($yearlyTotals);
+
+        // Sort months in descending order within each year
+        foreach ($yearlyTotals as &$yearData) {
+            krsort($yearData['months']);
+        }
+
+        return $yearlyTotals;
+    }
+
     // public function ShowUserDtrSummary(Request $request)
     // {
     //     @dd($request->all());

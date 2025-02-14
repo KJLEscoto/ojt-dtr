@@ -18,6 +18,7 @@
     'disabled' => false,
     'showLabel' => false,
     'big' => false,
+    'params' => [],
 ])
 
 @php
@@ -42,7 +43,7 @@
     @if ($openModal) data-pd-overlay="# . {{ $openModal }}" data-modal-target="{{ $openModal }}" data-modal-toggle="{{ $openModal }}" @endif
     @if ($submit) type="submit" @elseif ($button) type="button" @endif
     @if ($onClick) onclick="{{ $onClick }}" @endif
-    @if ($routePath) onclick="window.location.href='{{ route($routePath) }}'" @endif>
+    @if ($routePath) onclick="window.location.href='{{ route($routePath, $params) }}'" @endif>
 
     @if ($leftIcon)
         <span class="{{ $leftIcon }}"></span>
