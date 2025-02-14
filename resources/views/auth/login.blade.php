@@ -78,7 +78,7 @@
                     </section>
 
                     <div>
-                        <x-button primary label="Login" submit />
+                        <x-button primary label="Login" submit big />
                     </div>
                 </div>
 

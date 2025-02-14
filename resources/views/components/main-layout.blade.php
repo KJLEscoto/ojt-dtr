@@ -137,7 +137,7 @@
                 </x-form.container>
             </aside>
 
-            <main class="lg:mt-28 mt-[75px] bg-gray-100">
+            <main class="lg:!mt-[110px] mt-[73px] bg-gray-100">
                 {{ $slot }}
             </main>
         </div>
@@ -299,6 +299,7 @@
             <!-- ✅ Unique Button for Toggling (Outside Panel) -->
             <button id="toggleAttendance"
                 class="w-full sticky bottom-0 lg:hidden flex items-center justify-center py-3 bg-custom-red text-white">
+                <span class="icon-park-outline--to-top-one mr-2"></span>
                 View Attendance
             </button>
 
@@ -309,31 +310,48 @@
                 <!-- ✅ Unique Button for Hiding (Inside Panel) -->
                 <button id="toggleAttendance"
                     class="fixed bottom-1/2 left-0 w-full lg:hidden flex items-center justify-center py-3 bg-custom-red text-white z-30">
+                    <span class="icon-park-outline--to-top-one mr-2 rotate-180"></span>
                     Hide Attendance
                 </button>
 
                 <div class="w-full h-auto space-y-7">
                     <section class="w-full h-fit">
                         <div class="p-5 rounded-xl border border-gray-200 bg-white h-auto w-full space-y-5">
-                            <section class="flex gap-2 items-start text-custom-red">
-                                <span class="hugeicons--champion"></span>
-                                <div class="flex flex-wrap gap-x-2 items-end justify-between w-full">
+                            <div
+                                class="flex items-end flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
+                                <div class="flex items-start gap-2">
+                                    <span class="hugeicons--champion"></span>
                                     <p class="font-semibold text-lg">Top 3 Performer</p>
-                                    <p class="text-sm font-semibold">Highest Hour Basis</p>
                                 </div>
-                            </section>
+                                <p class="text-sm font-semibold">Highest Hour Basis</p>
+                            </div>
 
                             <!--HTML CODE-->
                             <div class="w-full relative h-fit">
                                 <div class="swiper progress-slide-carousel swiper-container relative">
                                     <div class="swiper-wrapper">
-                                        @forelse ($ranking as $user)
+                                        @forelse ($ranking as $index => $user)
                                             <div class="swiper-slide">
                                                 <div
-                                                    class="bg-custom-orange/5 rounded-md py-10 h-full flex justify-center items-center">
-                                                    <span class="text-xl font-semibold text-custom-red">
-                                                        Intern {{ $user['name'] }} {{ $user['hours_worked'] }} Hours
-                                                    </span>
+                                                    class="bg-custom-orange/5 rounded-md h-52 py-3 w-full overflow-hidden relative flex items-center justify-center">
+
+                                                    <!-- Centered & Blended Image -->
+                                                    <x-image path="resources/img/default-male.png"
+                                                        className="absolute inset-0 mx-auto h-full scale-125 w-auto opacity-20 z-0" />
+
+                                                    <section
+                                                        class="flex items-end text-center gap-2 w-full h-full p-3 rounded-md z-20 relative">
+                                                        <div class="w-full space-y-1 px-5">
+                                                            <p class="text-sm font-semibold">TOP {{ $index + 1 }}
+                                                            </p>
+                                                            <h1 class="text-sm truncate capitalize text-gray-500/80">
+                                                                {{ $user['name'] }}
+                                                            </h1>
+                                                            <p class="text-xl font-semibold text-custom-orange">
+                                                                {{ $user['hours_worked'] }} hours
+                                                            </p>
+                                                        </div>
+                                                    </section>
                                                 </div>
                                             </div>
                                         @empty
@@ -342,6 +360,8 @@
                                                 No top performer yet.
                                             </div>
                                         @endforelse
+
+
                                     </div>
                                     <div
                                         class="swiper-pagination !bottom-5 !top-auto !w-80 right-0 mx-auto bg-gray-100">
@@ -352,127 +372,131 @@
                     </section>
                     <section
                         class="p-5 w-full border bg-white border-gray-200 rounded-xl h-[500px] overflow-hidden space-y-5">
-                        <div class="flex items-end gap-2 text-custom-red justify-between w-full font-semibold">
+                        <div
+                            class="flex items-end flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
                             <div class="flex items-start gap-2">
                                 <span class="material-symbols--co-present-outline"></span>
                                 <p class="font-semibold text-lg">Daily Attendance</p>
                             </div>
 
-                            @foreach ($array_daily as $daily)
-                                <p class="text-sm font-semibold">{{ $daily['datetime'] }}</p>
-                            @break
-                        @endforeach
-                    </div>
-                    <div class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
-                        @forelse ($array_daily as $daily)
-                            <section
-                                class="px-7 py-5 w-full flex justify-between odd:bg-custom-orange/5 bg-white items-center">
-                                <div class="flex items-center gap-5">
-                                    <x-image className="w-12 h-12 rounded-full border border-custom-orange"
-                                        path="resources/img/default-male.png" />
-
-                                    <div>
-                                        <section class="font-bold text-black text-lg">
-                                            {{ $daily['timeFormat'] }}
-                                        </section>
-                                        <p class="text-sm font-medium text-gray-700 capitalize">
-                                            {{ $daily['name'] }}</p>
+                            <div class="text-sm font-semibold">{{ \Carbon\Carbon::now()->format('M d, Y') }}</div>
+                        </div>
+                        <div class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
+                            @forelse ($array_daily as $daily)
+                                <section
+                                    class="px-7 py-5 w-full flex flex-wrap justify-between odd:bg-custom-orange/5 bg-white items-center">
+                                    <div class="flex items-start gap-5 w-full">
+                                        <x-image className="w-12 h-12 rounded-full border border-custom-orange"
+                                            path="resources/img/default-male.png" />
+                                        <div class="flex items-center flex-wrap justify-between w-full gap-x-2">
+                                            <div>
+                                                <section class="font-bold text-black text-lg truncate">
+                                                    {{ $daily['timeFormat'] }}
+                                                </section>
+                                                <p class="text-sm font-medium text-gray-700 capitalize truncate">
+                                                    {{ $daily['name'] }}</p>
+                                            </div>
+                                            @if ($daily['description'] === 'time in')
+                                                <div class="text-green-500 flex items-center gap-1 select-none">
+                                                    <span class="lets-icons--in"></span>
+                                                    <p>Time in</p>
+                                                </div>
+                                            @else
+                                                <div class="text-red-500 flex items-center gap-1 select-none">
+                                                    <span class="lets-icons--out"></span>
+                                                    <p>Time out</p>
+                                                </div>
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
+                                </section>
+                            @empty
+                                <h1
+                                    class="text-center flex items-center justify-center h-full font-semibold text-gray-500">
+                                    Waiting for attendees...
+                                </h1>
+                            @endforelse
+                        </div>
+                    </section>
+                </div>
+            </aside>
+        </div>
 
-                                @if ($daily['description'] === 'time in')
-                                    <div class="text-green-500 flex items-center gap-1 select-none">
-                                        <span class="lets-icons--in"></span>
-                                        <p>Time in</p>
-                                    </div>
-                                @else
-                                    <div class="text-red-500 flex items-center gap-1 select-none">
-                                        <span class="lets-icons--out"></span>
-                                        <p>Time out</p>
-                                    </div>
-                                @endif
-                            </section>
-                        @empty
-                            <h1
-                                class="text-center flex items-center justify-center h-full font-semibold text-gray-500">
-                                Waiting for attendees...
-                            </h1>
-                        @endforelse
-                    </div>
-                </section>
-            </div>
-        </aside>
-    </div>
+        <script>
+            document.querySelectorAll('#toggleAttendance').forEach(button => {
+                button.addEventListener('click', function() {
+                    const panel = document.getElementById('attendancePanel');
+                    const allButtons = document.querySelectorAll('#toggleAttendance');
 
-    <script>
-        document.querySelectorAll('#toggleAttendance').forEach(button => {
-            button.addEventListener('click', function() {
-                const panel = document.getElementById('attendancePanel');
-                const allButtons = document.querySelectorAll('#toggleAttendance');
+                    const isHidden = panel.classList.contains('hidden');
 
-                const isHidden = panel.classList.contains('hidden');
+                    allButtons.forEach(btn => {
+                        const icon = btn.querySelector('span'); // Get the icon inside the button
 
-                if (isHidden) {
-                    panel.classList.remove('hidden');
-                    panel.classList.add('block'); // Show panel
-                    allButtons.forEach(btn => btn.textContent = 'Hide Attendance');
-                } else {
-                    panel.classList.remove('block');
-                    panel.classList.add('hidden'); // Hide panel
-                    allButtons.forEach(btn => btn.textContent = 'View Attendance');
-                }
+                        if (isHidden) {
+                            panel.classList.remove('hidden');
+                            panel.classList.add('block'); // Show panel
+                            btn.innerHTML =
+                                '<span class="icon-park-outline--to-top-one mr-2 rotate-180"></span> Hide Attendance';
+                        } else {
+                            panel.classList.remove('block');
+                            panel.classList.add('hidden'); // Hide panel
+                            btn.innerHTML =
+                                '<span class="icon-park-outline--to-top-one mr-2"></span> View Attendance';
+                        }
+                    });
+                });
             });
-        });
-    </script>
+        </script>
 
-    {{-- </main> --}}
+        {{-- </main> --}}
 
 
-    <script>
-        const menuToggle = document.getElementById("menu-toggle");
-        const mobileMenu = document.getElementById("mobile-menu");
+        <script>
+            const menuToggle = document.getElementById("menu-toggle");
+            const mobileMenu = document.getElementById("mobile-menu");
 
-        menuToggle.addEventListener("click", () => {
-            mobileMenu.classList.toggle("-translate-x-full");
-        });
-
-        // swiper
-        var swiper = new Swiper(".progress-slide-carousel", {
-            loop: true,
-            fraction: true,
-            autoplay: {
-                delay: 1200,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: ".progress-slide-carousel .swiper-pagination",
-                type: "progressbar",
-            },
-        });
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const dropdownToggle = document.getElementById("dropdown-toggle");
-            const dropdownMenu = document.getElementById("dropdown-menu");
-
-            // Toggle dropdown visibility on button click
-            dropdownToggle.addEventListener("click", function() {
-                dropdownMenu.classList.toggle("hidden");
+            menuToggle.addEventListener("click", () => {
+                mobileMenu.classList.toggle("-translate-x-full");
             });
 
-            // Close dropdown when clicking outside
-            document.addEventListener("click", function(event) {
-                if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                    dropdownMenu.classList.add("hidden");
-                }
+            // swiper
+            var swiper = new Swiper(".progress-slide-carousel", {
+                loop: true,
+                fraction: true,
+                autoplay: {
+                    delay: 1200,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: ".progress-slide-carousel .swiper-pagination",
+                    type: "progressbar",
+                },
             });
-        });
-    </script>
-@else
-    {{-- login / register form --}}
-    <main class="h-full w-full bg-white">
-        {{ $slot }}
-    </main>
-@endif
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const dropdownToggle = document.getElementById("dropdown-toggle");
+                const dropdownMenu = document.getElementById("dropdown-menu");
+
+                // Toggle dropdown visibility on button click
+                dropdownToggle.addEventListener("click", function() {
+                    dropdownMenu.classList.toggle("hidden");
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener("click", function(event) {
+                    if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                        dropdownMenu.classList.add("hidden");
+                    }
+                });
+            });
+        </script>
+    @else
+        {{-- login / register form --}}
+        <main class="h-full w-full bg-white">
+            {{ $slot }}
+        </main>
+    @endif
 </body>
 
 </html>

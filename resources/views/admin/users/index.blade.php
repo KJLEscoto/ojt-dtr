@@ -9,7 +9,7 @@
                 className="px-10" />
         </section>
 
-        <section class="grid grid-cols-3 gap-5" id="user-container">
+        <section class="grid md:grid-cols-3 grid-cols-2 gap-5" id="user-container">
             @foreach ($users as $user)
                 <a href="{{ route('admin.users.details', $user->id) }}"
                     class="p-5 border border-gray-200 rounded-xl cursor-pointer group animate-transition hover:border-custom-orange flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
@@ -21,9 +21,9 @@
                             path="resources/img/default-male.png" />
                     </div>
                     <div class="text-center mx-auto w-full">
-                        <h1 class="text-lg font-semibold group-hover:text-custom-orange animate-transition">
+                        <h1 class="text-lg font-semibold group-hover:text-custom-orange animate-transition truncate">
                             {{ $user->firstname }}</h1>
-                        <p class="text-gray-500">{{ $user->student_no }}</p>
+                        <p class="text-gray-500 truncate">{{ $user->student_no }}</p>
                     </div>
                 </a>
             @endforeach
@@ -61,7 +61,7 @@
         const pageInfo = document.getElementById("page-info");
 
         let currentPage = 1;
-        const itemsPerPage = 9; // Change this to adjust pagination size
+        const itemsPerPage = 20; // Change this to adjust pagination size
         let filteredUsers = [...userCards]; // Start with all users
 
         function renderUsers() {

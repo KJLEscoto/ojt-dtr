@@ -134,7 +134,7 @@
                 class="lg:col-span-8 w-full lg:h-[calc(100vh-7rem)] h-[calc(100vh-4rem)] overflow-auto lg:py-7 p-5 lg:pr-10 flex flex-col gap-7">
 
                 <section
-                    class="sticky top-0 bg-white border border-gray-200 rounded-full shadow-lg p-4 w-full lg:hidden block">
+                    class="sticky top-0 bg-white border border-gray-200 rounded-full shadow-lg p-4 w-full lg:hidden block z-30">
                     <section class="flex items-center justify-center gap-5">
                         <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" className="px-6" />
                         <x-button label="Reset Password" button openModal="forgot-password-modal"
