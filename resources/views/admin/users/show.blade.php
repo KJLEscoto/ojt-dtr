@@ -98,7 +98,7 @@
             <x-button routePath="admin.users" label="Back" tertiary button leftIcon="eva--arrow-back-fill"
                 className="px-8" />
             <div class="flex items-center gap-2">
-                <x-button tertiary label="View DTR" button className="px-8 font-semibold" />
+                <x-button tertiary label="View DTR" routePath="admin.users.dtr" :params="['id' => $user->id]" button className="px-8 font-semibold" />
                 <x-button primary label="Edit User" button className="px-8" />
             </div>
         </section>
@@ -176,14 +176,14 @@
             </div>
 
             @php
-                $histories = [
-                    ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
-                    ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
-                    ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
-                    ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
-                    ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
-                    ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
-                ];
+                // $histories = [
+                //     ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
+                //     ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
+                //     ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
+                //     ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
+                //     ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
+                //     ['description' => 'time in', 'timeFormat' => '2025-02-05 08:48:35', 'datetime' => '2025-02-05'],
+                // ];
             @endphp
 
             <div class="h-60 w-full bg-white overflow-auto rounded-b-lg">
