@@ -68,8 +68,11 @@
         </main>
 
         {{-- users/intern layout --}}
-    @elseif (Request::routeIs('users.dashboard*') || Request::routeIs('users.settings*') || Request::routeIs('users.dtr*'))
-        <div class="w-full h-auto">
+    @elseif (Request::routeIs('users.dashboard*') ||
+            Request::routeIs('users.settings*') ||
+            Request::routeIs('users.dtr*') ||
+            Request::routeIs('users.request*'))
+        {{-- <div class="w-full h-auto">
             <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
                 <div class="lg:hidden flex items-center justify-between gap-5 px-5 py-3">
                     <x-logo width="w-[200px]" />
@@ -109,7 +112,7 @@
             </nav>
 
             <aside id="mobile-menu"
-                class="fixed top-[70px] right-0 mt-1 w-64 h-[calc(100vh-3rem)] bg-white shadow-md transform translate-x-full transition-transform lg:hidden overflow-auto z-50 flex flex-col justify-between">
+                class="fixed top-[69px] right-0 mt-1 w-64 h-[calc(100vh-3rem)] bg-white shadow-md transform translate-x-full transition-transform lg:hidden overflow-auto z-50 flex flex-col justify-between">
                 <nav>
                     <a href="{{ route('users.dashboard') }}"
                         class="{{ Request::routeIs('users.dashboard*') ? 'border-custom-red text-custom-red py-5 px-7 border-l-4 flex items-center gap-2 font-semibold' : 'text-gray-600 border-white cursor-pointer font-semibold py-5 px-7 border-l-4 flex items-center gap-2' }}">
@@ -139,6 +142,126 @@
             <main class="lg:!mt-[110px] mt-[73px] bg-gray-100">
                 {{ $slot }}
             </main>
+        </div> --}}
+
+        <div class="h-full w-full lg:grid lg:grid-cols-12">
+            <section class="sticky lg:hidden top-0 w-full bg-white shadow-md h-auto py-4 z-50">
+                <div class="flex items-center justify-between w-full lg:px-10 px-5 gap-5">
+                    <section class="grid grid-cols-3 w-full">
+                        <div class="col-span-1 flex items-center justify-start w-full">
+                            <button id="intern-menu-toggle" class="lg:hidden p-2 border rounded-md w-fit h-fit">
+                                ☰
+                            </button>
+                        </div>
+                        <div class="col-span-1 w-full flex items-center justify-center">
+                            <x-logo />
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- Sidebar Menu (Hidden on Large Screens) -->
+            <aside id="mobile-menu"
+                class="fixed top-22 left-0 mt-0 w-64 h-[calc(100vh-4rem)] bg-white shadow-md transform -translate-x-full transition-transform lg:hidden overflow-auto z-50 flex flex-col justify-between py-5">
+
+                <nav class="w-full flex flex-col gap-10">
+                    <section class="w-full flex flex-col gap-2 justify-center items-center px-7">
+                        <div class="w-auto h-auto">
+                            <x-image path="resources/img/default-male.png"
+                                className="h-24 w-24 shadow-md border border-custom-orange rounded-full" />
+                        </div>
+                        <h1 class="font-bold text-lg capitalize text-center text-ellipsis">{{ Auth::user()->firstname }}
+                            {{ substr(Auth::user()->middlename, 0, 1) }}. {{ Auth::user()->lastname }}</h1>
+                        <p class="text-custom-red text-center -mt-2">{{ Auth::user()->email }}</p>
+
+                    </section>
+
+                    <section class="w-full border-y border-gray-100 py-5">
+                        <x-sidebar-menu route="users.dashboard">
+                            <span class="akar-icons--dashboard"></span>
+                            <p>Dashboard</p>
+                        </x-sidebar-menu>
+                        <x-sidebar-menu route="users.dtr">
+                            <span class="mingcute--paper-line"></span>
+                            <p>DTR</p>
+                        </x-sidebar-menu>
+                        <x-sidebar-menu route="users.request">
+                            <span class="ph--hand-deposit"></span>
+                            <p>Request</p>
+                        </x-sidebar-menu>
+                        <x-sidebar-menu route="users.settings">
+                            <span class="solar--settings-linear"></span>
+                            <p>Settings</p>
+                        </x-sidebar-menu>
+                    </section>
+                </nav>
+
+                <section class="pt-5 w-full">
+                    <x-form.container routeName="logout" className="flex items-center justify-center">
+                        @csrf
+                        <button
+                            class="flex items-center opacity-100 gap-1 w-full px-8 py-5 font-semibold bg-custom-red hover:bg-custom-red/80 text-white animate-transition"><span
+                                class="material-symbols--logout-rounded"></span>Logout</button>
+                    </x-form.container>
+                </section>
+            </aside>
+
+            <!-- Left Sidebar (Sticky on Large Screens) -->
+            <aside
+                class="hidden lg:flex flex-col justify-between items-center col-span-3 bg-white shadow-xl sticky top-0 h-[calc(100vh)] overflow-auto py-5">
+
+                <nav class="w-full flex flex-col gap-10">
+
+                    <div class="px-7 pt-5 w-full flex justify-center">
+                        <x-logo />
+                    </div>
+
+                    <section class="w-full flex flex-col gap-2 justify-center items-center px-7">
+                        <div class="w-auto h-auto">
+                            <x-image path="resources/img/default-male.png"
+                                className="h-32 w-32 shadow-md border border-custom-orange rounded-full" />
+                        </div>
+                        <h1 class="font-bold text-lg capitalize text-center text-ellipsis">{{ Auth::user()->firstname }}
+                            {{ substr(Auth::user()->middlename, 0, 1) }}. {{ Auth::user()->lastname }}</h1>
+                        <p class="text-custom-red text-center -mt-2">{{ Auth::user()->email }}</p>
+
+                    </section>
+
+                    <section class="w-full border-y border-gray-100 py-5">
+                        <x-sidebar-menu route="users.dashboard">
+                            <span class="akar-icons--dashboard"></span>
+                            <p>Dashboard</p>
+                        </x-sidebar-menu>
+                        <x-sidebar-menu route="users.dtr">
+                            <span class="mingcute--paper-line"></span>
+                            <p>DTR</p>
+                        </x-sidebar-menu>
+                        <x-sidebar-menu route="users.request">
+                            <span class="ph--hand-deposit"></span>
+                            <p>Request</p>
+                        </x-sidebar-menu>
+                        <x-sidebar-menu route="users.settings">
+                            <span class="solar--settings-linear"></span>
+                            <p>Settings</p>
+                        </x-sidebar-menu>
+                    </section>
+                </nav>
+
+                <section class="pt-5 w-full">
+                    <x-form.container routeName="logout" className="flex items-center justify-center">
+                        @csrf
+                        <button
+                            class="flex items-center opacity-100 gap-1 w-full px-8 py-5 font-semibold bg-custom-red hover:bg-custom-red/80 text-white animate-transition"><span
+                                class="material-symbols--logout-rounded"></span>Logout</button>
+                    </x-form.container>
+                </section>
+            </aside>
+
+            <!-- Main Content (Auto Scroll) -->
+            <main
+                class="col-span-9 overflow-auto w-full lg:!h-[calc(100vh)] h-[calc(100vh-4rem)] bg-gray-100 lg:!p-10 p-5">
+                {{ $slot }}
+            </main>
         </div>
 
         <script>
@@ -146,7 +269,7 @@
             const mobileMenu = document.getElementById("mobile-menu");
 
             menuToggle.addEventListener("click", () => {
-                mobileMenu.classList.toggle("translate-x-full");
+                mobileMenu.classList.toggle("-translate-x-full");
             });
 
             // swiper
@@ -188,46 +311,6 @@
             Request::routeIs('admin.profile*') ||
             Request::routeIs('admin.approvals*'))
         @props(['array_daily' => '', 'ranking' => ''])
-        <!-- Navbar (Sticky at the Top) -->
-        {{-- <nav class="bg-white fixed top-0 left-0 w-full z-50">
-            <div class="flex justify-between items-center lg:px-10 px-5 py-4">
-                <button id="menu-toggle" class="lg:hidden p-2 border rounded-md">
-                    ☰
-                </button>
-                <x-logo width="lg:!w-[250px] sm:!w-[200px] !w-[150px]" />
-                <div class="flex items-center gap-2">
-                    <p class="lg:block hidden capitalize">Hi, {{ Auth::user()->firstname }}!</p>
-                    <button type="button" class="">
-                    </button>
-                    <div class="dropdown relative inline-flex">
-                        <button type="button" id="dropdown-toggle"
-                            class="dropdown-toggle inline-flex cursor-pointer h-14 w-14 overflow-hidden items-center justify-center shadow-md rounded-full bg-white border-custom-orange border">
-                            <x-image path="resources/img/default-male.png" className="object-cover w-full h-full " />
-                        </button>
-                        <div id="dropdown-menu"
-                            class="dropdown-menu hidden rounded-xl shadow-lg border border-gray-300 bg-white absolute top-full right-0 w-72 mt-2 divide-y divide-gray-200">
-                            <ul class="py-2">
-                                <li>
-                                    <a class="block px-6 py-2 hover:bg-gray-100 text-gray-900 font-semibold"
-                                        href="{{ route('admin.profile') }}"> Profile </a>
-                                </li>
-                            </ul>
-                            <div class="pt-2">
-                                <x-form.container routeName="logout" method="POST" className="w-full">
-                                    <x-button label="Logout"
-                                        className="px-6 py-2 hover:bg-gray-100 text-custom-red font-semibold w-full text-start"
-                                        submit />
-                                </x-form.container>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav> --}}
-
-
-
-
 
         {{-- <main class="container max-w-screen-xl mx-auto"> --}}
         <div class="h-full w-full lg:grid lg:grid-cols-12">
@@ -334,7 +417,7 @@
                                     <!-- Header -->
                                     <div class="px-4 py-3 flex justify-between items-center text-custom-orange">
                                         <h2 class="text-base font-semibold">Notifications (<span
-                                                id="notification-count">7</span>)</h2>
+                                                id="notification-count">9</span>)</h2>
                                         {{-- <button id="close-dropdown"
                                             class="text-gray-500 hover:text-custom-red text-lg">&times;</button> --}}
                                     </div>
@@ -353,42 +436,73 @@
                                         </button>
                                     </div>
 
-
-                                    <!-- Content -->
+                                    <!-- Tab Content -->
                                     <section id="tab-content-all"
-                                        class="divide-y divide-gray-100 w-full h-52 overflow-auto">
+                                        class="divide-y divide-gray-100 w-full h-60 overflow-auto">
                                         <!-- Sample Approval Notification -->
-                                        @for ($i = 1; $i <= 7; $i++)
-                                            <div
-                                                class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer hover:bg-custom-orange/5 bg-custom-orange/10">
-                                                <div class="flex items-center gap-3 w-1/2">
-                                                    <x-image path="resources/img/default-male.png"
-                                                        className="w-10 h-10 rounded-full border border-custom-orange" />
-                                                    <div class="w-full truncate">
-                                                        <p class="text-sm font-semibold truncate">John Doe
-                                                            {{ $i }}
-                                                        </p>
-                                                        <p class="text-xs text-gray-500 truncate">Request for
-                                                            DTR
-                                                            Approval</p>
+                                        <section>
+                                            @for ($i = 1; $i <= 7; $i++)
+                                                <div
+                                                    class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer hover:bg-custom-orange/5 bg-custom-orange/10">
+                                                    <div class="flex items-center gap-3 w-1/2">
+                                                        <x-image path="resources/img/default-male.png"
+                                                            className="w-10 h-10 rounded-full border border-custom-orange" />
+                                                        <div class="w-full truncate">
+                                                            <p class="text-sm font-semibold truncate">John Doe Unread
+                                                                {{ $i }}
+                                                            </p>
+                                                            <p class="text-xs text-gray-500 truncate">Request for
+                                                                DTR
+                                                                Approval</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex items-center space-x-2">
+                                                        <button
+                                                            class="text-gray-400 hover:bg-gray-400 hover:text-white p-2 rounded-lg text-xs flex items-center gap-1">
+                                                            <div class="w-auto h-auto">
+                                                                <span
+                                                                    class="material-symbols--archive-rounded w-4 h-4"></span>
+                                                            </div>
+                                                            <p>Archive</p>
+                                                        </button>
+                                                        <span class="bg-custom-orange w-2 h-2 rounded-full"></span>
                                                     </div>
                                                 </div>
-                                                <div class="flex space-x-2">
-                                                    <button
-                                                        class="text-gray-400 hover:bg-gray-400 hover:text-white p-2 rounded-lg text-xs flex items-center gap-1">
-                                                        <div class="w-auto h-auto">
-                                                            <span
-                                                                class="material-symbols--archive-rounded w-4 h-4"></span>
+                                            @endfor
+                                        </section>
+                                        <section>
+                                            @for ($i = 1; $i <= 2; $i++)
+                                                <div
+                                                    class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer hover:bg-custom-orange/5 bg-white">
+                                                    <div class="flex items-center gap-3 w-1/2">
+                                                        <x-image path="resources/img/default-male.png"
+                                                            className="w-10 h-10 rounded-full border border-custom-orange" />
+                                                        <div class="w-full truncate">
+                                                            <p class="text-sm font-semibold truncate">John Doe Read
+                                                                {{ $i }}
+                                                            </p>
+                                                            <p class="text-xs text-gray-500 truncate">Request for
+                                                                DTR
+                                                                Approval</p>
                                                         </div>
-                                                        <p>Archive</p>
-                                                    </button>
+                                                    </div>
+                                                    <div class="flex space-x-2">
+                                                        <button
+                                                            class="text-gray-400 hover:bg-gray-400 hover:text-white p-2 rounded-lg text-xs flex items-center gap-1">
+                                                            <div class="w-auto h-auto">
+                                                                <span
+                                                                    class="material-symbols--archive-rounded w-4 h-4"></span>
+                                                            </div>
+                                                            <p>Archive</p>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        @endfor
+                                            @endfor
+                                        </section>
                                     </section>
 
                                     <section id="tab-content-unread"
-                                        class="hidden divide-y divide-gray-100 w-full h-52 overflow-auto">
+                                        class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                                         <!-- Sample Approval Notification -->
                                         @for ($i = 1; $i <= 7; $i++)
                                             <div
@@ -397,7 +511,7 @@
                                                     <x-image path="resources/img/default-male.png"
                                                         className="w-10 h-10 rounded-full border border-custom-orange" />
                                                     <div class="w-full truncate">
-                                                        <p class="text-sm font-semibold truncate">John Doe
+                                                        <p class="text-sm font-semibold truncate">John Doe Unread
                                                             {{ $i }}
                                                         </p>
                                                         <p class="text-xs text-gray-500 truncate">Request for
@@ -405,7 +519,7 @@
                                                             Approval</p>
                                                     </div>
                                                 </div>
-                                                <div class="flex space-x-2">
+                                                <div class="flex items-center space-x-2">
                                                     <button
                                                         class="text-gray-400 hover:bg-gray-400 hover:text-white p-2 rounded-lg text-xs flex items-center gap-1">
                                                         <div class="w-auto h-auto">
@@ -414,13 +528,14 @@
                                                         </div>
                                                         <p>Archive</p>
                                                     </button>
+                                                    <span class="bg-custom-orange w-2 h-2 rounded-full"></span>
                                                 </div>
                                             </div>
                                         @endfor
                                     </section>
 
                                     <section id="tab-content-archived"
-                                        class="hidden divide-y divide-gray-100 w-full h-52 overflow-auto">
+                                        class="hidden divide-y divide-gray-100 w-full h-60 overflow-auto">
                                         <p
                                             class="text-sm text-center text-gray-500 p-4 flex items-center justify-center h-full">
                                             Nothing here.</p>
@@ -550,7 +665,7 @@
 
                     // Activate selected tab
                     activeTab.classList.add("text-custom-orange", "border-custom-orange", "font-semibold",
-                    "border-b-2");
+                        "border-b-2");
                     activeTab.classList.remove("text-gray-500");
 
                     activeContent.classList.remove("hidden");

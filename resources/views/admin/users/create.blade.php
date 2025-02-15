@@ -1,4 +1,4 @@
-<x-main-layout :array_daily="$array_daily" :ranking="$ranking">
+<x-main-layout>
     <x-form.container routeName="admin.users.create.post" className="w-full h-auto">
         <div class="w-full h-full flex flex-col items-center gap-7">
 
@@ -9,7 +9,7 @@
             <x-page-title title="create intern account" titleClass="lg:!text-2xl md:!text-xl !text-lg"
                 vectorClass="lg:!h-4 !h-3" />
 
-            <div class="w-full flex flex-col gap-7 md:pb-10">
+            <div class="w-full flex flex-col gap-7">
                 <section class="space-y-5 w-full">
                     <x-form.section-title title="Personal Information" vectorClass="lg:h-5 h-3" />
                     <div class="grid sm:grid-cols-3 w-full gap-5">

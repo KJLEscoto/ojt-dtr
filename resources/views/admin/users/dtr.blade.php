@@ -1,4 +1,4 @@
-<x-main-layout :array_daily="$array_daily" :ranking="$ranking">
+<x-main-layout>
     <main class="flex flex-col gap-5">
         <div
             class="w-auto grid grid-cols-2 text-nowrap bg-white p-3 border sticky top-0 border-gray-200 shadow-lg rounded-full max-w-screen-xl mx-auto">

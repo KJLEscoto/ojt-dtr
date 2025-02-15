@@ -1,4 +1,4 @@
-<x-main-layout :array_daily="$array_daily" :ranking="$ranking">
+<x-main-layout>
     <div class="h-auto w-full flex flex-col gap-6">
         <section class="flex items-center justify-between gap-5">
             <x-button routePath="admin.users" label="Back" tertiary button showLabel="{{ true }}"

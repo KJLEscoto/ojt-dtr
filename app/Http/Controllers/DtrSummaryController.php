@@ -477,7 +477,7 @@ class DtrSummaryController extends Controller
         ]);
     }
 
-    public function showAdminUserDtr(Request $request, $id, RankingController $rankingController, HistoryController $historyController)
+    public function showAdminUserDtr(Request $request, $id)
     {
         $currentDate = Carbon::now();
         $selectedMonth = $request->input('month', $currentDate->month);
@@ -583,8 +583,6 @@ class DtrSummaryController extends Controller
 
 
         return view('admin.users.dtr', [
-            'ranking' => $rankingController->getRankings(),
-            'array_daily' => $historyController->AllUserDailyAttendance(),
             'user' => User::find($request->id),
             'records' => $records,
             'totalHoursPerMonth' => $totalHoursPerMonth,

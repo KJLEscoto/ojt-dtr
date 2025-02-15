@@ -1,58 +1,36 @@
 <x-modal.forgot-password id="forgot-password-modal" />
 <x-modal.confirmation-email id="confirmation-email-modal" />
 
-@if (session('success'))
-    <x-modal.flash-msg msg="success" />
-@elseif (session('update'))
-    <x-modal.flash-msg msg="update" />
-@elseif ($errors->has('invalid'))
-    <x-modal.flash-msg msg="invalid" />
-@elseif (session('invalid'))
-    <x-modal.flash-msg msg="invalid" />
-@endif
-
 <x-main-layout>
-    <main class="lg:container max-w-screen-xl mx-auto">
-        <x-form.container routeName="users.settings.update" method="POST"
-            className="grid lg:grid-cols-12 overflow-auto h-full w-full">
+
+    <div class="h-full w-full">
+        <x-form.container routeName="users.settings.update" method="POST" className="h-auto w-full flex flex-col gap-5">
             @method('PUT')
 
-            <section
-                class="lg:col-span-4 w-full lg:h-[calc(100vh-7rem)] hidden lg:flex items-center justify-center py-7 px-10">
-                <div
-                    class="rounded-lg border border-gray-200 bg-white w-full h-full p-7 flex flex-col gap-5 overflow-auto overflow-x-hidden justify-between items-center">
-                    <section class="flex flex-col items-center gap-5">
-                        <span class="h-44 w-44 overflow-hidden flex items-center justify-center shadow-md rounded-full">
-                            <x-image path="resources/img/default-male.png" className="h-full w-full object-cover" />
-                        </span>
-                        <x-button tertiary leftIcon="bx--image" button label="Change" className="px-6" />
-                    </section>
+            @if (session('success'))
+                <x-modal.flash-msg msg="success" />
+            @elseif (session('update'))
+                <x-modal.flash-msg msg="update" />
+            @elseif ($errors->has('invalid'))
+                <x-modal.flash-msg msg="invalid" />
+            @elseif (session('invalid'))
+                <x-modal.flash-msg msg="invalid" />
+            @endif
 
-                    <section class="flex flex-col items-center gap-5">
-                        <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" className="px-6" />
-                        <x-button label="Reset Password" button openModal="forgot-password-modal"
-                            className="text-custom-orange cursor-pointer hover:underline modal-button lg:text-base sm:text-sm text-xs" />
-                    </section>
-                </div>
-            </section>
+            <div
+                class="w-full flex items-center justify-center gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-5 z-30 rounded-full">
+                <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" className="px-6" />
+                <x-button label="Reset Password" button openModal="forgot-password-modal"
+                    className="text-custom-orange cursor-pointer hover:underline modal-button lg:text-base text-sm" />
+            </div>
 
-            <section
-                class="lg:col-span-8 w-full lg:h-[calc(100vh-7rem)] h-[calc(100vh-4rem)] overflow-auto lg:py-7 p-5 lg:pr-10 flex flex-col gap-7">
-
-                <section
-                    class="sticky top-0 bg-white border border-gray-200 rounded-full shadow-lg p-4 w-full lg:hidden block z-30">
-                    <section class="flex items-center justify-center gap-5">
-                        <x-button primary label="Save Changes" submit leftIcon="eva--save-outline" className="px-6" />
-                        <x-button label="Reset Password" button openModal="forgot-password-modal"
-                            className="text-custom-orange cursor-pointer hover:underline modal-button lg:text-base text-sm" />
-                    </section>
-                </section>
-
+            <div class="flex flex-col lg:!gap-7 gap-5 pb-10 mt-5 h-full">
                 <section class="flex flex-col gap-5 w-full p-7 border border-gray-200 rounded-lg bg-white">
-                    <div class="flex flex-col items-center gap-5 lg:hidden">
-                        <span class="h-64 w-64 overflow-hidden flex items-center justify-center shadow-md rounded-full">
-                            <x-image path="resources/img/default-male.png" className="h-full w-full object-cover" />
-                        </span>
+                    <div class="flex flex-col items-center gap-5">
+                        <div class="h-auto w-auto">
+                            <x-image path="resources/img/default-male.png"
+                                className="h-64 w-64 border border-custom-orange shadow rounded-full" />
+                        </div>
                         <x-button tertiary leftIcon="bx--image" label="Change" className="px-6" />
                     </div>
                     <x-form.section-title title="Personal Information" />
@@ -80,7 +58,7 @@
                     </div>
                 </section>
 
-                <section class="space-y-5 w-full p-7 border border-gray-200 rounded-lg bg-white">
+                <section class="flex flex-col gap-5 w-full p-7 border border-gray-200 rounded-lg bg-white">
                     <x-form.section-title title="Account Information" />
                     <div class="grid grid-cols-2 w-full gap-5">
                         <x-form.input label="Email" type="email" name_id="email" value="{{ $user->email }}"
@@ -91,12 +69,12 @@
                             value="{{ $user->starting_date }}" placeholder="MMM DD, YYY"
                             labelClass="text-lg font-medium" small />
                         <x-form.input disabled="true" label="Expiry Date" type="date" name_id="expiry_date"
-                            value="{{ $user->expiry_date }}" placeholder="MMM DD, YYY"
-                            labelClass="text-lg font-medium" small />
+                            value="{{ $user->expiry_date }}" placeholder="MMM DD, YYY" labelClass="text-lg font-medium"
+                            small />
                     </div>
                 </section>
 
-                <section class="space-y-5 w-full p-7 border border-gray-200 rounded-lg bg-white">
+                <section class="flex flex-col gap-5 w-full p-7 border border-gray-200 rounded-lg bg-white h-fit">
                     <x-form.section-title title="Emergency Contact" />
                     <div class="grid md:grid-cols-3 w-full gap-5">
                         <x-form.input label="Full Name" type="text" name_id="emergency_contact_fullname"
@@ -112,7 +90,7 @@
                             value="{{ $user->id }}" labelClass="text-lg font-medium" small />
                     </div>
                 </section>
-            </section>
+            </div>
         </x-form.container>
-    </main>
+    </div>
 </x-main-layout>

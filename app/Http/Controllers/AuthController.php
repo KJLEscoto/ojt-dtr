@@ -71,15 +71,9 @@ class AuthController extends Controller
         ]);
     }
 
-    public function showAdminUsersCreate(RankingController $rankingController, HistoryController $historyController, )
+    public function showAdminUsersCreate()
     {
-        $ranking = $rankingController->getRankings();
-        $array_daily = $historyController->AllUserDailyAttendance();
-
-        return view('admin.users.create', [
-            'ranking' => $ranking,
-            'array_daily' => $array_daily,
-        ]);
+        return view('admin.users.create');
     }
 
     public function showAdminUsersCreatePost(Request $request)

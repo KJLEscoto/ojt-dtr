@@ -1,4 +1,4 @@
-<x-main-layout :array_daily="$array_daily" :ranking="$ranking">
+<x-main-layout>
     <x-form.container routeName="users.settings.update" method="POST"
         className="h-auto w-full flex flex-col gap-7 overflow-auto">
         @method('PUT')

@@ -9,7 +9,7 @@
             <div class="flex flex-col p-10 gap-5 bg-white rounded-2xl">
                 <x-page-title title="DTR Summary" titleClass="text-xl" />
                 <div class=" bg-white shadow-md rounded-lg p-4 w-full max-w-3xl border">
-                    <div class="flex items-start space-x-6 border-b pb-4">
+                    {{-- <div class="flex items-start space-x-6 border-b pb-4">
                         <img src="{{ $profile_image ?? 'https://via.placeholder.com/100' }}" alt="Profile Image"
                             class="w-24 h-24 rounded-full border">
                         <div class="flex-1 grid grid-cols-3 gap-x-4 gap-y-1 text-sm">
@@ -37,10 +37,9 @@
                             <span class="font-semibold">E-Address</span> <span class="col-span-2">:
                                 {{ $user->emergency_contact_address }}</span>
                         </div>
-                    </div>
+                    </div> --}}
 
-                    <div class="mt-6">
-                        <h3 class="text-lg font-semibold mb-4">Yearly Hours Summary</h3>
+                    <div>
                         <div class="overflow-x-auto">
                             @php $totalHoursOverall = 0; @endphp
                             @foreach ($yearlyTotals as $yearData)
@@ -72,7 +71,7 @@
                             @endforeach
 
                             <div class="mt-6 border-t pt-4">
-                                <div class="text-lg font-semibold flex justify-between">
+                                <div class="text-lg font-semibold flex justify-between text-custom-red">
                                     <span>Total Overall Hours</span>
                                     <span>{{ $totalHoursOverall }} hrs</span>
                                 </div>

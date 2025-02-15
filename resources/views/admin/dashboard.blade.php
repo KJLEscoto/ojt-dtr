@@ -89,7 +89,7 @@
                 <div class="h-full pb-7 w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
                     @forelse ($array_daily as $daily)
                         <section
-                            class="px-7 py-5 w-full flex flex-wrap justify-between odd:bg-custom-orange/5 bg-white items-center">
+                            class="px-7 py-5 w-full flex flex-wrap justify-between odd:bg-custom-orange/5 even:border-y bg-white items-center">
                             <div class="flex items-start gap-5 w-full">
                                 <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                     path="resources/img/default-male.png" />
@@ -199,7 +199,7 @@
                 <div class="h-full w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
                     @foreach ($recentlyAddedUser as $user)
                         <a href="{{ route('admin.users.details', ['id' => $user['id']]) }}"
-                            class="px-7 py-5 w-full flex justify-between items-center even:bg-custom-orange/5 hover:bg-gray-100 cursor-pointer">
+                            class="px-7 py-5 w-full flex justify-between items-center even:bg-custom-orange/5 even:border-y hover:bg-gray-100 cursor-pointer">
                             <div class="flex items-center gap-5 w-1/2">
                                 <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                     path="resources/img/default-male.png" />

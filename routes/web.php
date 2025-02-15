@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
     //user index page
     Route::get('/users', [UserController::class, 'index'])->name('users.profile.index');
 
+    Route::get('/request', [UserController::class, 'showRequest'])->name('users.request');
 
     //scanner user validation data
     Route::get('scanner/{qr_code}', [UserController::class, 'AdminScannerValidation'])->name('admin.scanner.validation');

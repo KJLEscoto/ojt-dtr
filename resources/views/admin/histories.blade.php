@@ -2,8 +2,8 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
-<x-main-layout :array_daily="$array_daily" :ranking="$ranking">
-    <div class="h-auto w-full space-y-10">
+<x-main-layout>
+    <div class="h-auto w-full flex flex-col gap-5">
         <section class="flex lg:flex-row flex-col items-center justify-between w-full gap-5">
             <span class="lg:!w-1/2 w-full">
                 <x-form.input id="search" name_id="search" placeholder="Search" small />
@@ -12,29 +12,24 @@
             <input class="px-5 py-2 rounded-full cursor-pointer border border-gray-200" type="month" id="month">
         </section>
 
-        <section class="h-auto w-full">
+        <section class="h-auto w-full flex flex-col gap-5">
             <div class="overflow-x-auto bg-white rounded-lg shadow-md">
                 <table id="recordsTable" class="w-full border-collapse border border-gray-300">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-custom-orange border">Name</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-custom-orange border">Email</th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-custom-orange border">Description
-                            </th>
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-custom-orange border">Date & Time
-                            </th>
-                            {{-- 
-                                currently not used
-                            <th class="px-6 py-3 text-left text-sm font-semibold text-custom-orange border">Action</th> --}}
+                    <thead>
+                        <tr class="*:px-6 *:py-3 *:text-left *:text-sm *:font-semibold *:bg-custom-orange *:text-white">
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Description</th>
+                            <th>Date & Time</th>
                         </tr>
                     </thead>
                     <tbody id="recordsBody">
                         @foreach ($records as $record)
-                            <tr class="border hover:bg-gray-100">
-                                <td class="px-6 py-4 border">{{ $record['user']->firstname }}</td>
-                                <td class="px-6 py-4 border">{{ $record['user']->email }}</td>
-                                <td class="px-6 py-4 border">{{ $record['history']->description }}</td>
-                                <td class="px-6 py-4 border">
+                            <tr class="border hover:bg-gray-100 *:px-6 *:py-4">
+                                <td>{{ $record['user']->firstname }}</td>
+                                <td>{{ $record['user']->email }}</td>
+                                <td>{{ $record['history']->description }}</td>
+                                <td>
                                     {{ \Carbon\Carbon::parse($record['history']->datetime)->format('F d - h: i A') }}
                                 </td>
                             </tr>
@@ -43,7 +38,7 @@
                 </table>
             </div>
             <!-- Pagination Controls -->
-            <div class="flex lg:flex-row flex-col gap-3 items-center justify-between mt-4">
+            <div class="flex lg:flex-row flex-col gap-3 items-center justify-between">
                 <span id="pagination-info" class="text-sm text-gray-600"></span>
                 <div class="flex items-center gap-3">
                     <button id="prev-page"
@@ -96,12 +91,12 @@
                         'text-sm font-semibold text-green-500' : 'text-sm font-semibold text-red-500';
 
                     row.innerHTML = `
-                        <td class="px-6 py-4 border">${record.user.firstname}</td>
-                        <td class="px-6 py-4 border">${record.user.email}</td>
-                        <td class="px-6 py-4 border">
+                        <td class="px-6 py-4">${record.user.firstname}</td>
+                        <td class="px-6 py-4">${record.user.email}</td>
+                        <td class="px-6 py-4">
                             <span class="${descriptionClass}">${record.history.description}</span>
                         </td>
-                        <td class="px-6 py-4 border">{{ \Carbon\Carbon::parse($record['history']->datetime)->format('F d - h: i A') }}</td>
+                        <td class="px-6 py-4">{{ \Carbon\Carbon::parse($record['history']->datetime)->format('F d - h:i a') }}</td>
                     `;
 
                     recordsBody.appendChild(row);

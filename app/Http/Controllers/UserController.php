@@ -191,17 +191,12 @@ class UserController extends Controller
     //         return response()->json(['error' => $e->getMessage(), 'valid' => false], Response::HTTP_INTERNAL_SERVER_ERROR);
     //     }
     // }
-    public function showAdminProfile(RankingController $rankingController, HistoryController $historyController)
+    public function showAdminProfile()
     {
-        $ranking = $rankingController->getRankings();
-        $array_daily = $historyController->AllUserDailyAttendance();
         $user = Auth::user();
 
         return view('admin.profile.index', [
             'user' => $user,
-            'ranking' => $ranking,
-            'array_daily' => $array_daily,
-
         ]);
     }
 
@@ -361,7 +356,7 @@ class UserController extends Controller
         return view('admin.approvals.index');
     }
 
-    public function showAdminHistory(RankingController $rankingController, HistoryController $historyController)
+    public function showAdminHistory()
     {
         $histories = Histories::with('user')->get();
         $users = User::with('history')->get();
@@ -374,43 +369,30 @@ class UserController extends Controller
             $records[] = [
                 'user' => $user,
                 'history' => $history,
-                'formatted_datetime' => Carbon::parse($history->datetime)->format('M d, Y - h:i a'),
+                'formatted_datetime' => Carbon::parse($history->datetime)->format('h:i a - M d, Y'),
             ];
         }
-
-        $ranking = $rankingController->getRankings();
-        $array_daily = $historyController->AllUserDailyAttendance();
 
         //dd($records);
 
         return view('admin.histories', [
             'records' => $records,
-            'ranking' => $ranking,
-            'array_daily' => $array_daily,
         ]);
     }
 
-    public function showAdminUsers(RankingController $rankingController, HistoryController $historyController)
+    public function showAdminUsers()
     {
         $users = User::get();
 
-        $ranking = $rankingController->getRankings();
-        $array_daily = $historyController->AllUserDailyAttendance();
-
         return view('admin.users.index', [
             'users' => $users,
-            'ranking' => $ranking,
-            'array_daily' => $array_daily,
         ]);
 
     }
 
-    public function showUserDetails($id, RankingController $rankingController, HistoryController $historyController, DtrSummaryController $dtrSummaryController)
+    public function showUserDetails($id, DtrSummaryController $dtrSummaryController)
     {
         $user = User::find($id);
-
-        $ranking = $rankingController->getRankings();
-        $array_daily = $historyController->AllUserDailyAttendance();
 
         $histories = $user->history()->latest()->get()->map(function ($history) {
             return [
@@ -436,23 +418,17 @@ class UserController extends Controller
 
         return view('admin.users.show', [
             'user' => $user,
-            'ranking' => $ranking,
-            'array_daily' => $array_daily,
             'histories' => $histories,
             //'yearlyTotals' => $yearlyTotals,
         ]);
     }
 
-    public function showEditUsers($id, RankingController $rankingController, HistoryController $historyController)
+    public function showEditUsers($id)
     {
         $user = User::where('id', $id)->first();
-        $ranking = $rankingController->getRankings();
-        $array_daily = $historyController->AllUserDailyAttendance();
 
         return view('admin.users.edit', [
             'user' => $user,
-            'ranking' => $ranking,
-            'array_daily' => $array_daily,
         ]);
     }
 
@@ -490,5 +466,10 @@ class UserController extends Controller
             return $this->showAdminDashboard(new RankingController());
         }
         return $this->showUserDashboard(new RankingController());
+    }
+
+    public function showRequest()
+    {
+        return view('users.request');
     }
 }
