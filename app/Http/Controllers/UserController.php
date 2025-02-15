@@ -356,13 +356,9 @@ class UserController extends Controller
         }
     }
 
-    public function showAdminScanner()
+    public function showAdminApprovals()
     {
-        //$users = User::all();
-
-        //$histories = $users->history()->latest()->get();
-
-
+        return view('admin.approvals.index');
     }
 
     public function showAdminHistory(RankingController $rankingController, HistoryController $historyController)

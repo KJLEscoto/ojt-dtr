@@ -62,16 +62,114 @@
     <x-flash-msg msg="Time Out checked successfully"/>
     </span> --}}
 
-    <div class="flex flex-col gap-5 w-full h-auto">
+    <div class="flex flex-col gap-5 w-auto h-auto">
 
-        {{-- <div class="w-full gap-2 flex items-center justify-start">
-                <x-button primary label="Open QR Scanner" button openModal="scanner-modal"
-                    leftIcon="iconamoon--scanner-fill" className="px-7 modal-button" />
-            </div> --}}
+        <div class="h-full w-full">
+            <section class="h-full w-full p-7 border bg-white rounded-xl border-gray-200">
+                <!-- Scanner Section -->
+                <div id="reader" class="h-full w-full"></div>
+            </section>
 
-        <div class="h-[550px] w-full p-5 overflow-hidden object-center border bg-white rounded-xl border-gray-200">
-            <!-- Scanner Section -->
-            <div id="reader" class="h-full w-full max-w-xl mx-auto"></div>
+
+        </div>
+
+        <div class="flex lg:flex-row flex-col lg:gap-7 gap-5 w-full lg:!h-[500px] h-[600px]">
+            <section
+                class="p-7 w-full border bg-white border-gray-200 rounded-xl h-full overflow-hidden flex flex-col gap-5">
+                <div
+                    class="flex lg:items-end items-center flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
+                    <div class="flex lg:items-start items-center gap-2">
+                        <span class="material-symbols--co-present-outline"></span>
+                        <p class="font-semibold lg:!text-lg text-sm">Daily Attendance</p>
+                    </div>
+
+                    <div class="md:text-sm text-xs font-semibold">
+                        {{ \Carbon\Carbon::now()->format('M d, Y') }}</div>
+                </div>
+                <div class="h-full pb-7 w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
+                    @forelse ($array_daily as $daily)
+                        <section
+                            class="px-7 py-5 w-full flex flex-wrap justify-between odd:bg-custom-orange/5 bg-white items-center">
+                            <div class="flex items-start gap-5 w-full">
+                                <x-image className="w-12 h-12 rounded-full border border-custom-orange"
+                                    path="resources/img/default-male.png" />
+                                <div class="flex items-center flex-wrap justify-between w-full gap-x-2">
+                                    <div class="w-1/2 ">
+                                        <section class="font-bold text-black text-lg truncate">
+                                            {{ $daily['timeFormat'] }}
+                                        </section>
+                                        <p class="text-sm font-medium text-gray-700 capitalize truncate">
+                                            {{ $daily['name'] }}</p>
+                                    </div>
+                                    @if ($daily['description'] === 'time in')
+                                        <div
+                                            class="text-green-500 flex items-center gap-1 select-none text-sm font-semibold">
+
+                                            <p>Time in</p>
+                                        </div>
+                                    @else
+                                        <div
+                                            class="text-red-500 flex items-center gap-1 select-none text-sm font-semibold">
+
+                                            <p>Time out</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </section>
+                    @empty
+                        <h1 class="text-center flex items-center justify-center h-full font-semibold text-gray-500">
+                            Waiting for attendees...
+                        </h1>
+                    @endforelse
+                </div>
+            </section>
+
+            <section
+                class="p-7 rounded-xl border border-gray-200 bg-white h-full w-full overflow-hidden flex flex-col gap-5">
+                <div
+                    class="flex lg:items-end items-center flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
+                    <div class="flex lg:items-start items-center gap-2">
+                        <span class="hugeicons--champion"></span>
+                        <p class="font-semibold lg:!text-lg text-sm">Top 3 Performer</p>
+                    </div>
+                    <p class="md:text-sm text-xs font-semibold">Highest Hour Basis</p>
+                </div>
+
+                <!--HTML CODE-->
+                <div class="w-full relative h-full">
+                    <div class="swiper progress-slide-carousel swiper-container h-full flex">
+                        <div class="swiper-wrapper h-full flex">
+                            @forelse ($ranking as $index => $user)
+                                <div class="swiper-slide h-full flex">
+                                    <div
+                                        class="bg-custom-orange/5 h-full w-full overflow-hidden flex flex-col justify-center">
+                                        <section class="flex items-end text-center gap-2 w-full p-5 relative h-full">
+                                            <div class="w-full space-y-1 px-5">
+                                                <p class="text-sm font-semibold">TOP {{ $index + 1 }}</p>
+                                                <h1 class="text-sm truncate capitalize text-gray-500/80">
+                                                    {{ $user['name'] }}
+                                                </h1>
+                                                <p class="text-xl font-semibold text-custom-orange">
+                                                    {{ $user['hours_worked'] }} hours
+                                                </p>
+                                            </div>
+                                            <x-image path="resources/img/default-male.png"
+                                                className="absolute inset-0 mx-auto h-full scale-125 w-auto opacity-20 z-0" />
+                                        </section>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="flex w-full items-center justify-center h-full font-semibold text-gray-500">
+                                    No top performer yet.
+                                </div>
+                            @endforelse
+                        </div>
+                        <div class="swiper-pagination !bottom-0 !top-auto mx-auto bg-gray-100"></div>
+                    </div>
+                </div>
+
+            </section>
         </div>
 
         @php
@@ -85,7 +183,7 @@
 
         <div class="grid grid-cols-2 gap-5 w-full h-auto">
             @foreach ($totals as $total)
-                <section class="p-5 w-full flex justify-between h-full border bg-white border-gray-200 rounded-xl">
+                <section class="p-7 w-full flex justify-between h-full border bg-white border-gray-200 rounded-xl">
                     <h1 class="font-semibold text-sm">{{ $total['label'] }}</h1>
                     <p class="font-bold text-xl text-custom-red">{{ $total['number'] }}</p>
                 </section>
@@ -93,12 +191,12 @@
         </div>
 
         <div class="w-full h-full">
-            <section class="p-5 w-full border bg-white border-gray-200 rounded-xl h-[500px] space-y-5">
+            <section class="p-7 w-full border bg-white border-gray-200 rounded-xl h-[500px] flex flex-col gap-5">
                 <div class="flex items-center gap-2 text-custom-red font-semibold">
                     <span class="cuida--user-add-outline"></span>
                     <p class="font-semibold text-lg">Recently Added Users</p>
                 </div>
-                <div class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
+                <div class="h-full w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
                     @foreach ($recentlyAddedUser as $user)
                         <a href="{{ route('admin.users.details', ['id' => $user['id']]) }}"
                             class="px-7 py-5 w-full flex justify-between items-center even:bg-custom-orange/5 hover:bg-gray-100 cursor-pointer">
@@ -110,9 +208,9 @@
                             <p>{{ $user['ago'] }}</p>
                         </a>
                     @endforeach
-                    {{-- <button type="button" data-pd-overlay="#time-in-time-out-modal"
+                    <button type="button" data-pd-overlay="#time-in-time-out-modal"
                         data-modal-target="time-in-time-out-modal" data-modal-toggle="time-in-time-out-modal"
-                        name="showTimeShift" class="hidden modal-button">hello</button> --}}
+                        name="showTimeShift" class="hidden modal-button">Scan Successfully!</button>
                 </div>
             </section>
         </div>
@@ -122,6 +220,20 @@
 
 <script>
     let scannerInstance = null; // Store scanner instance globally
+
+    // swiper
+    var swiper = new Swiper(".progress-slide-carousel", {
+        loop: true,
+        fraction: true,
+        autoplay: {
+            delay: 1200,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: ".progress-slide-carousel .swiper-pagination",
+            type: "progressbar",
+        },
+    });
 
     function closeCamera() {
         if (scannerInstance) {
@@ -141,8 +253,8 @@
     function initScanner() {
         scannerInstance = new Html5QrcodeScanner('reader', {
             qrbox: {
-                width: 250,
-                height: 250
+                width: 400,
+                height: 400
             },
             fps: 10
         });

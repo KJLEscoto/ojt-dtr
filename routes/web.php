@@ -74,6 +74,10 @@ Route::middleware('auth')->group(function () {
 
     //admin scanner
     //Route::get('/admin/scanner', [UserController::class, 'showAdminScanner'])->name('admin.scanner');
+
+    // admin approvals page
+    Route::get('/admin/approvals', [UserController::class, 'showAdminApprovals'])->name('admin.approvals');
+
     //admin user index page
     Route::get('/admin/users', [UserController::class, 'showAdminUsers'])->name('admin.users');
 

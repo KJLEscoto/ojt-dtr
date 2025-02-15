@@ -30,8 +30,7 @@
     <style>
         .swiper-wrapper {
             width: 100%;
-            height: max-content !important;
-            padding-bottom: 64px !important;
+            height: 100%;
             -webkit-transition-timing-function: linear !important;
             transition-timing-function: linear !important;
             position: relative;
@@ -186,10 +185,11 @@
     @elseif (Request::routeIs('admin.dashboard*') ||
             Request::routeIs('admin.users*') ||
             Request::routeIs('admin.histories*') ||
-            Request::routeIs('admin.profile*'))
+            Request::routeIs('admin.profile*') ||
+            Request::routeIs('admin.approvals*'))
         @props(['array_daily' => '', 'ranking' => ''])
         <!-- Navbar (Sticky at the Top) -->
-        <nav class="bg-white shadow-md fixed top-0 left-0 w-full z-50">
+        {{-- <nav class="bg-white fixed top-0 left-0 w-full z-50">
             <div class="flex justify-between items-center lg:px-10 px-5 py-4">
                 <button id="menu-toggle" class="lg:hidden p-2 border rounded-md">
                     ☰
@@ -223,237 +223,247 @@
                     </div>
                 </div>
             </div>
-        </nav>
+        </nav> --}}
 
-        <!-- Sidebar Menu (Hidden on Large Screens) -->
-        <aside id="mobile-menu"
-            class="fixed top-22 left-0 w-64 h-[calc(100vh-5rem)] bg-white shadow-md transform -translate-x-full transition-transform lg:hidden overflow-auto z-50">
-            <nav>
-                <a href="{{ route('admin.dashboard') }}"
-                    class="{{ Request::routeIs('admin.dashboard*') ? 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
-                    <div class="w-auto h-auto flex items-center"><span class="akar-icons--dashboard"></span></div>
-                    <p>Dashboard</p>
-                </a>
-                <a href="{{ route('admin.users') }}"
-                    class="{{ Request::routeIs('admin.users*') ? 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
-                    <div class="w-auto h-auto flex items-center"><span class="cuida--users-outline"></span></div>
-                    <p>Users</p>
-                </a>
-                <a href="{{ route('admin.histories') }}"
-                    class="{{ Request::routeIs('admin.histories*') ? 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
-                    <div class="w-auto h-auto flex items-center"><span
-                            class="material-symbols--history-rounded w-6 h-6"></span></div>
-                    <p>History</p>
-                </a>
-                {{-- <a href="{{ route('admin.school') }}"
-                        class="{{ Request::routeIs('admin.school*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
-                        <div class="w-auto h-auto flex items-center"><span
-                                class="tabler--school"></span></div>
-                        <p>School</p>
-                    </a> --}}
-                <a href="{{ route('admin.profile') }}"
-                    class="{{ Request::routeIs('admin.profile*') ? 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-5 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
-                    <div class="w-auto h-auto flex items-center"><span class="cuida--user-outline"></span></div>
-                    <p>Profile</p>
-                </a>
-            </nav>
-        </aside>
+
+
+
 
         {{-- <main class="container max-w-screen-xl mx-auto"> --}}
-        <div class="lg:mt-[93px] mt-[89px] h-full w-full lg:grid lg:grid-cols-12">
+        <div class="h-full w-full lg:grid lg:grid-cols-12">
 
-            <!-- Left Sidebar (Sticky on Large Screens) -->
-            <aside
-                class="hidden lg:block md:col-span-2 bg-white shadow-xl sticky top-20 h-[calc(100vh-5rem)] overflow-auto">
-                <!-- Navigation -->
-                <nav>
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="{{ Request::routeIs('admin.dashboard*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
-                        <div class="w-auto h-auto flex items-center"><span class="akar-icons--dashboard"></span></div>
+            <!-- Sidebar Menu (Hidden on Large Screens) -->
+            <aside id="mobile-menu"
+                class="fixed top-22 left-0 mt-20 w-64 h-[calc(100vh-5rem)] bg-white shadow-md transform -translate-x-full transition-transform lg:hidden overflow-auto z-50">
+                <div class="px-5 pt-7 w-full">
+                    <x-logo />
+                </div>
+                <nav class="mt-5">
+                    <x-sidebar-menu route="admin.dashboard">
+                        <div class="w-auto h-auto flex items-center"><span class="akar-icons--dashboard"></span>
+                        </div>
                         <p>Dashboard</p>
-                    </a>
-                    <a href="{{ route('admin.users') }}"
-                        class="{{ Request::routeIs('admin.users*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
-                        <div class="w-auto h-auto flex items-center"><span class="cuida--users-outline"></span></div>
+                    </x-sidebar-menu>
+                    <x-sidebar-menu route="admin.approvals">
+                        <div class="w-auto h-auto flex items-center"><span class="lucide--check-check"></span></div>
+                        <p>Approvals</p>
+                    </x-sidebar-menu>
+                    <x-sidebar-menu route="admin.users">
+                        <div class="w-auto h-auto flex items-center"><span class="cuida--users-outline"></span>
+                        </div>
                         <p>Users</p>
-                    </a>
-                    <a href="{{ route('admin.histories') }}"
-                        class="{{ Request::routeIs('admin.histories*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    </x-sidebar-menu>
+                    <x-sidebar-menu route="admin.histories">
                         <div class="w-auto h-auto flex items-center"><span
                                 class="material-symbols--history-rounded w-6 h-6"></span></div>
                         <p>History</p>
-                    </a>
-                    <a href="{{ route('admin.profile') }}"
-                        class="{{ Request::routeIs('admin.profile*') ? 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-custom-red font-semibold text-custom-red cursor-pointer' : 'flex items-center gap-2 px-10 py-5 w-full border-r-8 border-white font-semibold text-gray-500 cursor-pointer' }}">
+                    </x-sidebar-menu>
+                    <x-sidebar-menu route="admin.profile">
                         <div class="w-auto h-auto flex items-center"><span class="cuida--user-outline"></span></div>
                         <p>Profile</p>
-                    </a>
+                    </x-sidebar-menu>
+                </nav>
+            </aside>
+
+            <!-- Left Sidebar (Sticky on Large Screens) -->
+            <aside
+                class="hidden lg:block col-span-2 bg-white shadow-xl sticky top-0 h-[calc(100vh)] overflow-auto py-5">
+                <div class="px-5 w-full">
+                    <x-logo />
+                </div>
+                <!-- Navigation -->
+                <nav class="mt-10">
+                    <x-sidebar-menu route="admin.dashboard">
+                        <div class="w-auto h-auto flex items-center"><span class="akar-icons--dashboard"></span>
+                        </div>
+                        <p>Dashboard</p>
+                    </x-sidebar-menu>
+                    <x-sidebar-menu route="admin.approvals">
+                        <div class="w-auto h-auto flex items-center"><span class="lucide--check-check"></span></div>
+                        <p>Approvals</p>
+                    </x-sidebar-menu>
+                    <x-sidebar-menu route="admin.users">
+                        <div class="w-auto h-auto flex items-center"><span class="cuida--users-outline"></span>
+                        </div>
+                        <p>Users</p>
+                    </x-sidebar-menu>
+                    <x-sidebar-menu route="admin.histories">
+                        <div class="w-auto h-auto flex items-center"><span
+                                class="material-symbols--history-rounded w-6 h-6"></span></div>
+                        <p>History</p>
+                    </x-sidebar-menu>
+                    <x-sidebar-menu route="admin.profile">
+                        <div class="w-auto h-auto flex items-center"><span class="cuida--user-outline"></span></div>
+                        <p>Profile</p>
+                    </x-sidebar-menu>
                 </nav>
             </aside>
 
             <!-- Main Content (Auto Scroll) -->
-            <main class="lg:col-span-6 overflow-auto lg:!p-10 px-5 pt-5 pb-20 h-[calc(100vh-5rem)] bg-gray-100">
-                {{ $slot }}
-            </main>
+            <main class="col-span-10 overflow-auto w-full h-[calc(100vh)] bg-gray-100">
+                <section class="sticky top-0 w-full bg-white shadow-md h-auto py-4 z-50">
+                    <div class="flex items-center justify-between w-full lg:px-10 px-5 gap-5">
+                        <section class="flex items-center gap-4">
+                            <button id="menu-toggle" class="lg:hidden p-2 border rounded-md">
+                                ☰
+                            </button>
+                            @if (Request::routeIs('admin.dashboard*'))
+                                <x-page-title title="Dashboard" />
+                            @elseif (Request::routeIs('admin.approvals*'))
+                                <x-page-title title="Approvals" />
+                            @elseif (Request::routeIs('admin.users*'))
+                                <x-page-title title="Users" />
+                            @elseif (Request::routeIs('admin.histories*'))
+                                <x-page-title title="History" />
+                            @elseif (Request::routeIs('admin.profile*'))
+                                <x-page-title title="Profile" />
+                            @endif
+                        </section>
 
-            <!-- ✅ Unique Button for Toggling (Outside Panel) -->
-            <button id="toggleAttendance"
-                class="w-full sticky bottom-0 lg:hidden flex items-center justify-center py-3 bg-custom-red text-white text-sm font-semibold">
-                <span class="icon-park-outline--to-top-one mr-2"></span>
-                Highlights
-            </button>
+                        <section class="flex items-center gap-2">
+                            <div class="dropdown relative inline-flex self-center">
+                                <button type="button" id="dropdown-notification"
+                                    class="dropdown-notification w-10 h-10 relative text-gray-500 p-2 rounded-full hover:bg-gray-100 cursor-pointer">
+                                    <span class="mi--notification w-full h-full relative"></span>
+                                    <div class="absolute top-2 right-2 w-3 h-3 rounded-full bg-custom-red"></div>
+                                </button>
 
-            <!-- ✅ Attendance Panel -->
-            <aside id="attendancePanel"
-                class="lg:col-span-4 lg:!h-[calc(100vh-5rem)] lg:static bg-gradient-to-r from-custom-orange via-custom-orange/90 to-custom-red shadow-md fixed bottom-0 left-0 w-full h-1/2 lg:!p-10 p-5 overflow-auto hidden lg:block z-30">
+                                <div id="dropdown-show-notification"
+                                    class="dropdown-menu-notification hidden rounded-lg shadow-lg border border-gray-300 bg-white absolute top-full lg:-right-40 -right-20 mt-2 md:w-[600px] sm:w-[400px] w-[300px] z-20">
 
-                <!-- ✅ Unique Button for Hiding (Inside Panel) -->
-                <button id="toggleAttendance"
-                    class="fixed bottom-1/2 left-0 w-full lg:hidden flex items-center justify-center py-3 bg-custom-red text-white z-30 text-sm font-semibold">
-                    <span class="icon-park-outline--to-top-one mr-2 rotate-180"></span>
-                    Highlights
-                </button>
+                                    <!-- Header -->
+                                    <div class="px-4 py-3 flex justify-between items-center text-custom-orange">
+                                        <h2 class="text-base font-semibold">Notifications (<span
+                                                id="notification-count">7</span>)</h2>
+                                        {{-- <button id="close-dropdown"
+                                            class="text-gray-500 hover:text-custom-red text-lg">&times;</button> --}}
+                                    </div>
 
-                <div class="w-full h-auto space-y-7">
-                    <section class="w-full h-fit">
-                        <div class="p-5 rounded-xl border border-gray-200 bg-white h-auto w-full space-y-5">
-                            <div
-                                class="flex lg:items-end items-center flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
-                                <div class="flex lg:items-start items-center gap-2">
-                                    <span class="hugeicons--champion"></span>
-                                    <p class="font-semibold lg:!text-lg text-sm">Top 3 Performer</p>
-                                </div>
-                                <p class="md:text-sm text-xs font-semibold">Highest Hour Basis</p>
-                            </div>
+                                    <!-- Tabs -->
+                                    <div class="flex border-b text-sm">
+                                        <button id="tab-all"
+                                            class="tab-btn px-4 py-2 text-custom-orange border-custom-orange font-semibold border-b-2">
+                                            All
+                                        </button>
+                                        <button id="tab-unread" class="tab-btn px-4 py-2 text-gray-500">
+                                            Unread (7)
+                                        </button>
+                                        <button id="tab-archived" class="tab-btn px-4 py-2 text-gray-500">
+                                            Archived (0)
+                                        </button>
+                                    </div>
 
-                            <!--HTML CODE-->
-                            <div class="w-full relative h-fit">
-                                <div class="swiper progress-slide-carousel swiper-container relative">
-                                    <div class="swiper-wrapper">
-                                        @forelse ($ranking as $index => $user)
-                                            <div class="swiper-slide">
-                                                <div
-                                                    class="bg-custom-orange/5 rounded-md h-52 py-3 w-full overflow-hidden relative flex items-center justify-center">
 
-                                                    <!-- Centered & Blended Image -->
-                                                    <x-image path="resources/img/default-male.png"
-                                                        className="absolute inset-0 mx-auto h-full scale-125 w-auto opacity-20 z-0" />
-
-                                                    <section
-                                                        class="flex items-end text-center gap-2 w-full h-full p-3 rounded-md z-20 relative">
-                                                        <div class="w-full space-y-1 px-5">
-                                                            <p class="text-sm font-semibold">TOP {{ $index + 1 }}
-                                                            </p>
-                                                            <h1 class="text-sm truncate capitalize text-gray-500/80">
-                                                                {{ $user['name'] }}
-                                                            </h1>
-                                                            <p class="text-xl font-semibold text-custom-orange">
-                                                                {{ $user['hours_worked'] }} hours
-                                                            </p>
-                                                        </div>
-                                                    </section>
-                                                </div>
-                                            </div>
-                                        @empty
+                                    <!-- Content -->
+                                    <section id="tab-content-all"
+                                        class="divide-y divide-gray-100 w-full h-52 overflow-auto">
+                                        <!-- Sample Approval Notification -->
+                                        @for ($i = 1; $i <= 7; $i++)
                                             <div
-                                                class="flex w-full items-center justify-center h-full font-semibold text-gray-500">
-                                                No top performer yet.
+                                                class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer hover:bg-custom-orange/5 bg-custom-orange/10">
+                                                <div class="flex items-center gap-3 w-1/2">
+                                                    <x-image path="resources/img/default-male.png"
+                                                        className="w-10 h-10 rounded-full border border-custom-orange" />
+                                                    <div class="w-full truncate">
+                                                        <p class="text-sm font-semibold truncate">John Doe
+                                                            {{ $i }}
+                                                        </p>
+                                                        <p class="text-xs text-gray-500 truncate">Request for
+                                                            DTR
+                                                            Approval</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex space-x-2">
+                                                    <button
+                                                        class="text-gray-400 hover:bg-gray-400 hover:text-white p-2 rounded-lg text-xs flex items-center gap-1">
+                                                        <div class="w-auto h-auto">
+                                                            <span
+                                                                class="material-symbols--archive-rounded w-4 h-4"></span>
+                                                        </div>
+                                                        <p>Archive</p>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        @endforelse
+                                        @endfor
+                                    </section>
 
+                                    <section id="tab-content-unread"
+                                        class="hidden divide-y divide-gray-100 w-full h-52 overflow-auto">
+                                        <!-- Sample Approval Notification -->
+                                        @for ($i = 1; $i <= 7; $i++)
+                                            <div
+                                                class="flex items-center justify-between gap-5 p-3 w-full cursor-pointer hover:bg-custom-orange/5 bg-custom-orange/10">
+                                                <div class="flex items-center gap-3 w-1/2">
+                                                    <x-image path="resources/img/default-male.png"
+                                                        className="w-10 h-10 rounded-full border border-custom-orange" />
+                                                    <div class="w-full truncate">
+                                                        <p class="text-sm font-semibold truncate">John Doe
+                                                            {{ $i }}
+                                                        </p>
+                                                        <p class="text-xs text-gray-500 truncate">Request for
+                                                            DTR
+                                                            Approval</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex space-x-2">
+                                                    <button
+                                                        class="text-gray-400 hover:bg-gray-400 hover:text-white p-2 rounded-lg text-xs flex items-center gap-1">
+                                                        <div class="w-auto h-auto">
+                                                            <span
+                                                                class="material-symbols--archive-rounded w-4 h-4"></span>
+                                                        </div>
+                                                        <p>Archive</p>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        @endfor
+                                    </section>
 
-                                    </div>
-                                    <div
-                                        class="swiper-pagination !bottom-5 !top-auto !w-80 right-0 mx-auto bg-gray-100">
+                                    <section id="tab-content-archived"
+                                        class="hidden divide-y divide-gray-100 w-full h-52 overflow-auto">
+                                        <p
+                                            class="text-sm text-center text-gray-500 p-4 flex items-center justify-center h-full">
+                                            Nothing here.</p>
+                                    </section>
+                                </div>
+                            </div>
+
+                            <div class="dropdown relative inline-flex">
+                                <button type="button" id="dropdown-profile" data-target="dropdown-show-profile"
+                                    class="dropdown-profile items-center gap-2 hover:bg-gray-100 rounded-lg py-2 px-3 overflow-hidden inline-flex">
+                                    <x-image path="resources/img/default-male.png"
+                                        className="w-10 h-auto rounded-full shadow border border-custom-red" />
+                                    <p class="lg:block hidden capitalize">{{ Auth::user()->firstname }}</p>
+                                    <span class="iconamoon--arrow-down-2"></span>
+                                </button>
+                                <div id="dropdown-show-profile"
+                                    class="dropdown-menu-profile hidden rounded-lg shadow-lg border border-gray-300 bg-white absolute top-full right-0 w-72 divide-y divide-gray-200">
+                                    <ul class="py-2">
+                                        <li>
+                                            <a class="block px-6 py-2 hover:bg-gray-100 text-gray-900 font-semibold"
+                                                href="{{ route('admin.profile') }}"> Profile </a>
+                                        </li>
+                                    </ul>
+                                    <div class="pt-2">
+                                        <x-form.container routeName="logout" method="POST" className="w-full">
+                                            <x-button label="Logout"
+                                                className="px-6 py-2 hover:bg-gray-100 text-custom-red font-semibold w-full text-start"
+                                                submit />
+                                        </x-form.container>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
-                    <section
-                        class="p-5 w-full border bg-white border-gray-200 rounded-xl h-[500px] overflow-hidden space-y-5">
-                        <div
-                            class="flex lg:items-end items-center flex-wrap gap-2 text-custom-red justify-between w-full font-semibold">
-                            <div class="flex lg:items-start items-center gap-2">
-                                <span class="material-symbols--co-present-outline"></span>
-                                <p class="font-semibold lg:!text-lg text-sm">Daily Attendance</p>
-                            </div>
 
-                            <div class="md:text-sm text-xs font-semibold">
-                                {{ \Carbon\Carbon::now()->format('M d, Y') }}</div>
-                        </div>
-                        <div class="h-[90%] w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
-                            @forelse ($array_daily as $daily)
-                                <section
-                                    class="px-7 py-5 w-full flex flex-wrap justify-between odd:bg-custom-orange/5 bg-white items-center">
-                                    <div class="flex items-start gap-5 w-full">
-                                        <x-image className="w-12 h-12 rounded-full border border-custom-orange"
-                                            path="resources/img/default-male.png" />
-                                        <div class="flex items-center flex-wrap justify-between w-full gap-x-2">
-                                            <div class="w-1/2 ">
-                                                <section class="font-bold text-black text-lg truncate">
-                                                    {{ $daily['timeFormat'] }}
-                                                </section>
-                                                <p class="text-sm font-medium text-gray-700 capitalize truncate">
-                                                    {{ $daily['name'] }}</p>
-                                            </div>
-                                            @if ($daily['description'] === 'time in')
-                                                <div
-                                                    class="text-green-500 flex items-center gap-1 select-none text-sm font-semibold">
-                                                    {{-- <span class="lets-icons--in"></span> --}}
-                                                    <p>Time in</p>
-                                                </div>
-                                            @else
-                                                <div
-                                                    class="text-red-500 flex items-center gap-1 select-none text-sm font-semibold">
-                                                    {{-- <span class="lets-icons--out"></span> --}}
-                                                    <p>Time out</p>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </section>
-                            @empty
-                                <h1
-                                    class="text-center flex items-center justify-center h-full font-semibold text-gray-500">
-                                    Waiting for attendees...
-                                </h1>
-                            @endforelse
-                        </div>
-                    </section>
-                </div>
-            </aside>
+                        </section>
+                    </div>
+                </section>
+
+                <section class="lg:!p-10 p-5">
+                    {{ $slot }}
+                </section>
+            </main>
         </div>
-
-        <script>
-            document.querySelectorAll('#toggleAttendance').forEach(button => {
-                button.addEventListener('click', function() {
-                    const panel = document.getElementById('attendancePanel');
-                    const allButtons = document.querySelectorAll('#toggleAttendance');
-
-                    const isHidden = panel.classList.contains('hidden');
-
-                    allButtons.forEach(btn => {
-                        const icon = btn.querySelector('span'); // Get the icon inside the button
-
-                        if (isHidden) {
-                            panel.classList.remove('hidden');
-                            panel.classList.add('block'); // Show panel
-                            btn.innerHTML =
-                                '<span class="icon-park-outline--to-top-one mr-2 rotate-180"></span> Highlights';
-                        } else {
-                            panel.classList.remove('block');
-                            panel.classList.add('hidden'); // Hide panel
-                            btn.innerHTML =
-                                '<span class="icon-park-outline--to-top-one mr-2"></span> Highlights';
-                        }
-                    });
-                });
-            });
-        </script>
-
         {{-- </main> --}}
-
 
         <script>
             const menuToggle = document.getElementById("menu-toggle");
@@ -463,34 +473,97 @@
                 mobileMenu.classList.toggle("-translate-x-full");
             });
 
-            // swiper
-            var swiper = new Swiper(".progress-slide-carousel", {
-                loop: true,
-                fraction: true,
-                autoplay: {
-                    delay: 1200,
-                    disableOnInteraction: false,
-                },
-                pagination: {
-                    el: ".progress-slide-carousel .swiper-pagination",
-                    type: "progressbar",
-                },
-            });
-
+            // notifications and profile
             document.addEventListener("DOMContentLoaded", function() {
-                const dropdownToggle = document.getElementById("dropdown-toggle");
-                const dropdownMenu = document.getElementById("dropdown-menu");
+                const dropdownProfile = document.getElementById("dropdown-profile");
+                const dropdownMenuProfile = document.getElementById("dropdown-show-profile");
 
-                // Toggle dropdown visibility on button click
-                dropdownToggle.addEventListener("click", function() {
-                    dropdownMenu.classList.toggle("hidden");
+                const dropdownNotification = document.getElementById("dropdown-notification");
+                const dropdownMenuNotification = document.getElementById("dropdown-show-notification");
+
+                const closeDropdown = document.getElementById("close-dropdown");
+
+                const tabs = {
+                    all: document.getElementById("tab-all"),
+                    unread: document.getElementById("tab-unread"),
+                    archived: document.getElementById("tab-archived")
+                };
+
+                const tabContents = {
+                    all: document.getElementById("tab-content-all"),
+                    unread: document.getElementById("tab-content-unread"),
+                    archived: document.getElementById("tab-content-archived")
+                };
+
+                function closeAllDropdowns() {
+                    dropdownMenuProfile?.classList.add("hidden");
+                    dropdownMenuNotification?.classList.add("hidden");
+                }
+
+                function toggleDropdown(dropdownButton, dropdownMenu, otherDropdownMenu) {
+                    if (dropdownMenu.classList.contains("hidden")) {
+                        closeAllDropdowns(); // Close any open dropdown first
+                        dropdownMenu.classList.remove("hidden"); // Open clicked dropdown
+                    } else {
+                        dropdownMenu.classList.add("hidden"); // Close dropdown if already open
+                    }
+                }
+
+                // Toggle profile dropdown
+                dropdownProfile?.addEventListener("click", function(event) {
+                    event.stopPropagation();
+                    toggleDropdown(dropdownProfile, dropdownMenuProfile, dropdownMenuNotification);
+                });
+
+                // Toggle notification dropdown
+                dropdownNotification?.addEventListener("click", function(event) {
+                    event.stopPropagation();
+                    toggleDropdown(dropdownNotification, dropdownMenuNotification, dropdownMenuProfile);
+                });
+
+                closeDropdown?.addEventListener("click", function() {
+                    closeAllDropdowns();
                 });
 
                 // Close dropdown when clicking outside
                 document.addEventListener("click", function(event) {
-                    if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                        dropdownMenu.classList.add("hidden");
+                    if (
+                        !dropdownProfile?.contains(event.target) &&
+                        !dropdownMenuProfile?.contains(event.target) &&
+                        !dropdownNotification?.contains(event.target) &&
+                        !dropdownMenuNotification?.contains(event.target)
+                    ) {
+                        closeAllDropdowns();
                     }
+                });
+
+                // Tab switching functionality
+                function switchTab(activeTab, activeContent) {
+                    // Reset all tabs
+                    Object.values(tabs).forEach(tab => {
+                        tab.classList.remove("text-custom-orange", "border-custom-orange", "font-semibold",
+                            "border-b-2");
+                        tab.classList.add("text-gray-500");
+                    });
+
+                    Object.values(tabContents).forEach(content => content.classList.add("hidden"));
+
+                    // Activate selected tab
+                    activeTab.classList.add("text-custom-orange", "border-custom-orange", "font-semibold",
+                    "border-b-2");
+                    activeTab.classList.remove("text-gray-500");
+
+                    activeContent.classList.remove("hidden");
+                }
+
+                // Set initial active tab to 'All'
+                switchTab(tabs.all, tabContents.all);
+
+                // Add event listeners for tab clicks
+                Object.keys(tabs).forEach(key => {
+                    tabs[key].addEventListener("click", function() {
+                        switchTab(tabs[key], tabContents[key]);
+                    });
                 });
             });
         </script>
