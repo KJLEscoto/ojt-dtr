@@ -252,7 +252,7 @@ class DtrSummaryController extends Controller
                 ]);
     }
 
-    public function showUserDtrSummary(Request $request)
+    public function showUserDtrSummary()
     {
         $user = Auth::user();
         $firstRecord = Histories::where('user_id', $user->id)
@@ -449,8 +449,13 @@ class DtrSummaryController extends Controller
             ];
         }
 
+        // yearlytotals and auth user
+        $yearlyTotals = $this->showUserDtrSummary()['yearlyTotals'];
+        $user = $this->showUserDtrSummary()['user'];
+
         return view('users.dtr', [
-            'user' => Auth::user(),
+            'user' => $user,
+            'yearlyTotals' => $yearlyTotals,
             'records' => $records,
             'totalHoursPerMonth' => $totalHoursPerMonth,
             'selectedMonth' => $selectedMonth,

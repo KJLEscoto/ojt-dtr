@@ -30,7 +30,8 @@
                     <div class="">
                         <div class="flex items-center w-full justify-center flex-col gap-4">
                             <div class="w-auto h-auto">
-                                <x-image className="w-40 h-40 rounded-full border border-custom-orange"
+                                <x-image
+                                    className="lg:!w-80 md:!w-60 w-40 lg:!h-80 md:!h-60 h-40 rounded-full border border-custom-orange"
                                     path="resources/img/default-male.png" />
                             </div>
                             <x-button tertiary leftIcon="bx--image" label="Change" button className="px-10" />

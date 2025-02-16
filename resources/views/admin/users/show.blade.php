@@ -1,6 +1,18 @@
 <x-main-layout>
     <div class="h-auto w-full flex flex-col gap-6">
-        <section class="flex items-center justify-between gap-5">
+        {{-- <section class="flex items-center justify-between gap-5">
+            <x-button routePath="admin.users" label="Back" tertiary button showLabel="{{ true }}"
+                leftIcon="eva--arrow-back-fill" className="lg:px-8 px-3" />
+            <div class="flex items-center gap-2">
+                <x-button tertiary label="View DTR" routePath="admin.users.dtr" :params="['id' => $user->id]" button
+                    className="px-8 font-semibold" />
+                <x-button primary label="Edit User" button className="px-8" routePath="admin.users.details.edit"
+                    :params="['id' => $user->id]" />
+            </div>
+        </section> --}}
+
+        <section
+            class="w-full flex items-center justify-between gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-[125px] z-30 rounded-full">
             <x-button routePath="admin.users" label="Back" tertiary button showLabel="{{ true }}"
                 leftIcon="eva--arrow-back-fill" className="lg:px-8 px-3" />
             <div class="flex items-center gap-2">
@@ -11,17 +23,19 @@
             </div>
         </section>
 
-        <section class="rounded-lg p-7 border border-gray-200 bg-white h-auto w-full space-y-5">
+        <section class="rounded-lg p-7 border border-gray-200 bg-white h-auto w-full flex flex-col gap-5">
 
-            <x-form.section-title title="User Details" vectorClass="!h-3" />
-            <div class="w-full flex lg:flex-row flex-col lg:items-start gap-5">
-                <x-image className="w-40 h-40 rounded-full border border-custom-orange lg:!mx-0 mx-auto"
-                    path="resources/img/default-male.png" />
-
-                <div class="space-y-2">
-
+            <div class="w-full">
+                <div class="w-auto h-auto flex flex-col gap-3 items-center justify-center mb-5">
+                    <x-image
+                        className="lg:!w-80 md:!w-60 w-40 lg:!h-80 md:!h-60 h-40 rounded-full border border-custom-orange lg:!mx-0 mx-auto"
+                        path="resources/img/default-male.png" />
                     <h1 class="capitalize font-semibold text-lg">{{ $user->firstname }}
                         {{ substr($user->middlename, 0, 1) }}. {{ $user->lastname }}</h1>
+                </div>
+
+                <div class="space-y-2">
+                    <x-form.section-title title="User Details" vectorClass="!h-3" />
                     <section class="flex items-start gap-x-2">
                         <div class="text-sm font-semibold text-gray-700">Gender:</div>
                         <p class="text-base -mt-[3px] capitalize">{{ $user->gender }}</p>
@@ -37,6 +51,10 @@
                     <section class="flex items-start gap-x-2">
                         <div class="text-sm font-semibold text-gray-600">Address:</div>
                         <p class="text-base -mt-[3px]">{{ $user->address }}</p>
+                    </section>
+                    <section class="flex items-start gap-x-2">
+                        <div class="text-sm font-semibold text-gray-600">School:</div>
+                        <p class="text-base -mt-[3px]">{{ $user->school }}</p>
                     </section>
                 </div>
             </div>
@@ -96,7 +114,7 @@
                 <div class="text-black flex flex-col h-full items-start justify-start">
                     @forelse ($histories as $history)
                         <section
-                            class="px-7 py-5 w-full h-full flex flex-wrap gap-2 justify-between items-center odd:bg-custom-orange/5">
+                            class="px-7 py-5 w-full h-fit border-b border-gray-200 hover:bg-gray-100 flex flex-wrap gap-2 justify-between items-center">
                             <div>
                                 <section class="font-bold">{{ $history['timeFormat'] ?? 'N/A' }}</section>
                                 <p class="text-sm font-medium text-gray-700">
@@ -104,13 +122,11 @@
                                 </p>
                             </div>
                             @if (!empty($history['description']) && $history['description'] === 'time in')
-                                <div class="text-green-500 flex items-center gap-1 select-none">
-                                    <span class="lets-icons--in"></span>
+                                <div class="text-green-500 flex items-center gap-1 select-none text-sm font-semibold">
                                     <p>Time in</p>
                                 </div>
                             @else
-                                <div class="text-red-500 flex items-center gap-1 select-none">
-                                    <span class="lets-icons--out"></span>
+                                <div class="text-red-500 flex items-center gap-1 select-none text-sm font-semibold">
                                     <p>Time out</p>
                                 </div>
                             @endif

@@ -15,8 +15,7 @@
             @foreach ($users as $user)
                 <a href="{{ route('admin.users.details', $user->id) }}"
                     class="p-5 border border-gray-200 rounded-xl cursor-pointer group animate-transition hover:border-custom-orange flex flex-col gap-5 items-center justify-center h-auto w-full bg-white user-card"
-                    data-name="{{ strtolower($user->firstname) }}"
-                    data-student_no="{{ strtolower($user->student_no) }}">
+                    data-name="{{ strtolower($user->firstname) }}" data-student_no="{{ strtolower($user->school) }}">
 
                     <div class="w-auto h-auto">
                         <x-image className="w-24 h-24 rounded-full border border-custom-orange"
@@ -26,7 +25,7 @@
                         <h1
                             class="text-sm font-semibold group-hover:text-custom-orange animate-transition truncate capitalize">
                             {{ $user->firstname }} {{ substr($user->middlename, 0, 1) }}. {{ $user->lastname }}</h1>
-                        <p class="text-gray-500 truncate">{{ $user->student_no }}</p>
+                        <p class="text-gray-500 truncate">{{ $user->school }}</p>
                     </div>
                 </a>
             @endforeach

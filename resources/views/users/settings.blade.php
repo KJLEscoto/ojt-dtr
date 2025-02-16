@@ -3,7 +3,7 @@
 
 <x-main-layout>
 
-    <div class="h-full w-full">
+    <div class="w-full">
         <x-form.container routeName="users.settings.update" method="POST" className="h-auto w-full flex flex-col gap-5">
             @method('PUT')
 
@@ -24,14 +24,14 @@
                     className="text-custom-orange cursor-pointer hover:underline modal-button lg:text-base text-sm" />
             </div>
 
-            <div class="flex flex-col lg:!gap-7 gap-5 pb-10 mt-5 h-full">
+            <div class="flex flex-col lg:!gap-7 gap-5 mt-5 h-full">
                 <section class="flex flex-col gap-5 w-full p-7 border border-gray-200 rounded-lg bg-white">
                     <div class="flex flex-col items-center gap-5">
                         <div class="h-auto w-auto">
                             <x-image path="resources/img/default-male.png"
-                                className="h-64 w-64 border border-custom-orange shadow rounded-full" />
+                                className="lg:!w-80 md:!w-60 w-40 lg:!h-80 md:!h-60 h-40 border border-custom-orange shadow rounded-full" />
                         </div>
-                        <x-button tertiary leftIcon="bx--image" label="Change" className="px-6" />
+                        <x-button tertiary button leftIcon="bx--image" label="Change" className="px-6" />
                     </div>
                     <x-form.section-title title="Personal Information" />
                     <div class="grid md:grid-cols-3 w-full gap-5">

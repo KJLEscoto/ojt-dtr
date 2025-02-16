@@ -1,7 +1,7 @@
 <x-main-layout>
     <main class="flex flex-col gap-5">
-        <div
-            class="w-auto grid grid-cols-2 text-nowrap bg-white p-3 border sticky top-0 border-gray-200 shadow-lg rounded-full max-w-screen-xl mx-auto">
+        <section
+            class="w-full flex items-center justify-between gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-[125px] z-30 rounded-full">
             <section class="lg:col-span-1 flex justify-start items-center">
                 <x-button routePath="admin.users.details" :params="['id' => $user->id]" label="Back" tertiary button
                     showLabel="{{ true }}" leftIcon="eva--arrow-back-fill" className="lg:px-8 px-3" />
@@ -24,7 +24,9 @@
                         leftIcon="material-symbols--download-rounded" submit className="text-xs lg:px-8 px-3" />
                 </form>
             </div>
-        </div>
+        </section>
+
+
 
         <section class="w-full h-auto overflow-auto space-y-7">
             {{-- <x-modal.dtr-summary id="dtr-summary-modal" /> --}}

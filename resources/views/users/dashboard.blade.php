@@ -1,10 +1,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<span>
-    <x-modal.qr-code id="qr-code-modal" />
-</span>
 
 <x-main-layout>
-    <main class="h-auto w-full flex flex-col gap-5 pb-10">
+    <x-modal.qr-code id="qr-code-modal" />
+
+    <main class="w-full flex flex-col gap-5 pb-5">
         <div class="flex md:flex-row flex-col gap-7 md:!h-[350px] !h-full w-full">
             <section class="w-full h-full">
                 <div
@@ -46,7 +45,7 @@
                     <div class=" text-black flex flex-col items-start justify-start">
                         @foreach ($histories as $history)
                             <section
-                                class="px-7 py-5 w-full flex justify-between items-center odd:bg-custom-orange/5 even:border-y even:border-gray-200">
+                                class="px-7 py-5 w-full flex justify-between items-center border-b border-gray-200">
                                 <div class="">
                                     <section class="font-bold text-lg">{{ $history['timeFormat'] }}
                                     </section>
@@ -54,13 +53,12 @@
                                         {{ $history['datetime'] }}</p>
                                 </div>
                                 @if ($history['description'] === 'time in')
-                                    <div class="text-green-500 flex items-center gap-1 select-none">
-                                        <span class="lets-icons--in"></span>
+                                    <div
+                                        class="text-green-500 flex items-center gap-1 select-none text-sm font-semibold">
                                         <p>Time in</p>
                                     </div>
                                 @else
-                                    <div class="text-red-500 flex items-center gap-1 select-none">
-                                        <span class="lets-icons--out"></span>
+                                    <div class="text-red-500 flex items-center gap-1 select-none text-sm font-semibold">
                                         <p>Time out</p>
                                     </div>
                                 @endif
@@ -114,6 +112,40 @@
                     </section>
                 </div>
             </section>
+        </div>
+
+        <div class="p-7 rounded-lg border border-gray-200 bg-white w-full">
+            <div class="flex w-full justify-between gap-2 items-end mb-3">
+                <x-page-title title="Request Status" />
+                <a href="{{ route('users.request') }}"
+                    class="lg:!text-sm text-xs text-custom-red hover:underline underline-offset-4 cursor-pointer font-semibold">
+                    View All
+                </a>
+            </div>
+            <hr>
+
+            {{-- dummy data | sort from latest --}}
+            <div class="overflow-auto h-[250px] w-full">
+                @for ($i = 0; $i <= 15; $i++)
+                    <a href="{{ route('users.request') }}"
+                        class="px-5 py-3 hover:bg-gray-100 border-b border-gray-300 w-full flex items-center justify-between gap-5">
+                        <div class="w-1/2">
+                            <h1 class="truncate">Request for DTR Approval</h1>
+                            <p class="lg:!text-sm text-xs font-semibold text-blue-500 truncate">Waiting for approval...
+                            </p>
+                            {{-- <p class="lg:!text-sm text-xs font-semibold text-green-500 truncate">Ready to download</p>
+                            <p class="lg:!text-sm text-xs font-semibold text-red-500 truncate">Declined approval</p> --}}
+                        </div>
+
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600">Feb 5, 2025</p>
+                        </div>
+                    </a>
+                @endfor
+
+                {{-- <p class="flex items-center justify-center h-full w-full font-semibold text-gray-500">You don't have
+                    request yet.</p> --}}
+            </div>
         </div>
     </main>
 </x-main-layout>

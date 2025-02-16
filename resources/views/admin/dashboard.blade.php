@@ -83,13 +83,13 @@
                         <p class="font-semibold lg:!text-lg text-sm">Daily Attendance</p>
                     </div>
 
-                    <div class="md:text-sm text-xs font-semibold">
+                    <div class="md:!text-sm text-xs font-semibold">
                         {{ \Carbon\Carbon::now()->format('M d, Y') }}</div>
                 </div>
                 <div class="h-full pb-7 w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
                     @forelse ($array_daily as $daily)
-                        <section
-                            class="px-7 py-5 w-full flex flex-wrap justify-between odd:bg-custom-orange/5 even:border-y bg-white items-center">
+                        <a href="{{ route('admin.users.details', ['id' => $daily['id']]) }}"
+                            class="px-7 py-5 w-full flex flex-wrap justify-between border-b border-gray-200 bg-white hover:bg-gray-100 items-center cursor-pointer">
                             <div class="flex items-start gap-5 w-full">
                                 <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                     path="resources/img/default-male.png" />
@@ -116,7 +116,7 @@
                                     @endif
                                 </div>
                             </div>
-                        </section>
+                        </a>
                     @empty
                         <h1 class="text-center flex items-center justify-center h-full font-semibold text-gray-500">
                             Waiting for attendees...
@@ -133,7 +133,7 @@
                         <span class="hugeicons--champion"></span>
                         <p class="font-semibold lg:!text-lg text-sm">Top 3 Performer</p>
                     </div>
-                    <p class="md:text-sm text-xs font-semibold">Highest Hour Basis</p>
+                    <p class="md:!text-sm text-xs font-semibold">Highest Hour Basis</p>
                 </div>
 
                 <!--HTML CODE-->
@@ -199,7 +199,7 @@
                 <div class="h-full w-full bg-white overflow-y-auto border border-gray-100 rounded-md">
                     @foreach ($recentlyAddedUser as $user)
                         <a href="{{ route('admin.users.details', ['id' => $user['id']]) }}"
-                            class="px-7 py-5 w-full flex justify-between items-center even:bg-custom-orange/5 even:border-y hover:bg-gray-100 cursor-pointer">
+                            class="px-7 py-5 w-full flex justify-between items-center border-b border-gray-200 hover:bg-gray-100 cursor-pointer">
                             <div class="flex items-center gap-5 w-1/2">
                                 <x-image className="w-12 h-12 rounded-full border border-custom-orange"
                                     path="resources/img/default-male.png" />

@@ -115,6 +115,7 @@ class HistoryController extends Controller
 
             $DailyAttendance = Histories::whereDate('datetime', $Today)->orderBy('datetime', 'desc')->get()->map(function ($daily) {
                 return [
+                    'id' => $daily->user_id,
                     'name' => User::where('id', $daily->user_id)->first()->firstname . ' ' . substr(User::where('id', $daily->user_id)->first()->middlename, 0, 1) . '. ' . User::where('id', $daily->user_id)->first()->lastname,
                     'description' => $daily->description,
                     'datetime' => Carbon::parse($daily->datetime)->format('F j, Y'),

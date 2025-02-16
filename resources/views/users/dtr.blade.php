@@ -1,8 +1,9 @@
 <x-main-layout>
-    <main class="h-full w-full">
+    <x-modal.dtr-summary id="dtr-summary-modal" :yearlyTotals="$yearlyTotals" />
 
+    <main class="w-full">
         {{-- <x-modal.dtr-summary id="dtr-summary-modal" /> --}}
-        <div class="flex flex-col gap-5 w-full items-center justify-center pb-10">
+        <div class="flex flex-col gap-5 w-full items-center justify-center pb-5">
             <div
                 class="w-full grid xl:!grid-cols-3 text-nowrap grid-cols-2 gap-5 bg-white p-3 border border-gray-200 shadow-lg sticky top-5 z-30 rounded-full max-w-screen-xl mx-auto">
 
@@ -50,9 +51,11 @@
                     </form>
                 </section>
 
-                <section class="flex items-center gap-3 col-span-1 justify-end w-full">
-                    <x-button tertiary label="DTR Summary" routePath="users.dtr.summary"
+                <section class="flex items-center gap-3 col-span-1 justify-end w-full h-auto">
+                    <!-- Fix alignment and padding for DTR Summary -->
+                    <x-button tertiary label="DTR Summary" openModal="dtr-summary-modal" button
                         className="text-xs lg:px-8 px-4 modal-button" />
+                    <!-- Ensure Request PDF button has the same alignment -->
                     <form
                         action="{{ route('download.pdf', ['records' => $records, 'pagination' => $pagination, 'totalHoursPerMonth' => $totalHoursPerMonth]) }}"
                         method="POST">
@@ -63,7 +66,6 @@
                     </form>
                 </section>
             </div>
-
 
             <div class="xl:w-[75%] lg:w-[85%] md:w-[95%] w-[100%] h-auto mt-8">
                 <div

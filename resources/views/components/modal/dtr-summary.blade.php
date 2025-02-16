@@ -1,13 +1,21 @@
-@props(['id' => ''])
+@props(['id' => '', 'yearlyTotals' => []])
 
 {{-- confirmation --}}
 <div id="{{ $id }}" class="pd-overlay hidden">
     <div
         class="w-full h-full fixed top-0 left-0 z-[100] flex items-center justify-center  overflow-x-hidden overflow-y-auto bg-black bg-opacity-70">
         <div
-            class="w-auto flex items-center justify-center p-10 transition-all ease-out opacity-0 sm:mx-auto modal-open:opacity-100 modal-open:duration-500">
-            <div class="flex flex-col p-10 gap-5 bg-white rounded-2xl">
-                <x-page-title title="DTR Summary" titleClass="text-xl" />
+            class="w-full flex items-center justify-center p-10 transition-all ease-out opacity-0 sm:mx-auto modal-open:opacity-100 modal-open:duration-500">
+            <div class="lg:!w-1/3 md:w-1/2 w-full flex flex-col p-10 gap-5 bg-white rounded-2xl">
+                <div class="flex w-full items-center justify-between gap-3 text-nowrap">
+                    <x-page-title title="DTR Summary" titleClass="text-xl" />
+
+                    <div>
+                        <x-button primary label="Close" button closeModal="{{ $id }}"
+                            className="close-modal-button px-7" />
+                    </div>
+                </div>
+
                 <div class=" bg-white shadow-md rounded-lg p-4 w-full max-w-3xl border">
                     {{-- <div class="flex items-start space-x-6 border-b pb-4">
                         <img src="{{ $profile_image ?? 'https://via.placeholder.com/100' }}" alt="Profile Image"
@@ -46,9 +54,10 @@
                                 @php $totalHoursOverall += $yearData['total_hours']; @endphp
 
                                 <div class="mb-8">
-                                    <h4 class="text-md font-semibold bg-gray-100 p-3 rounded">
-                                        Year {{ $yearData['year'] }}
-                                        <span class="float-right">Total: {{ $yearData['total_hours'] }} hrs</span>
+                                    <h4
+                                        class="md:text-base text-sm font-semibold bg-gray-100 p-3 rounded flex justify-between flex-wrap gap-2 items-center">
+                                        <p>Year {{ $yearData['year'] }}</p>
+                                        <p class="float-right">Total of {{ $yearData['total_hours'] }} hrs</p>
                                     </h4>
 
                                     <table class="w-full text-left text-sm mt-2">
@@ -59,9 +68,10 @@
                                         <tbody class="divide-y divide-gray-200">
                                             @foreach ($yearData['months'] as $monthData)
                                                 <tr class="hover:bg-gray-50">
-                                                    <td class="px-4 py-3">{{ $monthData['month_name'] }}</td>
-                                                    <td class="px-4 py-3 text-right">{{ $monthData['total_hours'] }}
-                                                        hrs
+                                                    <td
+                                                        class="px-4 py-3 flex justify-between w-full gap-2 flex-wrap items-center">
+                                                        <p>{{ $monthData['month_name'] }}</p>
+                                                        <p>{{ $monthData['total_hours'] }}hrs</p>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -71,17 +81,14 @@
                             @endforeach
 
                             <div class="mt-6 border-t pt-4">
-                                <div class="text-lg font-semibold flex justify-between text-custom-red">
-                                    <span>Total Overall Hours</span>
+                                <div
+                                    class="md:!text-lg text-base font-semibold flex flex-wrap gap-2 justify-between text-custom-red">
+                                    <span>Overall Hours</span>
                                     <span>{{ $totalHoursOverall }} hrs</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="w-full flex justify-end">
-                    <x-button primary label="Close" button closeModal="{{ $id }}" className="px-7 text-sm"
-                        className="close-modal-button" />
                 </div>
             </div>
         </div>
